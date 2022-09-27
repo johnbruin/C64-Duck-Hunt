@@ -1,0 +1,40 @@
+.label crosshairXLowBoundary=$6067
+.label spriteMemory=$3000
+.label initDuck1=$3519 {
+}
+.label duck1Y=$3532
+.label duck1X=$3530
+.label spriteXPositions=$6119
+.label init_sprites=$60fa
+.label showDuck1=$3535 {
+}
+.label crosshairXHighBoundary=$6069
+.label duck1AnimSpeed=$35ab
+.label crosshairYHighBoundary=$606c
+.label multiply=$60e7 {
+  .label m0=$60ec
+  .label m1=$60f1
+}
+.label crosshairYLowBoundary=$606b
+.label initCrosshair=$34c0 {
+}
+.label crosshairY=$34d0
+.label crosshairX=$34ce
+.label duck1IsShot=$3534
+.label crosshairTrigger=$34d1
+.label start=$810 {
+}
+.label hide_sprites=$610d
+.label spriteYPositions=$6129
+.label duck1Sprite=$352e
+.label duck1SpriteOverlay=$352f
+.label isHit=$606d {
+}
+.label duck1IsDead=$3533
+.label irq1=$6000 {
+}
+.label show_sprites=$6113
+.label showCrosshair=$34d2 {
+}
+.label animateDuck1=$35ac {
+}

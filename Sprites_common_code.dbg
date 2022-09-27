@@ -1,0 +1,46 @@
+<C64debugger version="1.0">
+   <Sources values="INDEX,FILE">
+      0,KickAss.jar:/include/autoinclude.asm
+      1,G:\Mijn Drive\c64\KickAssembler_Projects\Lightgun\sprites\Sprites_common_code.asm
+   </Sources>
+
+   <Segment name="Default" dest="" values="START,END,FILE_IDX,LINE1,COL1,LINE2,COL2">
+      <Block name="Default">
+         $2000,$2001,1,7,5,7,7
+         $2002,$2004,1,8,5,8,7
+         $2005,$2007,1,9,5,9,7
+         $2008,$2009,1,12,5,12,7
+         $200a,$200c,1,13,5,13,7
+         $200d,$200e,1,16,5,16,7
+         $200f,$2011,1,17,5,17,7
+         $2012,$2012,1,18,1,18,3
+         $2013,$2014,1,22,2,22,4
+         $2015,$2017,1,23,2,23,4
+         $2018,$2018,1,24,1,24,3
+         $2019,$201a,1,28,2,28,4
+         $201b,$201d,1,29,2,29,4
+         $201e,$201e,1,30,1,30,3
+         $201f,$202e,1,55,5,55,13
+         $202f,$2036,1,57,5,57,9
+      </Block>
+      <Block name="[Data] Sprite memory">
+         $2c80,$313f,1,62,1,62,5
+      </Block>
+   </Segment>
+
+   <Labels values="SEGMENT,ADDRESS,NAME,START,END,FILE_IDX,LINE1,COL1,LINE2,COL2">
+      Default,$2000,init_sprites,1,5,1,5,13
+      Default,$2013,hide_sprites,1,20,1,20,13
+      Default,$2019,show_sprites,1,26,1,26,13
+      Default,$201f,spriteXPositions,1,54,1,54,17
+      Default,$202f,spriteYPositions,1,56,1,56,17
+      Default,$2c80,spriteMemory,1,60,1,60,13
+   </Labels>
+
+   <Breakpoints values="SEGMENT,ADDRESS,ARGUMENT">
+   </Breakpoints>
+
+   <Watchpoints values="SEGMENT,ADDRESS1,ADDRESS2,ARGUMENT">
+   </Watchpoints>
+
+</C64debugger>

@@ -1,10 +1,19 @@
+//#define DEBUG
+
+//.var background = LoadBinary("Pictures/background.kla", BF_KOALA)
 .var music = LoadSid("music/Hiraeth_part_1_mockup.sid")
 
 #import "Macros/irq_macros.asm"
 
+//Labels
+.label border_color         = $d020
+.label background_color     = $d021
+
 //multiplies fac1 and fac2 and put results in x (low-byte) and a (hi-byte)  
-.var FAC1 = $58
-.var FAC2 = $59
+.var fac1 = $58
+.var fac2 = $59
+
+.var overlay_distance = 6
 
 .pc = $0801 "Basic Program Start"
 :BasicUpstart(start)			
@@ -15,19 +24,42 @@ start:
 	jsr $e544		// Clear screen	
 	
 	lda #BLACK     
-	sta $d020  
-	lda #BLUE     
-	sta $d021    
+	sta border_color
+	lda #LIGHT_BLUE     
+	sta background_color   
 
-    lda $DD00
+	lda $DD00
 	and #%11111100 
-	ora #%00000011	//Change VIC bank to bank0: $0000-$3fff
+	ora #%00000010 //Change VIC bank to bank1: $4000-$7fff
 	sta $DD00
 
-    lda #music.startSong - 1
-    ldx #music.startSong - 1
+	ldx #0
+	!:
+		.for (var i=0; i<4; i++) {
+			lda #13 	//GREEN
+			sta $d800 + i*250,x
+		}
+		inx
+	bne !-
+
+    lda #%00110000
+    sta $d018
+
+    lda $d016
+	ora #%00010000
+    sta $d016
+
+	lda #BLUE
+	sta $D022           // Char multi color 1
+
+	lda #BLACK
+	sta $D023           // Char multi color 2
+
+    lda #music.startSong - 0
+    ldx #music.startSong - 0
 	jsr music.init
 
+	jsr initScore
 	jsr init_sprites
 	jsr initCrosshair
 	jsr initDuck1
@@ -35,24 +67,36 @@ start:
 
 	sei
 	:irq_init()	
-    :irq_setup(irq1, 50)
+    :irq_setup(irq1, 0)
 	cli
 	
 	jmp *    
 }
 
-.pc =$6000 "[CODE] Irq1"
+.pc =* "[CODE] Irq1"
 irq1:   		
 {
 	:irq_enter()
+	#if DEBUG
+        dec border_color
+    #endif
+
+	lda #LIGHT_BLUE     
+	sta background_color 
+
+	lda #BLUE
+	sta $D022           // Char multi color 1
+
+	lda #BLACK
+	sta $D023           // Char multi color 2
 
 	lda $d41a
 	sta crosshairTrigger
 
 	lda $d013		//LPX
-	sta FAC1		//multiply LPX by 2
+	sta fac1		//multiply LPX by 2
 	lda #2
-	sta FAC2
+	sta fac2
 	jsr multiply
 	stx crosshairX	
 	sta crosshairX+1
@@ -68,38 +112,74 @@ irq1:
 	lda $d014		//LPY
 	sta crosshairY
 
-	jsr showCrosshair
-	lda crosshairTrigger
-    bne !+
-        jsr isHit
-    !:
+	//jsr showCrosshair
+
+	lda isShotFired
+	bne !+++
+		lda crosshairTrigger
+		bne !++
+			lda #10
+			sta isShotFired
+			lda duck1IsShot
+			bne !+
+				jsr isHitDuck1
+			!:
+		!:
+		jmp !skip+
+	!:
+	dec isShotFired
+	!skip:
 	
 	jsr showDuck1
+	jsr animateDuck1
 	
 	jsr music.play
 
-	:irq_next(irq1,50)
+    #if DEBUG
+        inc border_color
+    #endif
+	:irq_next(irq2,50+16*8)
+}
+
+irq2:
+{
+	irq_enter()
+	lda #LIGHT_GREEN
+	sta $D022           // Char multi color 1
+	irq_next(irq3,50+20*8)	
+}
+
+irq3:
+{
+	irq_enter()
+	lda #BROWN
+	sta $D022           // Char multi color 1
+
+	lda #BLACK
+	sta background_color
+
+	irq_next(irq1,0)	
 }
 
 crosshairXLowBoundary: .word 0
 crosshairXHighBoundary: .word 0
 crosshairYLowBoundary: .byte 0
 crosshairYHighBoundary: .byte 0
-isHit:
+isHitDuck1:
 {
 	sec
 	lda crosshairY
-	sbc #30
+	sbc #11*2
 	sta crosshairYLowBoundary
 
-	sec
+	clc
 	lda crosshairY
-	sbc #0
+	adc #11
 	sta crosshairYHighBoundary
 	
 	sec
 	lda crosshairX
-	sbc #28
+	sbc #12*2
 	sta crosshairXLowBoundary
 	lda crosshairX+1
 	sbc #0
@@ -107,7 +187,7 @@ isHit:
 
 	clc
 	lda crosshairX
-	adc #16
+	adc #12*2
 	sta crosshairXHighBoundary
 	lda crosshairX+1
 	adc #0
@@ -116,40 +196,54 @@ isHit:
 	//duck1Y < crosshairYLowBoundary?
 	lda duck1Y
 	cmp crosshairYLowBoundary
-	bcc !end+
+	bcc !nohit+
 
 	//duck1Y >= crosshairYHighBoundary?
 	lda duck1Y
 	cmp crosshairYHighBoundary
-	bcs !end+
+	bcs !nohit+
 	
 	//duck1X < crosshairXLowBoundary?
 	lda duck1X+1
 	cmp crosshairXLowBoundary+1
-	bcc !end+
-	lda duck1X
-	cmp crosshairXLowBoundary
-	bcc !end+
+	bne !+
+	    lda duck1X
+		cmp crosshairXLowBoundary
+	!:
+    bcc !nohit+ //lower
 
 	//duck1X >= crosshairXHighBoundary?
 	lda duck1X+1
 	cmp crosshairXHighBoundary+1
-	bne !end+
-	lda duck1X
-	cmp crosshairXHighBoundary
-	bcs !end+
+	bne !+
+	    lda duck1X
+		cmp crosshairXHighBoundary
+	!:
+	bcc !lower+
+	bne !nohit+ //higher
+	!lower:
 
+	// We have a hit!
 	lda #4
 	sta duck1Sprite
-	lda #4+6
+	lda #4+overlay_distance
 	sta duck1SpriteOverlay
+	lda #0
+    sta duck1AnimSpeed
+	lda #1
+	sta duck1IsShot
+	jsr addScore
+	jsr printScore
 	rts
 
-	!end:
-	lda #1
-	sta duck1Sprite
-	lda #1+6
-	sta duck1SpriteOverlay
+	!nohit:
+	lda crosshairX
+	sta showCrosshairX
+	lda crosshairX+1
+	sta showCrosshairX+1
+	lda crosshairY
+	sta showCrosshairY
+	jsr showCrosshair
 
 	rts
 }
@@ -158,26 +252,42 @@ isHit:
 // A*256 + X = FAC1 * FAC2
 multiply:
 {
-		lda #$00
-		ldx #$08
-		clc
+	lda #0
+	ldx #8
+	clc
 
 	m0:
-		bcc m1
-		clc
-		adc FAC2
+	bcc m1
+	clc
+	adc fac2
+
 	m1:    
-		ror
-		ror FAC1
-		dex
-		bpl m0
-		ldx FAC1
-		rts
+	ror
+	ror fac1
+	dex
+	bpl m0
+	ldx fac1
+	rts
 }
 
-#import "sprites/Sprites_common_code.asm"
 #import "sprites/Crosshair_code.asm"
 #import "sprites/Duck_code.asm"
+#import "Score_code.asm"
+
+*=$4c00 "[DATA] ScreenRam"
+screenRam:
+	.var charmap = LoadBinary("Pictures/background - Map (40x25).bin")
+ 	.fill charmap.getSize(), charmap.get(i)
+
+*=$4000 "[DATA] CharRam"
+charRam:
+	.var charset = LoadBinary("Pictures/background - Chars.bin")
+    .fill charset.getSize(), charset.get(i)
+
+.pc = $5000 "[DATA] Sprite memory"
+spriteMemory:
+	.var sprites = LoadBinary("Sprites/DuckHunt - Sprites.bin")
+	.fill sprites.getSize(), sprites.get(i)
 
 *=music.location "[MUSIC] Hiraeth by Jack-Paw-Judi"
 .fill music.size, music.getData(i)

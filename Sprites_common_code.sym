@@ -1,6 +1,0 @@
-.label spriteMemory=$2c80
-.label spriteXPositions=$201f
-.label init_sprites=$2000
-.label hide_sprites=$2013
-.label show_sprites=$2019
-.label spriteYPositions=$202f

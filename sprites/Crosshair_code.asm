@@ -1,5 +1,7 @@
 #import "Sprites_common_code.asm"
 
+*=* "[CODE] Crosshair code"
+
 initCrosshair:
 {
     //Set sprite pointer
@@ -12,33 +14,43 @@ initCrosshair:
     lda #CYAN
     sta $d027
 
+    lda #%11111110  
+	sta $d015    
+
     rts
 }
 
 crosshairX: .word $0080
 crosshairY: .byte 100
 crosshairTrigger: .byte 0
+showCrosshairX: .word $0080
+showCrosshairY: .byte 100
+isShotFired: .byte 0
 showCrosshair:
-{
-    lda crosshairX
+{    
+    lda showCrosshairX
     sta spriteXPositions.lo+0
 
-    lda crosshairX+1
+    lda showCrosshairX+1
     sta spriteXPositions.hi+0
 
-    lda crosshairY
+    lda showCrosshairY
     sta spriteYPositions+0
 
     :sprite_set_xy_positions(0)
 
-    lda crosshairTrigger
-    bne !+
-        lda #WHITE
-        sta $d027
-        rts
-    !:
+    // lda crosshairTrigger
+    // bne !+
+    //     lda #WHITE
+    //     sta $d027
+    //     rts
+    // !:
 
-    lda #CYAN
+    lda #WHITE
     sta $d027
+
+    lda #%11111111  
+	sta $d015 
+
     rts
 }

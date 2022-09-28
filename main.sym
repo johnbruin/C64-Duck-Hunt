@@ -1,40 +1,62 @@
-.label crosshairXLowBoundary=$6067
-.label spriteMemory=$3000
-.label initDuck1=$3519 {
+.label spriteMemory=$5000
+.label duck1Y=$af0
+.label duck1X=$aee
+.label score2=$e24
+.label score3=$e25
+.label rndYPositions=$c50
+.label isHitDuck1=$98e {
 }
-.label duck1Y=$3532
-.label duck1X=$3530
-.label spriteXPositions=$6119
-.label init_sprites=$60fa
-.label showDuck1=$3535 {
+.label showDuck1=$af3 {
 }
-.label crosshairXHighBoundary=$6069
-.label duck1AnimSpeed=$35ab
-.label crosshairYHighBoundary=$606c
-.label multiply=$60e7 {
-  .label m0=$60ec
-  .label m1=$60f1
+.label crosshairXHighBoundary=$98a
+.label crosshairYHighBoundary=$98d
+.label initScore=$d4f {
 }
-.label crosshairYLowBoundary=$606b
-.label initCrosshair=$34c0 {
+.label crosshairYLowBoundary=$98c
+.label initCrosshair=$a6f {
 }
-.label crosshairY=$34d0
-.label crosshairX=$34ce
-.label duck1IsShot=$3534
-.label crosshairTrigger=$34d1
+.label crosshairTrigger=$a85
+.label border_color=$d020
+.label score1=$e23
+.label showCrosshair=$a8a {
+}
+.label crosshairXLowBoundary=$988
+.label initDuck1=$acb {
+}
+.label showCrosshairY=$a88
+.label showCrosshairX=$a86
+.label spriteXPositions=$a57
+.label init_sprites=$a38
+.label isShotFired=$a89
+.label duck1AnimSpeed=$b69
+.label addScore=$e26 {
+}
+.label multiply=$a25 {
+  .label m0=$a2a
+  .label m1=$a2f
+}
+.label crosshairY=$a84
+.label charRam=$4000
+.label crosshairX=$a82
+.label duck1IsShot=$af2
+.label screenRam=$4c00
 .label start=$810 {
 }
-.label hide_sprites=$610d
-.label spriteYPositions=$6129
-.label duck1Sprite=$352e
-.label duck1SpriteOverlay=$352f
-.label isHit=$606d {
+.label hide_sprites=$a4b
+.label spriteYPositions=$a67
+.label duck1Sprite=$aec
+.label duck1SpriteOverlay=$aed
+.label printScore=$e41 {
 }
-.label duck1IsDead=$3533
-.label irq1=$6000 {
+.label background_color=$d021
+.label duck1IsDead=$af1
+.label irq1=$8a0 {
 }
-.label show_sprites=$6113
-.label showCrosshair=$34d2 {
+.label irq3=$957 {
 }
-.label animateDuck1=$35ac {
+.label rndYPositionPointer=$c4f
+.label irq2=$92b {
+}
+.label show_sprites=$a51
+.label animateDuck1=$b6a {
 }

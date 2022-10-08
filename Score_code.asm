@@ -1,3 +1,5 @@
+#import "globals.asm"
+
 initScore:
 {
     .for(var x=0;x<6;x++)

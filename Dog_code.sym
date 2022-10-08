@@ -1,0 +1,39 @@
+.label spriteMemory=$5000
+.label dog2Sprite4X=$29ee
+.label spriteXPositions=$284b
+.label init_sprites=$282c {
+}
+.label dog3AnimSpeed=$2bec
+.label showDog3=$2bed {
+}
+.label dog1Sprite1X=$2863
+.label showDog1=$2869 {
+}
+.label dog1Sprite3Y=$2868
+.label showDog2=$29f0 {
+}
+.label dog1Sprite1Y=$2864
+.label moveDog3=$2d1b {
+}
+.label dog2Sprite1X=$29e8
+.label dog2Sprite1Y=$29e9
+.label dog2Sprite3X=$29ec
+.label dog3Sprite1Y=$2be8
+.label dog2Sprite3Y=$29ed
+.label dog3Sprite1X=$2be7
+.label charRam=$4000
+.label screenRam=$4c00
+.label hide_sprites=$283f {
+}
+.label dog1Sprite3X=$2867
+.label spriteYPositions=$285b
+.label dog1Sprite2Y=$2866
+.label dog1Sprite2X=$2865
+.label dog2Sprite2Y=$29eb
+.label dog2Sprite4Y=$29ef
+.label dog3Animation=$2beb
+.label dog2Sprite2X=$29ea
+.label show_sprites=$2845 {
+}
+.label dog3Sprite2X=$2be9
+.label dog3Sprite2Y=$2bea

@@ -1,6 +1,7 @@
 #import "Sprites_common_code.asm"
 
 *=* "[CODE] Duck code"
+
 initDuck1:
 {
     // set sprites multicolor1
@@ -28,13 +29,17 @@ initDuck1:
 }
 
 duck1Sprite: .byte 1
-duck1SpriteOverlay: .byte 7
+duck1SpriteOverlay: .byte 1+overlay_distance
 duck1X: .word $0000
 duck1Y: .byte 100
 duck1IsDead: .byte 0
 duck1IsShot: .byte 0
 showDuck1:
 {
+    //multicolor
+    lda #%00000100
+    sta $d01c 
+
     lda duck1SpriteOverlay    
     clc
     adc #(>spriteMemory<<2)	

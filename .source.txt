@@ -1,101 +1,274 @@
-initScore:
+//#define DEBUG
+
+#import "Macros/irq_macros.asm"
+#import "globals.asm"
+
+//Labels
+.label border_color         = $d020
+.label background_color     = $d021
+
+//multiplies fac1 and fac2 and put results in x (low-byte) and a (hi-byte)  
+.var fac1 = $58
+.var fac2 = $59
+
+.pc = $0801 "Basic Program Start"
+:BasicUpstart(start)			
+
+.pc = $6000 "[CODE] Main Program"
+start:		
 {
-    .for(var x=0;x<6;x++)
-    {
-        lda #WHITE+8
-        sta $d800+(22*40)+29+x
-        sta $d800+(23*40)+29+x
-    }
+	jsr $e544		// Clear screen	
+	
+	lda #BLACK     
+	sta border_color
+	lda #LIGHT_BLUE     
+	sta background_color   
 
-    .for(var x=0;x<10;x++)
-    {
-        lda #WHITE+8
-        sta $d800+(22*40)+16+x   
-        lda #PURPLE+8
-        sta $d800+(23*40)+16+x   
-    }
+	lda $DD00
+	and #%11111100 
+	ora #%00000010 //Change VIC bank to bank1: $4000-$7fff
+	sta $DD00
 
-    .for(var x=0;x<4;x++)
-    {
-        lda #WHITE+8
-        sta $d800+(22*40)+6+x        
-    }
+	ldx #0
+	!:
+		.for (var i=0; i<4; i++) {
+			lda #13 	//GREEN
+			sta $d800 + i*250,x
+		}
+		inx
+	bne !-
 
-    .for(var x=0;x<4;x++)
-    {
-        lda #CYAN+8
-        sta $d800+(22*40)+6+x
-        lda #PURPLE+8
-        sta $d800+(23*40)+6+x
-    }
+    lda #%00110000
+    sta $d018
 
-    jsr printScore
+    lda $d016
+	ora #%00010000
+    sta $d016
 
-    rts
+	lda #BLUE
+	sta $D022           // Char multi color 1
+
+	lda #BLACK
+	sta $D023           // Char multi color 2
+
+    lda #music.startSong - 0
+    ldx #music.startSong - 0
+	jsr music.init
+
+	jsr initScore
+	jsr init_sprites
+	jsr initCrosshair
+	jsr initDuck1
+	jsr show_sprites
+
+	sei
+	:irq_init()	
+    :irq_setup(irq1, 0)
+	cli
+	
+	jmp *    
 }
 
-score1: .byte 0
-score2: .byte 0
-score3: .byte 0
-addScore:
+.pc =* "[CODE] Irq1"
+irq1:   		
 {
-    sed
-    lda #0    //50 points scored
-    adc score1	//ones and tens
-    sta score1
-    lda score2	//hundreds and thousands
-    adc #05
-    sta score2
-    lda score3	//ten-thousands and hundred-thousands
-    adc #0
-    sta score3
-    cld
-    rts
+	:irq_enter()
+	#if DEBUG
+        dec border_color
+    #endif
+
+	lda #LIGHT_BLUE     
+	sta background_color 
+
+	lda #BLUE
+	sta $D022           // Char multi color 1
+
+	lda #BLACK
+	sta $D023           // Char multi color 2
+
+	lda $d41a
+	sta crosshairTrigger
+
+	lda $d013		//LPX
+	sta fac1		//multiply LPX by 2
+	lda #2
+	sta fac2
+	jsr multiply
+	stx crosshairX	
+	sta crosshairX+1
+
+	sec				//substract 30+12 (half a sprite width)
+	lda crosshairX
+	sbc #30+12
+	sta crosshairX
+	lda crosshairX+1
+	sbc #0
+	sta crosshairX+1
+	
+	lda $d014		//LPY
+	sta crosshairY
+
+	//jsr showCrosshair
+
+	lda isShotFired
+	bne !+++
+		lda crosshairTrigger
+		bne !++
+			lda #10
+			sta isShotFired
+			lda duck1IsShot
+			bne !+
+				jsr isHitDuck1
+			!:
+		!:
+		jmp !skip+
+	!:
+	dec isShotFired
+	!skip:
+	
+	//jsr showDuck1
+	//jsr animateDuck1
+	jsr moveDog3
+	jsr showDog3	
+	
+	jsr music.play
+
+    #if DEBUG
+        inc border_color
+    #endif
+	:irq_next(irq2,50+16*8)
 }
 
-printScore:
+irq2:
 {
-    lda score3
-    and #$f0	                //hundred-thousands
-    lsr
-    lsr
-    lsr
-    lsr
-    ora #$30		            // -->ascii
-    sta screenRam+(22*40)+29+0	//print on screen
-    
-    lda score3
-    and #$0f		            //ten-thousands
-    ora #$30		            // -->ascii
-    sta screenRam+(22*40)+29+1	//print on next screen position
-
-    lda score2
-    and #$f0	                //thousands
-    lsr
-    lsr
-    lsr
-    lsr
-    ora #$30		            // -->ascii
-    sta screenRam+(22*40)+29+2	//print on screen
-    
-    lda score2
-    and #$0f		            //hundreds
-    ora #$30		            // -->ascii
-    sta screenRam+(22*40)+29+3	//print on next screen position
-
-    lda score1
-    and #$f0	                //tens
-    lsr
-    lsr
-    lsr
-    lsr
-    ora #$30		            // -->ascii
-    sta screenRam+(22*40)+29+4	//print on screen
-
-    lda score1
-    and #$0f		            //ones
-    ora #$30		            // -->ascii
-    sta screenRam+(22*40)+29+5	//print on next screen position
-
-    rts
+	irq_enter()
+	lda #LIGHT_GREEN
+	sta $D022           // Char multi color 1
+	irq_next(irq3,50+20*8)	
 }
+
+irq3:
+{
+	irq_enter()
+	lda #BROWN
+	sta $D022           // Char multi color 1
+
+	lda #BLACK
+	sta background_color
+
+	irq_next(irq1,0)	
+}
+
+crosshairXLowBoundary: .word 0
+crosshairXHighBoundary: .word 0
+crosshairYLowBoundary: .byte 0
+crosshairYHighBoundary: .byte 0
+isHitDuck1:
+{
+	sec
+	lda crosshairY
+	sbc #11*2
+	sta crosshairYLowBoundary
+
+	clc
+	lda crosshairY
+	adc #11
+	sta crosshairYHighBoundary
+	
+	sec
+	lda crosshairX
+	sbc #12*2
+	sta crosshairXLowBoundary
+	lda crosshairX+1
+	sbc #0
+	sta crosshairXLowBoundary+1
+
+	clc
+	lda crosshairX
+	adc #12*2
+	sta crosshairXHighBoundary
+	lda crosshairX+1
+	adc #0
+	sta crosshairXHighBoundary+1
+
+	//duck1Y < crosshairYLowBoundary?
+	lda duck1Y
+	cmp crosshairYLowBoundary
+	bcc !nohit+
+
+	//duck1Y >= crosshairYHighBoundary?
+	lda duck1Y
+	cmp crosshairYHighBoundary
+	bcs !nohit+
+	
+	//duck1X < crosshairXLowBoundary?
+	lda duck1X+1
+	cmp crosshairXLowBoundary+1
+	bne !+
+	    lda duck1X
+		cmp crosshairXLowBoundary
+	!:
+    bcc !nohit+ //lower
+
+	//duck1X >= crosshairXHighBoundary?
+	lda duck1X+1
+	cmp crosshairXHighBoundary+1
+	bne !+
+	    lda duck1X
+		cmp crosshairXHighBoundary
+	!:
+	bcc !lower+
+	bne !nohit+ //higher
+	!lower:
+
+	// We have a hit!
+	lda #4
+	sta duck1Sprite
+	lda #4+overlay_distance
+	sta duck1SpriteOverlay
+	lda #0
+    sta duck1AnimSpeed
+	lda #1
+	sta duck1IsShot
+	jsr addScore
+	jsr printScore
+	rts
+
+	!nohit:
+	lda crosshairX
+	sta showCrosshairX
+	lda crosshairX+1
+	sta showCrosshairX+1
+	lda crosshairY
+	sta showCrosshairY
+	jsr showCrosshair
+
+	rts
+}
+
+//multiplies FAC1 and FAC2 and put results in x (low-byte) and a (hi-byte)  
+// A*256 + X = FAC1 * FAC2
+multiply:
+{
+	lda #0
+	ldx #8
+	clc
+
+	m0:
+	bcc m1
+	clc
+	adc fac2
+
+	m1:    
+	ror
+	ror fac1
+	dex
+	bpl m0
+	ldx fac1
+	rts
+}
+
+#import "sprites/Crosshair_code.asm"
+#import "sprites/Duck_code.asm"
+#import "sprites/Dog_code.asm"
+#import "Score_code.asm"

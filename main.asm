@@ -1,9 +1,7 @@
 //#define DEBUG
 
-//.var background = LoadBinary("Pictures/background.kla", BF_KOALA)
-.var music = LoadSid("music/Hiraeth_part_1_mockup.sid")
-
 #import "Macros/irq_macros.asm"
+#import "globals.asm"
 
 //Labels
 .label border_color         = $d020
@@ -13,12 +11,10 @@
 .var fac1 = $58
 .var fac2 = $59
 
-.var overlay_distance = 6
-
 .pc = $0801 "Basic Program Start"
 :BasicUpstart(start)			
 
-.pc = $0810 "[CODE] Main Program"
+.pc = $6000 "[CODE] Main Program"
 start:		
 {
 	jsr $e544		// Clear screen	
@@ -130,8 +126,10 @@ irq1:
 	dec isShotFired
 	!skip:
 	
-	jsr showDuck1
-	jsr animateDuck1
+	//jsr showDuck1
+	//jsr animateDuck1
+	jsr moveDog3
+	jsr showDog3	
 	
 	jsr music.play
 
@@ -272,22 +270,5 @@ multiply:
 
 #import "sprites/Crosshair_code.asm"
 #import "sprites/Duck_code.asm"
+#import "sprites/Dog_code.asm"
 #import "Score_code.asm"
-
-*=$4c00 "[DATA] ScreenRam"
-screenRam:
-	.var charmap = LoadBinary("Pictures/background - Map (40x25).bin")
- 	.fill charmap.getSize(), charmap.get(i)
-
-*=$4000 "[DATA] CharRam"
-charRam:
-	.var charset = LoadBinary("Pictures/background - Chars.bin")
-    .fill charset.getSize(), charset.get(i)
-
-.pc = $5000 "[DATA] Sprite memory"
-spriteMemory:
-	.var sprites = LoadBinary("Sprites/DuckHunt - Sprites.bin")
-	.fill sprites.getSize(), sprites.get(i)
-
-*=music.location "[MUSIC] Hiraeth by Jack-Paw-Judi"
-.fill music.size, music.getData(i)

@@ -4,6 +4,26 @@
 
 initDuck1:
 {
+    ldx rndYPositionPointer            
+    lda rndYPositions,x
+    sta duck1Y
+    inc rndYPositionPointer
+
+    lda #0
+    sta duck1X
+    sta duck1X+1
+
+    rts
+}
+
+duck1Sprite: .byte 1
+duck1SpriteOverlay: .byte 1+overlay_distance
+duck1X: .word $0000
+duck1Y: .byte 100
+duck1IsDead: .byte 0
+duck1IsShot: .byte 0
+showDuck1:
+{
     // set sprites multicolor1
     lda #WHITE
     sta $d025
@@ -20,22 +40,10 @@ initDuck1:
     lda #BLACK
     sta $d027+1
 
-    ldx rndYPositionPointer            
-    lda rndYPositions,x
-    sta duck1Y
-    inc rndYPositionPointer
+    // show sprites
+    :sprite_enable(1)
+	:sprite_enable(2)
 
-    rts
-}
-
-duck1Sprite: .byte 1
-duck1SpriteOverlay: .byte 1+overlay_distance
-duck1X: .word $0000
-duck1Y: .byte 100
-duck1IsDead: .byte 0
-duck1IsShot: .byte 0
-showDuck1:
-{
     //multicolor
     lda #%00000100
     sta $d01c 
@@ -78,14 +86,10 @@ animateDuck1:
         lda duck1Y
         cmp #170
         bcc !+
-            ldx rndYPositionPointer            
-            lda rndYPositions,x
-            sta duck1Y
-            inc rndYPositionPointer
-    
-            lda #0
-            sta duck1X
-            sta duck1X+1
+            jsr initDuck1
+            
+            lda #roundClearWith1Duck
+            sta gameState
 
             lda #0
             sta duck1IsDead
@@ -118,9 +122,10 @@ animateDuck1:
     bne !higher+    
 
     !higher:
-    lda #0
-    sta duck1X
-    sta duck1X+1
+    lda #roundLost
+    sta gameState 
+    jsr initDuck1
+    rts   
     
     !lower:
 
@@ -129,8 +134,7 @@ animateDuck1:
     cmp #8
     bne !skipAnimation+
         
-        lda #%11111110  
-	    sta $d015 
+        :sprite_disable(0)
 
         lda duck1IsShot
         beq !+

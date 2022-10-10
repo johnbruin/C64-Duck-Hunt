@@ -126,10 +126,17 @@ irq1:
 	dec isShotFired
 	!skip:
 	
-	//jsr showDuck1
-	//jsr animateDuck1
-	jsr moveDog3
-	jsr showDog3	
+	lda gameState
+	cmp #roundLost
+	bne !+
+		jsr moveDog3
+		jsr showDog3	
+		jmp !skip+	
+	!:
+	jsr showDuck1
+	jsr animateDuck1
+	
+	!skip:
 	
 	jsr music.play
 

@@ -14,9 +14,6 @@ initCrosshair:
     lda #CYAN
     sta $d027
 
-    lda #%11111110  
-	sta $d015    
-
     rts
 }
 
@@ -27,7 +24,10 @@ showCrosshairX: .word $0080
 showCrosshairY: .byte 100
 isShotFired: .byte 0
 showCrosshair:
-{    
+{  
+    jsr initCrosshair 
+    :sprite_enable(0)
+
     lda showCrosshairX
     sta spriteXPositions.lo+0
 
@@ -48,9 +48,6 @@ showCrosshair:
 
     lda #WHITE
     sta $d027
-
-    lda #%11111111  
-	sta $d015 
 
     rts
 }

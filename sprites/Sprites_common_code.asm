@@ -7,9 +7,10 @@
 *=* "[CODE] Sprite common code"
 init_sprites:
 {
+    jsr hide_sprites
+    
     // Make sure no sprites are x- or y-expanded.
     lda #%11111110 
-    //lda #%00000000
     sta $d017
     sta $d01d
 

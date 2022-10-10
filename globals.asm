@@ -1,6 +1,14 @@
 #importonce 
 
 .var overlay_distance = 19
+.var gameState = $f0
+.enum {
+	 roundPlaying
+	,roundClearWith1Duck
+	,roundClearWith2Ducks
+	,roundLost
+}
+
 
 *=$4c00 "[DATA] ScreenRam"
 screenRam:

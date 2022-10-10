@@ -126,10 +126,7 @@ irq1:
 	dec isShotFired
 	!skip:
 	
-	//jsr showDuck1
-	//jsr animateDuck1
-	jsr moveDog3
-	jsr showDog3	
+	jsr playGame
 	
 	jsr music.play
 
@@ -157,6 +154,30 @@ irq3:
 	sta background_color
 
 	irq_next(irq1,0)	
+}
+
+playGame:
+{
+	lda gameState
+	
+	cmp #roundClearWith1Duck
+	bne !+
+		jsr showDog1	
+		jsr moveDog1		
+		rts
+	!:
+
+	cmp #roundLost
+	bne !+
+		jsr showDog3	
+		jsr moveDog3		
+		rts
+	!:
+	
+	jsr showDuck1
+	jsr animateDuck1	
+	
+	rts
 }
 
 crosshairXLowBoundary: .word 0

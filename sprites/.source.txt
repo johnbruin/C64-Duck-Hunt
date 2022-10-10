@@ -1,411 +1,197 @@
 #import "Sprites_common_code.asm"
 
-*=* "[CODE] Dog code"
+*=* "[CODE] Duck code"
 
-dog1Sprite1X: .byte 160
-dog1Sprite1Y: .byte 110-21*2+21*2+10
-dog1Sprite2X: .byte 160+24*2
-dog1Sprite2Y: .byte 110-21*2+21*2+10
-dog1Sprite3X: .byte 160
-dog1Sprite3Y: .byte 110-21*2+21*2+21*2+10
-showDog1:
+initDuck1:
 {
-    // show sprites
-    lda #%01111110  
-	sta $d015 
+    // set sprites multicolor1
+    lda #WHITE
+    sta $d025
 
-    // x- and y-expanded.
-    sta $d017
-    sta $d01d
+    // set sprites multicolor2
+    lda #ORANGE
+    sta $d026
 
+    // set sprite color sprite1
+    lda #GREEN
+    sta $d027+2
+
+    // set sprite color sprite2
     lda #BLACK
     sta $d027+1
-    sta $d027+2
-    sta $d027+3
 
-    lda #GREEN
-    sta $d027+5
+    ldx rndYPositionPointer            
+    lda rndYPositions,x
+    sta duck1Y
+    inc rndYPositionPointer
 
-    lda #RED
-    sta $d027+4
-    sta $d027+6
+    rts
+}
 
+duck1Sprite: .byte 1
+duck1SpriteOverlay: .byte 1+overlay_distance
+duck1X: .word $0000
+duck1Y: .byte 100
+duck1IsDead: .byte 0
+duck1IsShot: .byte 0
+showDuck1:
+{
     //multicolor
-    lda #%01110000
+    lda #%00000100
     sta $d01c 
 
-    lda #7    
-    clc
-    adc #(>spriteMemory<<2)	
-    sta SPRITEPOINTER+4
-
-    lda #8
-    clc
-    adc #(>spriteMemory<<2)	
-    sta SPRITEPOINTER+5
-
-    lda #14
-    clc
-    adc #(>spriteMemory<<2)	
-    sta SPRITEPOINTER+6
-
-    lda #7+overlay_distance
+    lda duck1SpriteOverlay    
     clc
     adc #(>spriteMemory<<2)	
     sta SPRITEPOINTER+1
 
-    lda #8+overlay_distance
+    lda duck1Sprite
     clc
     adc #(>spriteMemory<<2)	
     sta SPRITEPOINTER+2
 
-    lda #14+overlay_distance
-    clc
-    adc #(>spriteMemory<<2)	
-    sta SPRITEPOINTER+3
-
-    lda dog1Sprite1X
+    lda duck1X
     sta spriteXPositions.lo+1
-    sta spriteXPositions.lo+4
-
-    lda #0
-    sta spriteXPositions.hi+1
-    sta spriteXPositions.hi+4
-
-    lda dog1Sprite1Y
-    sta spriteYPositions+1
-    sta spriteYPositions+4
-
-    lda dog1Sprite2X
     sta spriteXPositions.lo+2
-    sta spriteXPositions.lo+5
 
-    lda #0
+    lda duck1X+1
+    sta spriteXPositions.hi+1
     sta spriteXPositions.hi+2
-    sta spriteXPositions.hi+5
 
-    lda dog1Sprite2Y
+    lda duck1Y
+    sta spriteYPositions+1
     sta spriteYPositions+2
-    sta spriteYPositions+5
-
-    lda dog1Sprite3X
-    sta spriteXPositions.lo+3
-    sta spriteXPositions.lo+6
-
-    lda #0
-    sta spriteXPositions.hi+3
-    sta spriteXPositions.hi+6
-
-    lda dog1Sprite3Y
-    sta spriteYPositions+3
-    sta spriteYPositions+6
 
     :sprite_set_xy_positions(1)
     :sprite_set_xy_positions(2)
-    :sprite_set_xy_positions(3)
-    :sprite_set_xy_positions(4)
-    :sprite_set_xy_positions(5)
-    :sprite_set_xy_positions(6)
 
     rts
 }
 
-dog2Sprite1X: .byte 160-24*2
-dog2Sprite1Y: .byte 110-21*2+21*2+10
-dog2Sprite2X: .byte 160-24*2+24*2
-dog2Sprite2Y: .byte 110-21*2+21*2+10
-dog2Sprite3X: .byte 160-24*2+24*2*2
-dog2Sprite3Y: .byte 110-21*2+21*2+10
-dog2Sprite4X: .byte 160-24*2+24*2
-dog2Sprite4Y: .byte 110-21*2+21*2+21*2+10
-showDog2:
+duck1AnimSpeed: .byte 0
+animateDuck1:
 {
-    // show sprites
-    lda #%11111111  
-	sta $d015 
-
-    // x- and y-expanded.
-    sta $d017
-    sta $d01d
-
-    lda #BLACK
-    sta $d027+0
-    sta $d027+1
-    sta $d027+2
-    sta $d027+3
-
-    lda #GREEN
-    sta $d027+4
-    sta $d027+6
-
-    lda #RED    
-    sta $d027+5
-    sta $d027+7
-
-    //multicolor
-    lda #%11110000
-    sta $d01c 
-
-    lda #9    
-    clc
-    adc #(>spriteMemory<<2)	
-    sta SPRITEPOINTER+4
-
-    lda #10
-    clc
-    adc #(>spriteMemory<<2)	
-    sta SPRITEPOINTER+5
-
-    lda #11
-    clc
-    adc #(>spriteMemory<<2)	
-    sta SPRITEPOINTER+6
-
-    lda #17
-    clc
-    adc #(>spriteMemory<<2)	
-    sta SPRITEPOINTER+7
-
-    lda #9+overlay_distance
-    clc
-    adc #(>spriteMemory<<2)	
-    sta SPRITEPOINTER+0
-
-    lda #10+overlay_distance
-    clc
-    adc #(>spriteMemory<<2)	
-    sta SPRITEPOINTER+1
-
-    lda #11+overlay_distance
-    clc
-    adc #(>spriteMemory<<2)	
-    sta SPRITEPOINTER+2
-
-    lda #17+overlay_distance
-    clc
-    adc #(>spriteMemory<<2)	
-    sta SPRITEPOINTER+3
-
-    // sprite 1
-    lda dog2Sprite1X
-    sta spriteXPositions.lo+0
-    sta spriteXPositions.lo+4
-
-    lda #0
-    sta spriteXPositions.hi+0
-    sta spriteXPositions.hi+4
-
-    lda dog2Sprite1Y
-    sta spriteYPositions+0
-    sta spriteYPositions+4
-
-    // sprite 2
-    lda dog2Sprite2X
-    sta spriteXPositions.lo+1
-    sta spriteXPositions.lo+5
-
-    lda #0
-    sta spriteXPositions.hi+1
-    sta spriteXPositions.hi+5
-
-    lda dog2Sprite2Y
-    sta spriteYPositions+1
-    sta spriteYPositions+5
-
-    // sprite 3
-    lda dog2Sprite3X
-    sta spriteXPositions.lo+2
-    sta spriteXPositions.lo+6
-
-    lda #0
-    sta spriteXPositions.hi+2
-    sta spriteXPositions.hi+6
-    
-    lda dog2Sprite3Y
-    sta spriteYPositions+2
-    sta spriteYPositions+6
-
-    //sprite 4
-    lda dog2Sprite4X
-    sta spriteXPositions.lo+3
-    sta spriteXPositions.lo+7
-
-    lda #0
-    sta spriteXPositions.hi+3
-    sta spriteXPositions.hi+7
-
-    lda dog2Sprite4Y
-    sta spriteYPositions+3
-    sta spriteYPositions+7
-
-    :sprite_set_xy_positions(0)
-    :sprite_set_xy_positions(1)
-    :sprite_set_xy_positions(2)
-    :sprite_set_xy_positions(3)
-    :sprite_set_xy_positions(4)
-    :sprite_set_xy_positions(5)
-    :sprite_set_xy_positions(6)
-    :sprite_set_xy_positions(7)
-
-    rts
-}
-
-dog3Sprite1X: .byte 160
-dog3Sprite1Y: .byte 120+50
-dog3Sprite2X: .byte 160
-dog3Sprite2Y: .byte 120+50+21*2
-dog3Animation: .byte 0
-dog3AnimSpeed: .byte 4
-dog3MoveDown: .byte 0
-showDog3:
-{
-    // show sprites
-    lda #%00001111  
-	//sta $d015 
-
-    // sprite priority to front    
-    sta $d01b
-
-    // x- and y-expanded.
-    sta $d017
-    sta $d01d
-
-    lda #BLACK
-    sta $d027+0
-    sta $d027+1
-
-    //multicolor
-    lda #%00001100
-    sta $d01c 
-
-    lda dog3AnimSpeed
-    cmp #4
-    bne !skipAnimation+
-        lda #0
-        sta dog3AnimSpeed
-
-        lda dog3Animation
-        bne !+
-            lda #12    
-            clc
-            adc #(>spriteMemory<<2)	
-            sta SPRITEPOINTER+2
-            
-            lda #12+overlay_distance
-            clc
-            adc #(>spriteMemory<<2)	
-            sta SPRITEPOINTER+0
-
-            lda #1
-            sta dog3Animation
-
-            jmp !skipAnimation+
-        !:
-    
-        lda #13    
-        clc
-        adc #(>spriteMemory<<2)	
-        sta SPRITEPOINTER+2
-        
-        lda #13+overlay_distance
-        clc
-        adc #(>spriteMemory<<2)	
-        sta SPRITEPOINTER+0    
-
-        lda #0
-        sta dog3Animation
-        
-    !skipAnimation:
-    inc dog3AnimSpeed
-
-    lda #19
-    clc
-    adc #(>spriteMemory<<2)	
-    sta SPRITEPOINTER+3
-
-    lda #19+overlay_distance
-    clc
-    adc #(>spriteMemory<<2)	
-    sta SPRITEPOINTER+1
-
-    // sprite 1
-    lda dog3Sprite1X
-    sta spriteXPositions.lo+0
-    sta spriteXPositions.lo+2
-
-    lda #0
-    sta spriteXPositions.hi+0
-    sta spriteXPositions.hi+2
-
-    lda dog3Sprite1Y
-    sta spriteYPositions+0
-    sta spriteYPositions+2
-
-    // sprite 2
-    lda dog3Sprite2X
-    sta spriteXPositions.lo+1
-    sta spriteXPositions.lo+3
-
-    lda #0
-    sta spriteXPositions.hi+1
-    sta spriteXPositions.hi+3
-
-    lda dog3Sprite2Y
-    sta spriteYPositions+1
-    sta spriteYPositions+3
-
-    :sprite_set_xy_positions(0)
-    :sprite_set_xy_positions(1)
-    :sprite_set_xy_positions(2)
-    :sprite_set_xy_positions(3)
-
-    lda dog3Sprite1Y
-    cmp #120+48
-    bcc !+
-        :sprite_disable(0)
-        :sprite_disable(2)
-        jmp !skip+
-    !:  
-    :sprite_enable(0)
-    :sprite_enable(2)
-    !skip:
-
-    lda dog3Sprite2Y
-    cmp #120+48+18
-    bcc !+
-        :sprite_disable(1)
-        :sprite_disable(3)
-        jmp !skip+
-    !:  
-    :sprite_enable(1)
-    :sprite_enable(3)
-    !skip:
-
-    rts
-}
-
-moveDog3:
-{
-    lda dog3MoveDown
-    bne !moveDown+
-        lda dog3Sprite1Y
-        cmp #120
+    lda duck1IsDead
+    beq !++
+        inc duck1Y   
+        inc duck1Y     
+        lda duck1Y
+        cmp #170
         bcc !+
-            dec dog3Sprite1Y
-            dec dog3Sprite2Y
-            rts
+            ldx rndYPositionPointer            
+            lda rndYPositions,x
+            sta duck1Y
+            inc rndYPositionPointer
+    
+            lda #0
+            sta duck1X
+            sta duck1X+1
+
+            lda #0
+            sta duck1IsDead
+            lda #1
+            sta duck1Sprite
+            lda #1+overlay_distance
+            sta duck1SpriteOverlay            
         !:
-        lda #1
-        sta dog3MoveDown    
-    !moveDown:
-        lda dog3Sprite1Y
-        cmp #120+50
-        bcs !+
-            inc dog3Sprite1Y
-            inc dog3Sprite2Y
-            rts
+        jmp !isDeadOrIsShot+
+    !:
+
+    lda duck1IsShot
+    bne !isDeadOrIsShot+
+
+    clc
+    lda duck1X
+    adc #1
+    sta duck1X
+    lda duck1X+1
+    adc #0
+    sta duck1X+1
+    
+    lda duck1X+1
+	cmp #$01
+	bne !+
+	    lda duck1X
+	    cmp #$90
+	!:
+    bcc !lower+
+    bne !higher+    
+
+    !higher:
+    lda rou0
+    sta duck1X
+    sta duck1X+1
+    
+    !lower:
+
+    !isDeadOrIsShot:
+    lda duck1AnimSpeed
+    cmp #8
+    bne !skipAnimation+
+        
+        lda #%11111110  
+	    sta $d015 
+
+        lda duck1IsShot
+        beq !+
+            lda #1
+            sta duck1IsDead
+            lda #0
+            sta duck1IsShot
+            jmp !skip+
         !:
-        //lda #0
-        //sta dog3MoveDown
+        inc duck1Sprite
+        inc duck1SpriteOverlay
+        lda duck1IsDead
+        beq !+
+
+            lda duck1Sprite        
+            cmp #4
+            bne !+
+                lda #5
+                sta duck1Sprite
+                lda #5+overlay_distance
+                sta duck1SpriteOverlay
+                jmp !skip+
+            !:  
+            
+            lda duck1Sprite        
+            cmp #5
+            bne !+
+                lda #6
+                sta duck1Sprite
+                lda #6+overlay_distance
+                sta duck1SpriteOverlay
+                jmp !skip+
+            !: 
+            
+            lda duck1Sprite        
+            cmp #7
+            bne !+
+                lda #5
+                sta duck1Sprite
+                lda #5+overlay_distance
+                sta duck1SpriteOverlay
+                jmp !skip+
+            !: 
+        !:
+        lda duck1Sprite        
+        cmp #4
+        bne !+
+            lda #1
+            sta duck1Sprite
+            lda #1+overlay_distance
+            sta duck1SpriteOverlay
+        !:
+
+        !skip:
+        lda #0
+        sta duck1AnimSpeed
+    !skipAnimation:
+    inc duck1AnimSpeed
     rts
 }
+
+rndYPositionPointer: .byte 0
+rndYPositions:
+    .fill $ff, 40+round(random()*110)

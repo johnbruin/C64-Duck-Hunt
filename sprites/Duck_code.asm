@@ -24,6 +24,8 @@ duck1IsDead: .byte 0
 duck1IsShot: .byte 0
 showDuck1:
 {
+    jsr hide_sprites
+    
     // set sprites multicolor1
     lda #WHITE
     sta $d025

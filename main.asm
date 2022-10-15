@@ -14,7 +14,7 @@
 .pc = $0801 "Basic Program Start"
 :BasicUpstart(start)			
 
-.pc = $6000 "[CODE] Main Program"
+.pc = $8000 "[CODE] Main Program"
 start:		
 {
 	jsr $e544		// Clear screen	
@@ -61,6 +61,9 @@ start:
 	jsr initDuck1
 	jsr show_sprites
 
+	lda #intro
+	sta gameState
+
 	sei
 	:irq_init()	
     :irq_setup(irq1, 0)
@@ -69,7 +72,7 @@ start:
 	jmp *    
 }
 
-.pc =* "[CODE] Irq1"
+.pc =* "[CODE] Irq1 Main loop"
 irq1:   		
 {
 	:irq_enter()
@@ -136,6 +139,7 @@ irq1:
 	:irq_next(irq2,50+16*8)
 }
 
+.pc =* "[CODE] Irq2 Screen split"
 irq2:
 {
 	irq_enter()
@@ -144,6 +148,7 @@ irq2:
 	irq_next(irq3,50+20*8)	
 }
 
+.pc =* "[CODE] Irq3 Screen split"
 irq3:
 {
 	irq_enter()
@@ -160,6 +165,13 @@ playGame:
 {
 	lda gameState
 	
+	cmp #intro
+	bne !+
+		jsr moveDog4
+		jsr showDog4	
+		rts
+	!:
+
 	cmp #roundClearWith1Duck
 	bne !+
 		jsr showDog1	

@@ -3,7 +3,8 @@
 .var overlay_distance = 19
 .var gameState = $f0
 .enum {
-	 roundPlaying
+	intro
+	,roundPlaying
 	,roundClearWith1Duck
 	,roundClearWith2Ducks
 	,roundLost

@@ -1,99 +1,122 @@
-.label spriteMemory=$5000
-.label duck1Y=$62f4
-.label duck1X=$62f2
-.label score2=$6c32
-.label dog2Sprite4X=$67a9
-.label score3=$6c33
-.label rndYPositions=$6473
-.label isHitDuck1=$619a {
+.label score2=$8ff4
+.label dog2Sprite4X=$87bb
+.label score3=$8ff5
+.label rndYPositions=$8485
+.label isDogVisible=$8584
+.label dog1Sprite1X=$8586
+.label dog1Sprite1Y=$8587
+.label dog4Sprites=$8bae
+.label dog2Sprite3X=$87b9
+.label dog2Sprite3Y=$87ba
+.label crosshairYLowBoundary=$81a7
+.label initCrosshair=$828d {
 }
-.label showDuck1=$62f7 {
+.label jump=$8ee2 {
 }
-.label isDogVisible=$6572
-.label crosshairXHighBoundary=$6196
-.label crosshairYHighBoundary=$6199
-.label initScore=$6b5d {
-}
-.label dog1Sprite1X=$6574
-.label dog1Sprite1Y=$6575
-.label dog2Sprite3X=$67a7
-.label dog3Sprite1Y=$69a3
-.label dog2Sprite3Y=$67a8
-.label crosshairYLowBoundary=$6198
-.label dog3Sprite1X=$69a2
-.label initCrosshair=$627e {
-}
-.label crosshairTrigger=$628f
+.label dog4Sprite1X=$8b6f
+.label crosshairTrigger=$829e
+.label dog4Sprite1Y=$8b70
 .label border_color=$d020
-.label playGame=$6175 {
+.label dog2Sprite2Y=$87b8
+.label dog3Animation=$89b8
+.label dog2Sprite2X=$87b7
+.label score1=$8ff3
+.label dogMoveDown=$8585
+.label crosshairXLowBoundary=$81a3
+.label initDuck1=$82ea {
 }
-.label dog2Sprite2Y=$67a6
-.label dog3Animation=$69a6
-.label dog2Sprite2X=$67a5
-.label score1=$6c31
-.label showCrosshair=$6294 {
+.label showCrosshairY=$82a1
+.label showCrosshairX=$829f
+.label spriteXPositions=$8275
+.label isShotFired=$82a2
+.label moveDog4=$8e5f {
 }
-.label dogMoveDown=$6573
-.label crosshairXLowBoundary=$6194
-.label initDuck1=$62db {
+.label moveDog3=$8b3c {
 }
-.label showCrosshairY=$6292
-.label showCrosshairX=$6290
-.label spriteXPositions=$6266
-.label init_sprites=$6244 {
+.label moveDog1=$877c {
 }
-.label isShotFired=$6293
-.label duck1AnimSpeed=$6396
-.label dog3AnimSpeed=$69a7
-.label showDog3=$69a8 {
-}
-.label showDog1=$657a {
-}
-.label dog1Sprite3Y=$6579
-.label showDog2=$67ab {
-}
-.label moveDog3=$6b2a {
-}
-.label addScore=$6c34 {
-}
-.label dog2Sprite1X=$67a3
-.label moveDog1=$676a {
-}
-.label dog2Sprite1Y=$67a4
-.label multiply=$6231 {
-  .label m0=$6236
-  .label m1=$623b
-}
-.label charRam=$4000
-.label crosshairY=$628e
-.label crosshairX=$628c
+.label dog4SpritesAnimationPointer=$8b77
+.label crosshairY=$829d
+.label dog4AnimSpeed=$8e5e
+.label crosshairX=$829b
 .label screenRam=$4c00
-.label duck1IsShot=$62f6
-.label start=$6000 {
+.label duck1IsShot=$8305
+.label hide_sprites=$8269 {
 }
-.label hide_sprites=$625a {
-}
-.label dog1Sprite3X=$6578
-.label spriteYPositions=$6276
-.label duck1Sprite=$62f0
-.label duck1SpriteOverlay=$62f1
-.label printScore=$6c4f {
+.label duck1SpriteOverlay=$8300
+.label printScore=$9011 {
 }
 .label background_color=$d021
-.label dog1Sprite2Y=$6577
-.label duck1IsDead=$62f5
-.label dog1Sprite2X=$6576
-.label irq1=$6090 {
+.label rndYPositionPointer=$8484
+.label dog2Sprite4Y=$87bc
+.label dog3Sprite2X=$89b6
+.label dog3Sprite2Y=$89b7
+.label spriteMemory=$5000
+.label dog4Sprite4Y=$8b76
+.label duck1Y=$8303
+.label duck1X=$8301
+.label dog4Sprite4X=$8b75
+.label dog4SpritesAnimation=$8b78
+.label isHitDuck1=$81a9 {
 }
-.label irq3=$6144 {
+.label showDuck1=$8306 {
 }
-.label rndYPositionPointer=$6472
-.label dog2Sprite4Y=$67aa
-.label irq2=$6118 {
+.label crosshairXHighBoundary=$81a5
+.label crosshairYHighBoundary=$81a8
+.label initScore=$8f1f {
 }
-.label show_sprites=$6260 {
+.label dog3Sprite1Y=$89b5
+.label dog3Sprite1X=$89b4
+.label playGame=$8179 {
 }
-.label dog3Sprite2X=$69a4
-.label animateDuck1=$6397 {
+.label showCrosshair=$82a3 {
 }
-.label dog3Sprite2Y=$69a5
+.label dog4Sprite2X=$8b71
+.label dog4MoveSpeed=$8e5d
+.label dog4Sprite2Y=$8b72
+.label init_sprites=$8253 {
+}
+.label duck1AnimSpeed=$83a8
+.label dog3AnimSpeed=$89b9
+.label showDog3=$89ba {
+}
+.label showDog4=$8bd2 {
+}
+.label showDog1=$858c {
+}
+.label dog1Sprite3Y=$858b
+.label showDog2=$87bd {
+}
+.label addScore=$8ff6 {
+}
+.label dog2Sprite1X=$87b5
+.label dog2Sprite1Y=$87b6
+.label land=$8ec9 {
+}
+.label multiply=$8240 {
+  .label m0=$8245
+  .label m1=$824a
+}
+.label dog4Sprite3X=$8b73
+.label dog4Sprite3Y=$8b74
+.label move=$8ec8 {
+}
+.label charRam=$4000
+.label start=$8000 {
+}
+.label dog1Sprite3X=$858a
+.label spriteYPositions=$8285
+.label duck1Sprite=$82ff
+.label dog1Sprite2Y=$8589
+.label duck1IsDead=$8304
+.label dog1Sprite2X=$8588
+.label irq1=$8094 {
+}
+.label irq3=$8148 {
+}
+.label irq2=$811c {
+}
+.label show_sprites=$826f {
+}
+.label animateDuck1=$83a9 {
+}

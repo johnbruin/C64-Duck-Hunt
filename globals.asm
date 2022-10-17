@@ -8,6 +8,8 @@
 	,roundClearWith1Duck
 	,roundClearWith2Ducks
 	,roundLost
+	,roundNew
+	,flyAway
 }
 
 

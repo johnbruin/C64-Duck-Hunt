@@ -163,7 +163,7 @@ moveDog1:
         inc dog1Sprite3Y
         rts
     !:
-    lda #roundPlaying
+    lda #roundNew
     sta gameState
     lda #0
     sta dogMoveDown 
@@ -465,7 +465,7 @@ moveDog3:
         inc dog3Sprite2Y
         rts
     !:
-    lda #roundPlaying
+    lda #roundNew
     sta gameState
     lda #0
     sta dogMoveDown 
@@ -677,7 +677,7 @@ showDog4:
     :sprite_set_xy_positions(7)
 
     ldy dog4SpritesAnimationPointer
-    cpy #41
+    cpy #43
     bcc !land+
         lda dog4Sprite3Y
         cmp #120+48+13
@@ -702,9 +702,9 @@ dog4AnimSpeed: .byte 0
 moveDog4:
 {
     ldy dog4SpritesAnimationPointer
-    cpy #48
+    cpy #50
     bne !+
-        lda #roundPlaying
+        lda #roundNew
         sta gameState
         rts
     !:
@@ -770,24 +770,34 @@ move:
 
 land:
 {
-    .for(var i=0;i<2;i++)
-    {
-        inc dog4Sprite1Y
-        inc dog4Sprite2Y
-        inc dog4Sprite3Y
-        inc dog4Sprite4Y
-    } 
+    clc
+    lda dog4Sprite1Y
+    adc #2
+    sta dog4Sprite1Y
+    sta dog4Sprite2Y
+
+    clc
+    lda dog4Sprite3Y
+    adc #2
+    sta dog4Sprite3Y
+    sta dog4Sprite4Y
+
     rts
 }
 
 jump:
 {
-    .for(var i=0;i<5;i++)
-    {
-        dec dog4Sprite1Y
-        dec dog4Sprite2Y
-        dec dog4Sprite3Y
-        dec dog4Sprite4Y
-    }
+    sec
+    lda dog4Sprite1Y
+    sbc #6
+    sta dog4Sprite1Y
+    sta dog4Sprite2Y
+
+    sec
+    lda dog4Sprite3Y
+    sbc #6
+    sta dog4Sprite3Y
+    sta dog4Sprite4Y
+    
     rts
 }

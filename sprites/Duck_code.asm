@@ -4,27 +4,68 @@
 
 initDuck1:
 {
-    ldx rndYPositionPointer            
-    lda rndYPositions,x
-    sta duck1Y
-    inc rndYPositionPointer
-
     lda #0
+    sta duck1IsDead
+    sta duck1IsShot
+    sta duck1SpritesAnimationCounter
+    
+    ldx rndDirectionPointer
+    lda rndDirection,x
+    sta duck1Direction
+
+    lda #160
+    sta duck1Y
+        
+    ldx rndXPositionPointer            
+    lda rndXPositions,x
     sta duck1X
+    lda #0
     sta duck1X+1
+
+    inc rndXPositionPointer
+    inc rndDirectionPointer
 
     rts
 }
 
-duck1Sprite: .byte 1
-duck1SpriteOverlay: .byte 1+overlay_distance
+duckSprites:
+.byte 1, 3, 2, 1, 3, 2          //0=right
+.byte 40, 42, 41, 40, 42, 41    //1=left
+.byte 47, 49, 48, 47, 49, 48    //2=diagonal left
+.byte 44, 46, 45, 44, 46, 45    //3=diagonal right
+.byte 50, 52, 51, 50, 52, 51    //4=up
+.byte 4, 4, 4, 4, 4, 4          //5=dead right
+.byte 43, 43, 43, 43, 43, 43    //6=dead left
+.byte 5, 6, 5, 6, 5, 6          //7=falling
+
+.enum 
+{
+     flyUp   
+    ,flyLeftUp
+    ,flyRightUp
+    ,flyDiagonalLeftUp
+    ,flyDiagonalRightUp
+    ,flyDown    
+    ,flyLeftDown
+    ,flyRightDown    
+    ,flyDiagonalLeftDown
+    ,flyDiagonalRightDown
+}
+
+duck1SpritesAnimationPointer: .byte 0
+duck1SpritesAnimationCounter: .byte 0
 duck1X: .word $0000
 duck1Y: .byte 100
 duck1IsDead: .byte 0
 duck1IsShot: .byte 0
+duck1Direction: .byte flyRightUp
 showDuck1:
 {
-    jsr hide_sprites
+    :sprite_disable(3)
+    :sprite_disable(4)
+    :sprite_disable(5)
+    :sprite_disable(6)
+    :sprite_disable(7)    
     
     // set sprites multicolor1
     lda #WHITE
@@ -50,12 +91,29 @@ showDuck1:
     lda #%00000100
     sta $d01c 
 
-    lda duck1SpriteOverlay    
+    lda duck1IsShot
+    beq !+
+        lda #5*6
+        sta duck1SpritesAnimationPointer
+    !:
+
+    lda duck1IsDead
+    beq !+
+        lda #7*6
+        sta duck1SpritesAnimationPointer
+    !:
+
+    lda duck1SpritesAnimationPointer
+    clc
+    adc duck1SpritesAnimationCounter
+    tax
+    lda duckSprites,x
     clc
     adc #(>spriteMemory<<2)	
+    adc #overlay_distance
     sta SPRITEPOINTER+1
 
-    lda duck1Sprite
+    lda duckSprites,x  
     clc
     adc #(>spriteMemory<<2)	
     sta SPRITEPOINTER+2
@@ -88,54 +146,15 @@ animateDuck1:
         lda duck1Y
         cmp #170
         bcc !+
-            jsr initDuck1
-            
+            jsr initDuck1            
             lda #roundClearWith1Duck
             sta gameState
-
-            lda #0
-            sta duck1IsDead
-            lda #1
-            sta duck1Sprite
-            lda #1+overlay_distance
-            sta duck1SpriteOverlay            
         !:
-        jmp !isDeadOrIsShot+
     !:
 
-    lda duck1IsShot
-    bne !isDeadOrIsShot+
-
-    clc
-    lda duck1X
-    adc #1
-    sta duck1X
-    lda duck1X+1
-    adc #0
-    sta duck1X+1
-    
-    lda duck1X+1
-	cmp #$01
-	bne !+
-	    lda duck1X
-	    cmp #$90
-	!:
-    bcc !lower+
-    bne !higher+    
-
-    !higher:
-    lda #roundLost
-    sta gameState 
-    jsr initDuck1
-    rts   
-    
-    !lower:
-
-    !isDeadOrIsShot:
     lda duck1AnimSpeed
     cmp #8
-    bne !skipAnimation+
-        
+    bne !skipAnimation+        
         :sprite_disable(0)
 
         lda duck1IsShot
@@ -144,53 +163,16 @@ animateDuck1:
             sta duck1IsDead
             lda #0
             sta duck1IsShot
-            jmp !skip+
-        !:
-        inc duck1Sprite
-        inc duck1SpriteOverlay
-        lda duck1IsDead
-        beq !+
-
-            lda duck1Sprite        
-            cmp #4
-            bne !+
-                lda #5
-                sta duck1Sprite
-                lda #5+overlay_distance
-                sta duck1SpriteOverlay
-                jmp !skip+
-            !:  
-            
-            lda duck1Sprite        
-            cmp #5
-            bne !+
-                lda #6
-                sta duck1Sprite
-                lda #6+overlay_distance
-                sta duck1SpriteOverlay
-                jmp !skip+
-            !: 
-            
-            lda duck1Sprite        
-            cmp #7
-            bne !+
-                lda #5
-                sta duck1Sprite
-                lda #5+overlay_distance
-                sta duck1SpriteOverlay
-                jmp !skip+
-            !: 
-        !:
-        lda duck1Sprite        
-        cmp #4
+        !:       
+        
+        inc duck1SpritesAnimationCounter
+        lda duck1SpritesAnimationCounter
+        cmp #6
         bne !+
-            lda #1
-            sta duck1Sprite
-            lda #1+overlay_distance
-            sta duck1SpriteOverlay
+            lda #0
+            sta duck1SpritesAnimationCounter
         !:
 
-        !skip:
         lda #0
         sta duck1AnimSpeed
     !skipAnimation:
@@ -198,6 +180,512 @@ animateDuck1:
     rts
 }
 
-rndYPositionPointer: .byte 0
-rndYPositions:
-    .fill $ff, 40+round(random()*110)
+duck1MoveSpeed: .byte 0
+moveDuck1:
+{
+    lda duck1IsShot
+    beq !+
+        rts
+    !:
+	
+    lda duck1IsDead
+	beq !+
+        rts
+    !:
+
+    lda gameState
+    cmp #flyAway
+    bne !+
+        jsr moveFlyAway
+        rts
+    !:
+
+    lda duck1Direction
+    cmp #flyRightUp
+    bne !+
+        jsr moveRightUp
+    !:
+
+    lda duck1Direction
+    cmp #flyRightDown
+    bne !+
+        jsr moveRightDown
+    !:
+
+    lda duck1Direction
+    cmp #flyLeftUp
+    bne !+
+        jsr moveLeftUp
+    !:
+
+    lda duck1Direction
+    cmp #flyLeftDown
+    bne !+
+        jsr moveLeftDown
+    !:
+
+    lda duck1Direction
+    cmp #flyDiagonalLeftUp
+    bne !+
+        jsr moveDiagonalLeftUp
+    !:
+
+    lda duck1Direction
+    cmp #flyDiagonalLeftDown
+    bne !+
+        jsr moveDiagonalLeftDown
+    !:
+
+    lda duck1Direction
+    cmp #flyDiagonalRightUp
+    bne !+
+        jsr moveDiagonalRightUp
+    !:
+
+    lda duck1Direction
+    cmp #flyDiagonalRightDown
+    bne !+
+        jsr moveDiagonalRightDown
+    !:
+
+    lda duck1Direction
+    cmp #flyUp
+    bne !+
+        jsr moveUp
+    !:
+
+    lda duck1Direction
+    cmp #flyDown
+    bne !+
+        jsr moveDown
+    !:
+       
+    rts
+}
+
+moveUp:
+{
+    lda #4*6
+    sta duck1SpritesAnimationPointer
+
+    jsr Up
+    jsr Up
+    jsr Up    
+    jsr Up  
+
+    lda duck1Y
+	cmp #50	
+    bcc !lower+
+    bne !higher+    
+
+    !higher:
+        rts
+    !lower:
+        lda #flyDiagonalLeftDown
+        sta duck1Direction
+        rts
+}
+
+moveFlyAway:
+{
+    lda #4*6
+    sta duck1SpritesAnimationPointer
+
+    jsr Up
+    jsr Up
+    jsr Up
+    jsr Up
+
+    lda duck1Y
+	cmp #4	
+    bcc !lower+
+    bne !higher+    
+
+    !higher:
+        rts
+    !lower:
+        lda #roundLost
+        sta gameState
+        rts
+}
+
+moveDown:
+{
+    lda #4*6
+    sta duck1SpritesAnimationPointer
+
+    jsr Down
+    jsr Down
+    jsr Down
+    jsr Down
+
+    lda duck1Y
+	cmp #150	
+    bcc !lower+
+    bne !higher+    
+
+    !higher:
+        lda #flyDiagonalLeftUp
+        sta duck1Direction
+        rts
+    !lower:  
+        rts
+}
+
+moveLeftUp:
+{
+    lda #1*6
+    sta duck1SpritesAnimationPointer
+
+    jsr Up
+    jsr Left
+    
+    lda duck1Y
+	cmp #50	
+    bcc !lower+
+    bne !higher+    
+
+    !higher:
+        jmp !skip+
+    !lower:
+        lda #flyDiagonalLeftDown
+        sta duck1Direction
+        rts
+
+    !skip:
+
+    lda duck1X+1
+	cmp #>30
+	bne !+
+	    lda duck1X
+	    cmp #<30
+	!:
+    bcc !lower+
+    bne !higher+    
+
+    !higher:
+        rts
+    !lower:
+        lda #flyDiagonalRightUp
+        sta duck1Direction
+         rts
+}
+
+moveLeftDown:
+{
+    lda #1*6
+    sta duck1SpritesAnimationPointer
+
+    jsr Down
+    jsr Left
+    
+    lda duck1Y
+	cmp #150
+    bcc !lower+
+    bne !higher+    
+
+    !higher:
+        lda #flyUp
+        sta duck1Direction
+        rts
+    !lower:
+
+    lda duck1X+1
+	cmp #>30
+	bne !+
+	    lda duck1X
+	    cmp #<30
+	!:
+    bcc !lower+
+    bne !higher+    
+
+    !higher:
+        rts
+    !lower:
+        lda #flyRightDown
+        sta duck1Direction
+        rts
+}
+
+moveRightUp:
+{
+    lda #0*6
+    sta duck1SpritesAnimationPointer
+
+    jsr Up
+    jsr Right
+    
+    lda duck1Y
+	cmp #50	
+    bcc !lower+
+    bne !higher+    
+
+    !higher:
+        jmp !skip+
+    !lower:
+        lda #flyDiagonalRightDown
+        sta duck1Direction
+        rts
+
+    !skip:
+
+    lda duck1X+1
+	cmp #>290
+	bne !+
+	    lda duck1X
+	    cmp #<290
+	!:
+    bcc !lower+
+    bne !higher+    
+
+    !higher:
+        lda #flyDiagonalLeftUp
+        sta duck1Direction
+    !lower:
+        rts
+}
+
+moveRightDown:
+{
+    lda #0*6
+    sta duck1SpritesAnimationPointer
+
+    jsr Down
+    jsr Right
+    
+    lda duck1Y
+	cmp #150
+    bcc !lower+
+    bne !higher+    
+
+    !higher:
+        lda #flyUp
+        sta duck1Direction
+        rts
+    !lower:
+
+    lda duck1X+1
+	cmp #>290
+	bne !+
+	    lda duck1X
+	    cmp #<290
+	!:
+    bcc !lower+
+    bne !higher+    
+
+    !higher:
+        lda #flyLeftDown
+        sta duck1Direction        
+    !lower:
+        rts    
+}
+
+moveDiagonalLeftUp:
+{
+    lda #2*6
+    sta duck1SpritesAnimationPointer
+
+    jsr Up
+    jsr Up
+    jsr Left
+    
+    lda duck1Y
+	cmp #50	
+    bcc !lower+
+    bne !higher+    
+
+    !higher:
+        jmp !skip+
+    !lower:
+        lda #flyLeftDown
+        sta duck1Direction
+        rts
+
+    !skip:
+    lda duck1X+1
+	cmp #0
+	bne !+
+	    lda duck1X
+	    cmp #30
+	!:
+    bcc !lower+
+    bne !higher+    
+
+    !higher:
+        rts
+    !lower:
+        lda #flyDiagonalRightUp
+        sta duck1Direction
+        rts    
+}
+
+moveDiagonalLeftDown:
+{
+    lda #2*6
+    sta duck1SpritesAnimationPointer
+
+    jsr Down
+    jsr Down
+    jsr Left
+    
+    lda duck1Y
+	cmp #150
+    bcc !lower+
+    bne !higher+    
+
+    !higher:
+        lda #flyLeftUp
+        sta duck1Direction
+        rts
+    !lower:
+
+    lda duck1X+1
+	cmp #0
+	bne !+
+	    lda duck1X
+	    cmp #30
+	!:
+    bcc !lower+
+    bne !higher+    
+
+    !higher:
+        rts
+    !lower:
+        lda #flyRightDown
+        sta duck1Direction
+        rts    
+}
+
+moveDiagonalRightUp:
+{
+    lda #3*6
+    sta duck1SpritesAnimationPointer
+
+    jsr Up
+    jsr Up
+    jsr Right
+    
+    lda duck1Y
+	cmp #50	
+    bcc !lower+
+    bne !higher+    
+
+    !higher:
+        jmp !skip+
+    !lower:
+        lda #flyRightDown
+        sta duck1Direction
+        rts
+
+    !skip:
+    lda duck1X+1
+	cmp #>290
+	bne !+
+	    lda duck1X
+	    cmp #<290
+	!:
+    bcc !lower+
+    bne !higher+    
+
+    !higher:
+        lda #flyLeftUp
+        sta duck1Direction
+        rts
+    !lower:
+        rts
+}
+
+moveDiagonalRightDown:
+{
+    lda #3*6
+    sta duck1SpritesAnimationPointer
+
+    jsr Down
+    jsr Down
+    jsr Right
+    
+    lda duck1Y
+	cmp #150	
+    bcc !lower+
+    bne !higher+    
+
+    !higher:
+        lda #flyRightUp
+        sta duck1Direction
+        rts
+    !lower:
+    
+    lda duck1X+1
+	cmp #>290
+	bne !+
+	    lda duck1X
+	    cmp #<290
+	!:
+    bcc !lower+
+    bne !higher+    
+
+    !higher:
+        lda #flyLeftDown
+        sta duck1Direction
+        rts
+    !lower:
+        rts
+}
+
+Left:
+{
+    sec
+    lda duck1X
+    sbc #1
+    sta duck1X
+    lda duck1X+1
+    sbc #0
+    sta duck1X+1
+    rts
+}
+
+Right:
+{
+    clc
+    lda duck1X
+    adc #1
+    sta duck1X
+    lda duck1X+1
+    adc #0
+    sta duck1X+1
+    rts
+}
+
+Up:
+{
+    lda duck1MoveSpeed
+    cmp #2
+    bne !skipAnimation+ 
+        dec duck1Y
+        lda #0
+        sta duck1MoveSpeed
+    !skipAnimation:
+    inc duck1MoveSpeed
+    rts
+}
+
+Down:
+{
+    lda duck1MoveSpeed
+    cmp #2
+    bne !skipAnimation+ 
+        inc duck1Y
+        lda #0
+        sta duck1MoveSpeed
+    !skipAnimation:
+    inc duck1MoveSpeed
+    rts
+}
+
+rndDirectionPointer: .byte 0
+rndDirection: 
+    .fill $ff, round(random()*4)
+
+rndXPositionPointer: .byte 0
+rndXPositions:
+    .fill $ff, 44+round(random()*211)

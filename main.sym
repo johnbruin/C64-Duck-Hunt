@@ -1,122 +1,162 @@
-.label score2=$8ff4
-.label dog2Sprite4X=$87bb
-.label score3=$8ff5
-.label rndYPositions=$8485
-.label isDogVisible=$8584
-.label dog1Sprite1X=$8586
-.label dog1Sprite1Y=$8587
-.label dog4Sprites=$8bae
-.label dog2Sprite3X=$87b9
-.label dog2Sprite3Y=$87ba
-.label crosshairYLowBoundary=$81a7
-.label initCrosshair=$828d {
+.label Left=$8750 {
 }
-.label jump=$8ee2 {
+.label rndXPositionPointer=$889a
+.label score2=$93e6
+.label dog2Sprite4X=$8bd1
+.label score3=$93e7
+.label isDogVisible=$899a
+.label dog1Sprite1X=$899c
+.label moveRightDown=$864a {
 }
-.label dog4Sprite1X=$8b6f
-.label crosshairTrigger=$829e
-.label dog4Sprite1Y=$8b70
+.label dog1Sprite1Y=$899d
+.label dog4Sprites=$8fc4
+.label dog2Sprite3X=$8bcf
+.label dog2Sprite3Y=$8bd0
+.label crosshairYLowBoundary=$81d0
+.label initCrosshair=$82dc {
+}
+.label moveUp=$8550 {
+}
+.label jump=$92f8 {
+}
+.label dog4Sprite1X=$8f85
+.label crosshairTrigger=$82ed
+.label dog4Sprite1Y=$8f86
+.label duck1Direction=$839e
 .label border_color=$d020
-.label dog2Sprite2Y=$87b8
-.label dog3Animation=$89b8
-.label dog2Sprite2X=$87b7
-.label score1=$8ff3
-.label dogMoveDown=$8585
-.label crosshairXLowBoundary=$81a3
-.label initDuck1=$82ea {
+.label moveLeftUp=$85b2 {
 }
-.label showCrosshairY=$82a1
-.label showCrosshairX=$829f
-.label spriteXPositions=$8275
-.label isShotFired=$82a2
-.label moveDog4=$8e5f {
+.label dog2Sprite2Y=$8bce
+.label moveDiagonalRightDown=$871c {
 }
-.label moveDog3=$8b3c {
+.label dog3Animation=$8dce
+.label dog2Sprite2X=$8bcd
+.label score1=$93e5
+.label shots=$81cb
+.label dogMoveDown=$899b
+.label crosshairXLowBoundary=$81cc
+.label initDuck1=$8339 {
 }
-.label moveDog1=$877c {
+.label showCrosshairY=$82f0
+.label showCrosshairX=$82ee
+.label spriteXPositions=$82c4
+.label moveDiagonalLeftDown=$86b1 {
 }
-.label dog4SpritesAnimationPointer=$8b77
-.label crosshairY=$829d
-.label dog4AnimSpeed=$8e5e
-.label crosshairX=$829b
+.label Right=$8762 {
+}
+.label isShotFired=$82f1
+.label moveFlyAway=$8571 {
+}
+.label moveDog4=$9275 {
+}
+.label moveDog3=$8f52 {
+}
+.label moveDog1=$8b92 {
+}
+.label dog4SpritesAnimationPointer=$8f8d
+.label crosshairY=$82ec
+.label dog4AnimSpeed=$9274
+.label crosshairX=$82ea
 .label screenRam=$4c00
-.label duck1IsShot=$8305
-.label hide_sprites=$8269 {
+.label duck1IsShot=$839d
+.label moveDiagonalLeftUp=$867a {
 }
-.label duck1SpriteOverlay=$8300
-.label printScore=$9011 {
+.label hide_sprites=$82b8 {
+}
+.label duck1MoveSpeed=$84d4
+.label printScore=$9403 {
 }
 .label background_color=$d021
-.label rndYPositionPointer=$8484
-.label dog2Sprite4Y=$87bc
-.label dog3Sprite2X=$89b6
-.label dog3Sprite2Y=$89b7
+.label moveDuck1=$84d5 {
+}
+.label dog2Sprite4Y=$8bd2
+.label dog3Sprite2X=$8dcc
+.label dog3Sprite2Y=$8dcd
 .label spriteMemory=$5000
-.label dog4Sprite4Y=$8b76
-.label duck1Y=$8303
-.label duck1X=$8301
-.label dog4Sprite4X=$8b75
-.label dog4SpritesAnimation=$8b78
-.label isHitDuck1=$81a9 {
+.label dog4Sprite4Y=$8f8c
+.label duck1Y=$839b
+.label duck1X=$8399
+.label dog4Sprite4X=$8f8b
+.label dog4SpritesAnimation=$8f8e
+.label duck1SpritesAnimationPointer=$8397
+.label isHitDuck1=$81d2 {
 }
-.label showDuck1=$8306 {
+.label showDuck1=$839f {
 }
-.label crosshairXHighBoundary=$81a5
-.label crosshairYHighBoundary=$81a8
-.label initScore=$8f1f {
+.label crosshairXHighBoundary=$81ce
+.label crosshairYHighBoundary=$81d1
+.label initScore=$9311 {
 }
-.label dog3Sprite1Y=$89b5
-.label dog3Sprite1X=$89b4
+.label printShots=$8276 {
+}
+.label rndDirection=$879b
+.label dog3Sprite1Y=$8dcb
+.label dog3Sprite1X=$8dca
+.label moveDiagonalRightUp=$86e5 {
+}
+.label moveRightUp=$8617 {
+}
+.label moveDown=$8591 {
+}
 .label playGame=$8179 {
 }
-.label showCrosshair=$82a3 {
+.label Up=$8774 {
 }
-.label dog4Sprite2X=$8b71
-.label dog4MoveSpeed=$8e5d
-.label dog4Sprite2Y=$8b72
-.label init_sprites=$8253 {
+.label showCrosshair=$82f2 {
 }
-.label duck1AnimSpeed=$83a8
-.label dog3AnimSpeed=$89b9
-.label showDog3=$89ba {
+.label dog4Sprite2X=$8f87
+.label dog4MoveSpeed=$9273
+.label dog4Sprite2Y=$8f88
+.label init_sprites=$82a2 {
 }
-.label showDog4=$8bd2 {
+.label duck1AnimSpeed=$8484
+.label duck1SpritesAnimationCounter=$8398
+.label dog3AnimSpeed=$8dcf
+.label rndDirectionPointer=$879a
+.label showDog3=$8dd0 {
 }
-.label showDog1=$858c {
+.label showDog4=$8fe8 {
 }
-.label dog1Sprite3Y=$858b
-.label showDog2=$87bd {
+.label showDog1=$89a2 {
 }
-.label addScore=$8ff6 {
+.label dog1Sprite3Y=$89a1
+.label showDog2=$8bd3 {
 }
-.label dog2Sprite1X=$87b5
-.label dog2Sprite1Y=$87b6
-.label land=$8ec9 {
+.label addScore=$93e8 {
 }
-.label multiply=$8240 {
-  .label m0=$8245
-  .label m1=$824a
+.label dog2Sprite1X=$8bcb
+.label dog2Sprite1Y=$8bcc
+.label land=$92df {
 }
-.label dog4Sprite3X=$8b73
-.label dog4Sprite3Y=$8b74
-.label move=$8ec8 {
+.label multiply=$828f {
+  .label m0=$8294
+  .label m1=$8299
+}
+.label moveLeftDown=$85e6 {
+}
+.label dog4Sprite3X=$8f89
+.label dog4Sprite3Y=$8f8a
+.label duckSprites=$8367
+.label Down=$8787 {
+}
+.label move=$92de {
 }
 .label charRam=$4000
 .label start=$8000 {
 }
-.label dog1Sprite3X=$858a
-.label spriteYPositions=$8285
-.label duck1Sprite=$82ff
-.label dog1Sprite2Y=$8589
-.label duck1IsDead=$8304
-.label dog1Sprite2X=$8588
+.label dog1Sprite3X=$89a0
+.label spriteYPositions=$82d4
+.label rndXPositions=$889b
+.label dog1Sprite2Y=$899f
+.label duck1IsDead=$839c
+.label dog1Sprite2X=$899e
 .label irq1=$8094 {
 }
 .label irq3=$8148 {
 }
 .label irq2=$811c {
 }
-.label show_sprites=$826f {
+.label show_sprites=$82be {
 }
-.label animateDuck1=$83a9 {
+.label animateDuck1=$8485 {
 }

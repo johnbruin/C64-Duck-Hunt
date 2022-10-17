@@ -61,7 +61,8 @@ start:
 	jsr initDuck1
 	jsr show_sprites
 
-	lda #intro
+	//lda #intro
+	lda #roundPlaying
 	sta gameState
 
 	sei
@@ -175,8 +176,16 @@ playGame:
 	cmp #roundClearWith1Duck
 	bne !+
 		jsr showDog1	
-		jsr moveDog1		
+		jsr moveDog1
 		rts
+	!:
+
+	cmp #flyAway
+	bne !+
+		jsr showDuck1
+		jsr moveDuck1
+		jsr animateDuck1
+		rts	
 	!:
 
 	cmp #roundLost
@@ -185,19 +194,39 @@ playGame:
 		jsr moveDog3		
 		rts
 	!:
+
+	cmp #roundNew
+	bne !+
+		lda #3
+		sta shots
+		jsr printShots
+
+		jsr initDuck1
+		
+		lda #roundPlaying
+		sta gameState
+	!:
 	
-	jsr showDuck1
-	jsr animateDuck1	
-	
+	cmp #roundPlaying
+	bne !+
+		jsr showDuck1
+		jsr moveDuck1
+		jsr animateDuck1	
+	!:
+
 	rts
 }
 
+shots: .byte 3
 crosshairXLowBoundary: .word 0
 crosshairXHighBoundary: .word 0
 crosshairYLowBoundary: .byte 0
 crosshairYHighBoundary: .byte 0
 isHitDuck1:
 {
+	dec shots
+	jsr printShots
+
 	sec
 	lda crosshairY
 	sbc #11*2
@@ -255,12 +284,9 @@ isHitDuck1:
 	!lower:
 
 	// We have a hit!
-	lda #4
-	sta duck1Sprite
-	lda #4+overlay_distance
-	sta duck1SpriteOverlay
 	lda #0
     sta duck1AnimSpeed
+	sta duck1SpritesAnimationCounter
 	lda #1
 	sta duck1IsShot
 	jsr addScore
@@ -276,7 +302,37 @@ isHitDuck1:
 	sta showCrosshairY
 	jsr showCrosshair
 
+    lda #0
+    sta duck1AnimSpeed
+
+	lda shots
+	bne !+
+		lda #flyAway
+    	sta gameState     	
+	!:
+
 	rts
+}
+
+printShots:
+{
+	ldx #3
+	lda #0
+	!:
+  		sta screenRam+(22*40)+5,x
+		dex
+	bne !-		
+    
+	ldx shots
+	bne !+
+		rts
+	!:
+	lda #157
+	!:
+       	sta screenRam+(22*40)+5,x
+		dex
+	bne !-
+    rts
 }
 
 //multiplies FAC1 and FAC2 and put results in x (low-byte) and a (hi-byte)  

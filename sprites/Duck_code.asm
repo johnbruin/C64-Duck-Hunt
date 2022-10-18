@@ -180,6 +180,10 @@ animateDuck1:
     rts
 }
 
+.var upperBoundary = 50
+.var lowerBoundary = 150
+.var leftBoundary = 30
+.var rightBoundary = 295
 duck1MoveSpeed: .byte 0
 moveDuck1:
 {
@@ -274,14 +278,14 @@ moveUp:
     jsr Up  
 
     lda duck1Y
-	cmp #50	
+	cmp #upperBoundary
     bcc !lower+
     bne !higher+    
 
     !higher:
         rts
     !lower:
-        lda #flyDiagonalLeftDown
+        lda #flyRightDown
         sta duck1Direction
         rts
 }
@@ -320,7 +324,7 @@ moveDown:
     jsr Down
 
     lda duck1Y
-	cmp #150	
+	cmp #lowerBoundary	
     bcc !lower+
     bne !higher+    
 
@@ -341,24 +345,24 @@ moveLeftUp:
     jsr Left
     
     lda duck1Y
-	cmp #50	
+	cmp #upperBoundary	
     bcc !lower+
     bne !higher+    
 
     !higher:
         jmp !skip+
     !lower:
-        lda #flyDiagonalLeftDown
+        lda #flyLeftDown
         sta duck1Direction
         rts
 
     !skip:
 
     lda duck1X+1
-	cmp #>30
+	cmp #>leftBoundary
 	bne !+
 	    lda duck1X
-	    cmp #<30
+	    cmp #<leftBoundary
 	!:
     bcc !lower+
     bne !higher+    
@@ -380,21 +384,21 @@ moveLeftDown:
     jsr Left
     
     lda duck1Y
-	cmp #150
+	cmp #lowerBoundary
     bcc !lower+
     bne !higher+    
 
     !higher:
-        lda #flyUp
+        lda #flyDiagonalLeftUp
         sta duck1Direction
         rts
     !lower:
 
     lda duck1X+1
-	cmp #>30
+	cmp #>leftBoundary
 	bne !+
 	    lda duck1X
-	    cmp #<30
+	    cmp #<leftBoundary
 	!:
     bcc !lower+
     bne !higher+    
@@ -416,24 +420,24 @@ moveRightUp:
     jsr Right
     
     lda duck1Y
-	cmp #50	
+	cmp #upperBoundary
     bcc !lower+
     bne !higher+    
 
     !higher:
         jmp !skip+
     !lower:
-        lda #flyDiagonalRightDown
+        lda #flyRightDown
         sta duck1Direction
         rts
 
     !skip:
 
     lda duck1X+1
-	cmp #>290
+	cmp #>rightBoundary
 	bne !+
 	    lda duck1X
-	    cmp #<290
+	    cmp #<rightBoundary
 	!:
     bcc !lower+
     bne !higher+    
@@ -454,21 +458,21 @@ moveRightDown:
     jsr Right
     
     lda duck1Y
-	cmp #150
+	cmp #lowerBoundary
     bcc !lower+
     bne !higher+    
 
     !higher:
-        lda #flyUp
+        lda #flyDiagonalRightUp
         sta duck1Direction
         rts
     !lower:
 
     lda duck1X+1
-	cmp #>290
+	cmp #>rightBoundary
 	bne !+
 	    lda duck1X
-	    cmp #<290
+	    cmp #<rightBoundary
 	!:
     bcc !lower+
     bne !higher+    
@@ -490,7 +494,7 @@ moveDiagonalLeftUp:
     jsr Left
     
     lda duck1Y
-	cmp #50	
+	cmp #upperBoundary
     bcc !lower+
     bne !higher+    
 
@@ -503,10 +507,10 @@ moveDiagonalLeftUp:
 
     !skip:
     lda duck1X+1
-	cmp #0
+	cmp #>leftBoundary
 	bne !+
 	    lda duck1X
-	    cmp #30
+	    cmp #<leftBoundary
 	!:
     bcc !lower+
     bne !higher+    
@@ -529,7 +533,7 @@ moveDiagonalLeftDown:
     jsr Left
     
     lda duck1Y
-	cmp #150
+	cmp #lowerBoundary
     bcc !lower+
     bne !higher+    
 
@@ -540,10 +544,10 @@ moveDiagonalLeftDown:
     !lower:
 
     lda duck1X+1
-	cmp #0
+	cmp #>leftBoundary
 	bne !+
 	    lda duck1X
-	    cmp #30
+	    cmp #<leftBoundary
 	!:
     bcc !lower+
     bne !higher+    
@@ -566,7 +570,7 @@ moveDiagonalRightUp:
     jsr Right
     
     lda duck1Y
-	cmp #50	
+	cmp #upperBoundary
     bcc !lower+
     bne !higher+    
 
@@ -579,10 +583,10 @@ moveDiagonalRightUp:
 
     !skip:
     lda duck1X+1
-	cmp #>290
+	cmp #>rightBoundary
 	bne !+
 	    lda duck1X
-	    cmp #<290
+	    cmp #<rightBoundary
 	!:
     bcc !lower+
     bne !higher+    
@@ -605,7 +609,7 @@ moveDiagonalRightDown:
     jsr Right
     
     lda duck1Y
-	cmp #150	
+	cmp #lowerBoundary	
     bcc !lower+
     bne !higher+    
 
@@ -616,10 +620,10 @@ moveDiagonalRightDown:
     !lower:
     
     lda duck1X+1
-	cmp #>290
+	cmp #>rightBoundary
 	bne !+
 	    lda duck1X
-	    cmp #<290
+	    cmp #<rightBoundary
 	!:
     bcc !lower+
     bne !higher+    
@@ -684,7 +688,7 @@ Down:
 
 rndDirectionPointer: .byte 0
 rndDirection: 
-    .fill $ff, round(random()*4)
+    .fill $ff, round(random()*5)
 
 rndXPositionPointer: .byte 0
 rndXPositions:

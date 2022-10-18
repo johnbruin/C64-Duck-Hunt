@@ -61,8 +61,8 @@ start:
 	jsr initDuck1
 	jsr show_sprites
 
-	//lda #intro
-	lda #roundPlaying
+	lda #intro
+	//lda #roundPlaying
 	sta gameState
 
 	sei
@@ -224,6 +224,12 @@ crosshairYLowBoundary: .byte 0
 crosshairYHighBoundary: .byte 0
 isHitDuck1:
 {
+	lda gameState
+	cmp #roundPlaying
+	beq !+
+		rts
+	!:
+
 	dec shots
 	jsr printShots
 

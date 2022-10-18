@@ -4,6 +4,11 @@
 
 initCrosshair:
 {
+    // Make sure no sprites are x- or y-expanded.
+    lda #%11111110 
+    sta $d017
+    sta $d01d
+
     //Set sprite pointer
     lda #0
     clc

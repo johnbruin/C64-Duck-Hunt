@@ -11,7 +11,6 @@ dog1Sprite2X: .byte 160+24*2
 dog1Sprite2Y: .byte 120+50
 dog1Sprite3X: .byte 160
 dog1Sprite3Y: .byte 120+21*2+50
-
 showDog1:
 {
     lda #%01111110  
@@ -163,7 +162,7 @@ moveDog1:
         inc dog1Sprite3Y
         rts
     !:
-    lda #roundNew
+    lda #New
     sta gameState
     lda #0
     sta dogMoveDown 
@@ -184,7 +183,9 @@ showDog2:
 {
     // show sprites
     lda #%11111111  
-	sta $d015 
+
+    // sprite priority to back    
+    sta $d01b
 
     // x- and y-expanded.
     sta $d017
@@ -198,6 +199,7 @@ showDog2:
 
     lda #GREEN
     sta $d027+4
+    lda #PURPLE
     sta $d027+6
 
     lda #RED    
@@ -308,6 +310,72 @@ showDog2:
     :sprite_set_xy_positions(5)
     :sprite_set_xy_positions(6)
     :sprite_set_xy_positions(7)
+
+    lda dog2Sprite1Y
+    cmp #120+48
+    bcc !+
+        :sprite_disable(0)
+        :sprite_disable(1)
+        :sprite_disable(2)
+        :sprite_disable(4)    
+        :sprite_disable(5)
+        :sprite_disable(6)             
+        jmp !skip+
+    !:  
+    :sprite_enable(0)
+    :sprite_enable(1)
+    :sprite_enable(2)
+    :sprite_enable(4)
+    :sprite_enable(5)
+    :sprite_enable(6)    
+    
+    !skip:
+
+    lda dog2Sprite4Y
+    cmp #120+48+18
+    bcc !+
+        :sprite_disable(3)
+        :sprite_disable(7)
+        jmp !skip+
+    !:  
+    :sprite_enable(3)
+    :sprite_enable(7)
+    !skip:
+
+    rts
+}
+
+moveDog2:
+{
+    lda dogMoveDown
+    bne !moveDown+
+        lda dog2Sprite1Y
+        cmp #120
+        bcc !+
+            dec dog2Sprite1Y
+            dec dog2Sprite2Y
+            dec dog2Sprite3Y
+            dec dog2Sprite4Y
+            rts
+        !:
+        lda #1
+        sta dogMoveDown 
+
+    !moveDown:
+    lda dog2Sprite1Y
+    cmp #120+50
+    bcs !+
+        inc dog2Sprite1Y
+        inc dog2Sprite2Y
+        inc dog2Sprite3Y
+        inc dog2Sprite4Y
+        rts
+    !:
+    lda #New
+    sta gameState
+    lda #0
+    sta dogMoveDown 
+    jsr init_sprites
 
     rts
 }
@@ -465,7 +533,7 @@ moveDog3:
         inc dog3Sprite2Y
         rts
     !:
-    lda #roundNew
+    lda #New
     sta gameState
     lda #0
     sta dogMoveDown 
@@ -704,7 +772,7 @@ moveDog4:
     ldy dog4SpritesAnimationPointer
     cpy #50
     bne !+
-        lda #roundNew
+        lda #New
         sta gameState
         rts
     !:

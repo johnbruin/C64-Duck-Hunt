@@ -51,18 +51,22 @@ start:
 	lda #BLACK
 	sta $D023           // Char multi color 2
 
-    lda #music.startSong - 0
-    ldx #music.startSong - 0
-	jsr music.init
+    //lda #music.startSong - 0
+    //ldx #music.startSong - 0
+	//jsr music.init
+
+    lda #15
+    sta $d418 // set volume to 15
 
 	jsr initScore
 	jsr init_sprites
 	jsr initCrosshair
-	jsr initDuck1
 	jsr show_sprites
+	jsr initDuck1
+	jsr initDuck2
 
-	lda #intro
-	//lda #roundPlaying
+	//lda #intro
+	lda #Playing
 	sta gameState
 
 	sei
@@ -115,24 +119,45 @@ irq1:
 	//jsr showCrosshair
 
 	lda isShotFired
-	bne !+++
+	bne !shotwasfired+
+		:sprite_disable(0)
+				
 		lda crosshairTrigger
-		bne !++
+		bne !trigger+
 			lda #10
 			sta isShotFired
+			
+			lda #0    // sfx number
+			ldy #0    // voice number
+			jsr $c04a // play sound!
+
+			lda shots
+			beq !+
+				dec shots
+			!:
+			jsr printShots
+
 			lda duck1IsShot
 			bne !+
 				jsr isHitDuck1
 			!:
-		!:
+
+			bne !++ // a=1 when duck1 was hit
+			lda duck2IsShot
+				bne !+
+					jsr isHitDuck2
+				!:
+			!:
+		!trigger:
 		jmp !skip+
-	!:
+	!shotwasfired:
 	dec isShotFired
 	!skip:
 	
 	jsr playGame
 	
-	jsr music.play
+	jsr $c237 // play all voices!
+	//jsr music.play
 
     #if DEBUG
         inc border_color
@@ -166,52 +191,70 @@ playGame:
 {
 	lda gameState
 	
-	cmp #intro
+	cmp #Intro
 	bne !+
 		jsr moveDog4
 		jsr showDog4	
 		rts
 	!:
 
-	cmp #roundClearWith1Duck
+	cmp #ClearWith1Duck
 	bne !+
 		jsr showDog1	
 		jsr moveDog1
 		rts
 	!:
 
-	cmp #flyAway
+	cmp #ClearWith2Ducks
+	bne !+
+		jsr showDog2	
+		jsr moveDog2
+		rts
+	!:
+
+	cmp #FlyAway
 	bne !+
 		jsr showDuck1
 		jsr moveDuck1
 		jsr animateDuck1
+
+		jsr showDuck2
+		jsr moveDuck2
+		jsr animateDuck2
 		rts	
 	!:
 
-	cmp #roundLost
+	cmp #Miss
 	bne !+
 		jsr showDog3	
 		jsr moveDog3		
 		rts
 	!:
 
-	cmp #roundNew
+	cmp #New
 	bne !+
 		lda #3
 		sta shots
 		jsr printShots
 
 		jsr initDuck1
+		jsr initDuck2
 		
-		lda #roundPlaying
+		lda #Playing
 		sta gameState
 	!:
 	
-	cmp #roundPlaying
+	cmp #Playing
 	bne !+
 		jsr showDuck1
 		jsr moveDuck1
 		jsr animateDuck1	
+
+		jsr showDuck2
+		jsr moveDuck2
+		jsr animateDuck2
+
+		jsr areAllDucksDead
 	!:
 
 	rts
@@ -225,13 +268,10 @@ crosshairYHighBoundary: .byte 0
 isHitDuck1:
 {
 	lda gameState
-	cmp #roundPlaying
+	cmp #Playing
 	beq !+
 		rts
 	!:
-
-	dec shots
-	jsr printShots
 
 	sec
 	lda crosshairY
@@ -288,36 +328,135 @@ isHitDuck1:
 	bcc !lower+
 	bne !nohit+ //higher
 	!lower:
-
-	// We have a hit!
-	lda #0
-    sta duck1AnimSpeed
-	sta duck1SpritesAnimationCounter
-	lda #1
-	sta duck1IsShot
-	jsr addScore
-	jsr printScore
-	rts
+	
+	!hit:
+		lda #0
+		sta duck1AnimSpeed
+		sta duck1SpritesAnimationCounter
+		lda #1
+		sta duck1IsShot
+		jsr addScore
+		jsr printScore
+		rts
 
 	!nohit:
-	lda crosshairX
-	sta showCrosshairX
-	lda crosshairX+1
-	sta showCrosshairX+1
-	lda crosshairY
-	sta showCrosshairY
-	jsr showCrosshair
+		lda crosshairX
+		sta showCrosshairX
+		lda crosshairX+1
+		sta showCrosshairX+1
+		lda crosshairY
+		sta showCrosshairY
+		jsr showCrosshair
+		lda shots
+		bne !+
+			lda #FlyAway
+			sta gameState     	
+		!:
+		lda #0
+		rts
+}
 
-    lda #0
-    sta duck1AnimSpeed
-
-	lda shots
-	bne !+
-		lda #flyAway
-    	sta gameState     	
+isHitDuck2:
+{
+	lda gameState
+	cmp #Playing
+	beq !+
+		rts
 	!:
 
-	rts
+	sec
+	lda crosshairY
+	sbc #11*2
+	sta crosshairYLowBoundary
+
+	clc
+	lda crosshairY
+	adc #11
+	sta crosshairYHighBoundary
+	
+	sec
+	lda crosshairX
+	sbc #12*2
+	sta crosshairXLowBoundary
+	lda crosshairX+1
+	sbc #0
+	sta crosshairXLowBoundary+1
+
+	clc
+	lda crosshairX
+	adc #12*2
+	sta crosshairXHighBoundary
+	lda crosshairX+1
+	adc #0
+	sta crosshairXHighBoundary+1
+
+	//duck2Y < crosshairYLowBoundary?
+	lda duck2Y
+	cmp crosshairYLowBoundary
+	bcc !nohit+
+
+	//duck2Y >= crosshairYHighBoundary?
+	lda duck2Y
+	cmp crosshairYHighBoundary
+	bcs !nohit+
+	
+	//duck2X < crosshairXLowBoundary?
+	lda duck2X+1
+	cmp crosshairXLowBoundary+1
+	bne !+
+	    lda duck2X
+		cmp crosshairXLowBoundary
+	!:
+    bcc !nohit+ //lower
+
+	//duck2X >= crosshairXHighBoundary?
+	lda duck2X+1
+	cmp crosshairXHighBoundary+1
+	bne !+
+	    lda duck2X
+		cmp crosshairXHighBoundary
+	!:
+	bcc !lower+
+	bne !nohit+ //higher
+	!lower:
+
+	!hit:
+		lda #0
+		sta duck2AnimSpeed
+		sta duck2SpritesAnimationCounter
+		lda #1
+		sta duck2IsShot
+		jsr addScore
+		jsr printScore
+		rts
+
+	!nohit:
+		lda crosshairX
+		sta showCrosshairX
+		lda crosshairX+1
+		sta showCrosshairX+1
+		lda crosshairY
+		sta showCrosshairY
+		jsr showCrosshair
+		lda shots
+		bne !+
+			lda #FlyAway
+			sta gameState     	
+		!:
+		rts
+}
+
+areAllDucksDead:
+{
+    lda duck1IsDead
+	beq !++
+		lda duck2IsDead
+		beq !+
+			lda #ClearWith2Ducks
+			sta gameState
+		!:
+	!:
+    rts
 }
 
 printShots:
@@ -364,6 +503,10 @@ multiply:
 }
 
 #import "sprites/Crosshair_code.asm"
-#import "sprites/Duck_code.asm"
+#import "sprites/Duck1_code.asm"
+#import "sprites/Duck2_code.asm"
 #import "sprites/Dog_code.asm"
 #import "Score_code.asm"
+
+*=$c000 "[DATA] SoundFX"
+#import "Music\SoundFx.asm"

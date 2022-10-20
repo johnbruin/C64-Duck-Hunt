@@ -388,6 +388,11 @@ dog3Animation: .byte 0
 dog3AnimSpeed: .byte 4
 showDog3:
 {
+    :sprite_disable(4)
+    :sprite_disable(5)
+    :sprite_disable(6)
+    :sprite_disable(7)
+    
     lda #%00001111  
 
     // sprite priority to front    
@@ -782,7 +787,19 @@ moveDog4:
     bne !skipAnimation+
         lda #0
         sta dog4AnimSpeed  
-        inc dog4SpritesAnimationPointer      
+        inc dog4SpritesAnimationPointer  
+        
+        ldy dog4SpritesAnimationPointer
+        cpy #38
+        bne !+
+            jsr playBark
+        !:
+
+        ldy dog4SpritesAnimationPointer
+        cpy #41
+        bne !+
+            jsr playBark
+        !:    
     !skipAnimation:
 
     ldy dog4SpritesAnimationPointer
@@ -811,13 +828,14 @@ moveDog4:
         inc dog4Sprite3X
         inc dog4Sprite4X
 
+        ldy dog4SpritesAnimationPointer
         cpy #38
         bcc !++
             cpy #41
             bcc !+
                 jsr land               
                 jmp !++
-            !:
+            !:            
             jsr jump
         !:
         lda #0
@@ -867,5 +885,41 @@ jump:
     sta dog4Sprite3Y
     sta dog4Sprite4Y
     
+    rts
+}
+
+playSmile:
+{
+    lda #6    // sfx number
+   	ldy #1    // voice number
+   	jsr $c04a // play sound!
+    rts
+}
+
+playLaugh:
+{
+    lda #5    // sfx number
+    ldy #1    // voice number
+    jsr $c04a // play sound!
+    rts
+}
+
+playBark:
+{
+    lda #15
+    sta $d418 // set volume to 15
+
+    lda #7    // sfx number
+    ldy #0    // voice number
+    jsr $c04a // play sound!
+    
+    lda #7    // sfx number
+    ldy #1    // voice number
+    jsr $c04a // play sound!
+
+    lda #7    // sfx number
+    ldy #2    // voice number
+    jsr $c04a // play sound!
+
     rts
 }

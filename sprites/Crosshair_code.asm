@@ -56,3 +56,22 @@ showCrosshair:
 
     rts
 }
+
+playShot:
+{
+    lda #15
+    sta $d418 // set volume to 15
+
+    lda #0    // sfx number
+    ldy #0    // voice number
+    jsr $c04a // play sound!
+    
+    lda #0    // sfx number
+    ldy #1    // voice number
+    jsr $c04a // play sound!
+
+    lda #0    // sfx number
+    ldy #2    // voice number
+    jsr $c04a // play sound!
+    rts
+}

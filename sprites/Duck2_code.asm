@@ -7,6 +7,7 @@ initDuck2:
     lda #0
     sta duck2IsDead
     sta duck2IsShot
+    sta duck2OnTheGround
     sta duck2SpritesAnimationCounter
     
     ldx rndDirectionPointer
@@ -111,20 +112,29 @@ showDuck2:
 }
 
 duck2AnimSpeed: .byte 0
+duck2OnTheGround: .byte 0
 animateDuck2:
 {
     lda duck2IsDead
-    beq !++
+    beq !duckisdead+
         lda duck2Y
         cmp #170
-        bcc !+
+        bcc !++
+            lda duck2OnTheGround
+            bne !+
+                lda #4    // sfx number
+                ldy #0    // voice number
+                jsr $c04a // play sound!
+            !:
+            lda #1
+            sta duck2OnTheGround
             sprite_disable(3)
             sprite_disable(4) 
-            jmp !++
+            jmp !duckisdead+
         !:
         inc duck2Y   
         inc duck2Y 
-    !:
+    !duckisdead:
 
     lda duck2AnimSpeed
     cmp #8
@@ -272,6 +282,9 @@ moveDuck2FlyAway:
     !higher:
         rts
     !lower:
+        lda #5    // sfx number
+        ldy #0    // voice number
+        jsr $c04a // play sound!
         lda #Miss
         sta gameState
         rts

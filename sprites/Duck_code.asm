@@ -48,5 +48,49 @@ rndXPositions:
     {
         .var x1 = 44+round(random()*211)
         .var x2 = x1-75
+        .if (x2 < 44)
+            .eval x2 = 250
         .byte x1, x2
     }
+
+rndQuackPointer: .byte 0
+rndQuacks:
+    .for (var i=0; i< 255; i++)
+    {
+        .var q = round(random()*15)        
+        .byte q
+    }
+
+playDrop:
+{
+    lda #4    // sfx number
+    ldy #0    // voice number
+    jsr $c04a // play sound!
+    rts
+}
+
+playFly:
+{
+    lda #15
+    sta $d418 // set volume to 15
+
+    lda #1    // sfx number
+    ldy #0    // voice number
+    jsr $c04a // play sound!
+    rts
+}
+
+playQuack:
+{
+    lda #2    // sfx number
+    ldy #2    // voice number
+    jsr $c04a // play sound!
+    rts
+}
+playHit:
+{
+    lda #3    // sfx number
+    ldy #2    // voice number
+    jsr $c04a // play sound!
+    rts
+}

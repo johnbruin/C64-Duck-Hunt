@@ -7,6 +7,7 @@ initDuck1:
     lda #0
     sta duck1IsDead
     sta duck1IsShot
+    sta duck1OnTheGround
     sta duck1SpritesAnimationCounter
     
     ldx rndDirectionPointer
@@ -24,10 +25,6 @@ initDuck1:
 
     inc rndXPositionPointer
     inc rndDirectionPointer
-
-    lda #2    // sfx number
-    ldy #2    // voice number
-    jsr $c04a // play sound!
 
     rts
 }
@@ -115,26 +112,40 @@ showDuck1:
 }
 
 duck1AnimSpeed: .byte 0
+duck1OnTheGround: .byte 0
 animateDuck1:
 {
     lda duck1IsDead
-    beq !++
+    beq !duckisdead+
         lda duck1Y
         cmp #170
-        bcc !+
+        bcc !++
+            lda duck1OnTheGround
+            bne !+
+                jsr playDrop
+            !:
+            lda #1
+            sta duck1OnTheGround
             sprite_disable(1)
-            sprite_disable(2)            
-            jmp !++
+            sprite_disable(2)  
+            jmp !duckisdead+
         !:
         inc duck1Y   
         inc duck1Y 
-    !:
+    !duckisdead:
     
+    lda duck1AnimSpeed
     cmp #8
     bne !skipAnimation+  
-        lda #1    // sfx number
-        ldy #1    // voice number
-        jsr $c04a // play sound!
+
+        inc rndQuackPointer
+        ldx rndQuackPointer
+        lda rndQuacks,x
+        bne !+
+            jsr playQuack
+        !:
+
+        jsr playFly
 
         lda duck1IsShot
         beq !+
@@ -279,6 +290,8 @@ moveDuck1FlyAway:
     !higher:
         rts
     !lower:
+        jsr playLaugh
+
         lda #Miss
         sta gameState
         rts

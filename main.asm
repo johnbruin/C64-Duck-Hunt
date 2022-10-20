@@ -55,9 +55,6 @@ start:
     //ldx #music.startSong - 0
 	//jsr music.init
 
-    lda #15
-    sta $d418 // set volume to 15
-
 	jsr initScore
 	jsr init_sprites
 	jsr initCrosshair
@@ -65,8 +62,8 @@ start:
 	jsr initDuck1
 	jsr initDuck2
 
-	//lda #intro
-	lda #Playing
+	lda #Intro
+	//lda #Playing
 	sta gameState
 
 	sei
@@ -127,13 +124,10 @@ irq1:
 			lda #10
 			sta isShotFired
 			
-			lda #0    // sfx number
-			ldy #0    // voice number
-			jsr $c04a // play sound!
-
 			lda shots
 			beq !+
 				dec shots
+				jsr playShot
 			!:
 			jsr printShots
 
@@ -254,7 +248,7 @@ playGame:
 		jsr moveDuck2
 		jsr animateDuck2
 
-		jsr areAllDucksDead
+		jsr areAllDucksOnTheGround
 	!:
 
 	rts
@@ -330,6 +324,8 @@ isHitDuck1:
 	!lower:
 	
 	!hit:
+	    jsr playHit
+
 		lda #0
 		sta duck1AnimSpeed
 		sta duck1SpritesAnimationCounter
@@ -421,6 +417,8 @@ isHitDuck2:
 	!lower:
 
 	!hit:
+		jsr playHit
+
 		lda #0
 		sta duck2AnimSpeed
 		sta duck2SpritesAnimationCounter
@@ -446,12 +444,13 @@ isHitDuck2:
 		rts
 }
 
-areAllDucksDead:
+areAllDucksOnTheGround:
 {
-    lda duck1IsDead
+    lda duck1OnTheGround
 	beq !++
-		lda duck2IsDead
+		lda duck2OnTheGround
 		beq !+
+		    jsr playSmile
 			lda #ClearWith2Ducks
 			sta gameState
 		!:

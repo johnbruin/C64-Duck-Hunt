@@ -1,6 +1,6 @@
 #importonce 
 
-#import "../globals.asm"
+#import "globals.asm"
 
 .const SPRITEPOINTER = screenRam+$03f8
 

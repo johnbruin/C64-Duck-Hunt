@@ -1,4 +1,5 @@
-#import "Sprites_common_code.asm"
+#import "Sprites_code.asm"
+#import "SoundFx_code.asm"
 
 *=* "[CODE] Dog code"
 
@@ -172,13 +173,13 @@ moveDog1:
 }
 
 dog2Sprite1X: .byte 160-24*2
-dog2Sprite1Y: .byte 120
+dog2Sprite1Y: .byte 120+50
 dog2Sprite2X: .byte 160
-dog2Sprite2Y: .byte 120
+dog2Sprite2Y: .byte 120+50
 dog2Sprite3X: .byte 160+24*2
-dog2Sprite3Y: .byte 120
+dog2Sprite3Y: .byte 120+50
 dog2Sprite4X: .byte 160
-dog2Sprite4Y: .byte 120+21*2
+dog2Sprite4Y: .byte 120+21*2+50
 showDog2:
 {
     // show sprites
@@ -885,41 +886,5 @@ jump:
     sta dog4Sprite3Y
     sta dog4Sprite4Y
     
-    rts
-}
-
-playSmile:
-{
-    lda #6    // sfx number
-   	ldy #1    // voice number
-   	jsr $c04a // play sound!
-    rts
-}
-
-playLaugh:
-{
-    lda #5    // sfx number
-    ldy #1    // voice number
-    jsr $c04a // play sound!
-    rts
-}
-
-playBark:
-{
-    lda #15
-    sta $d418 // set volume to 15
-
-    lda #7    // sfx number
-    ldy #0    // voice number
-    jsr $c04a // play sound!
-    
-    lda #7    // sfx number
-    ldy #1    // voice number
-    jsr $c04a // play sound!
-
-    lda #7    // sfx number
-    ldy #2    // voice number
-    jsr $c04a // play sound!
-
     rts
 }

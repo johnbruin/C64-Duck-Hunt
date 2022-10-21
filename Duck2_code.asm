@@ -1,3 +1,5 @@
+#importonce 
+
 #import "Duck_code.asm"
 
 *=* "[CODE] Duck2 code"
@@ -112,7 +114,6 @@ showDuck2:
 }
 
 duck2AnimSpeed: .byte 0
-duck2OnTheGround: .byte 0
 animateDuck2:
 {
     lda duck2IsDead

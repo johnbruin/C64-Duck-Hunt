@@ -1,5 +1,7 @@
 #importonce 
+
 #import "Sprites_common_code.asm"
+#import "../Music/SoundFx_code.asm"
 
 *=* "[CODE] Duck common code"
 
@@ -60,37 +62,3 @@ rndQuacks:
         .var q = round(random()*15)        
         .byte q
     }
-
-playDrop:
-{
-    lda #4    // sfx number
-    ldy #0    // voice number
-    jsr $c04a // play sound!
-    rts
-}
-
-playFly:
-{
-    lda #15
-    sta $d418 // set volume to 15
-
-    lda #1    // sfx number
-    ldy #0    // voice number
-    jsr $c04a // play sound!
-    rts
-}
-
-playQuack:
-{
-    lda #2    // sfx number
-    ldy #2    // voice number
-    jsr $c04a // play sound!
-    rts
-}
-playHit:
-{
-    lda #3    // sfx number
-    ldy #2    // voice number
-    jsr $c04a // play sound!
-    rts
-}

@@ -1,5 +1,7 @@
 #importonce 
-#import "Sprites_common_code.asm"
+
+#import "Sprites_code.asm"
+#import "SoundFx_code.asm"
 
 *=* "[CODE] Duck common code"
 
@@ -61,36 +63,18 @@ rndQuacks:
         .byte q
     }
 
-playDrop:
+duck1OnTheGround: .byte 0
+duck2OnTheGround: .byte 0
+areAllDucksOnTheGround:
 {
-    lda #4    // sfx number
-    ldy #0    // voice number
-    jsr $c04a // play sound!
-    rts
-}
-
-playFly:
-{
-    lda #15
-    sta $d418 // set volume to 15
-
-    lda #1    // sfx number
-    ldy #0    // voice number
-    jsr $c04a // play sound!
-    rts
-}
-
-playQuack:
-{
-    lda #2    // sfx number
-    ldy #2    // voice number
-    jsr $c04a // play sound!
-    rts
-}
-playHit:
-{
-    lda #3    // sfx number
-    ldy #2    // voice number
-    jsr $c04a // play sound!
+    lda duck1OnTheGround
+	beq !++
+		lda duck2OnTheGround
+		beq !+
+		    jsr playSmile
+			lda #ClearWith2Ducks
+			sta gameState
+		!:
+	!:
     rts
 }

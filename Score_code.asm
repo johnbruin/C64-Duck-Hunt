@@ -1,3 +1,5 @@
+#importonce
+
 #import "globals.asm"
 
 initScore:
@@ -99,5 +101,26 @@ printScore:
     ora #$30		            // -->ascii
     sta screenRam+(22*40)+29+5	//print on next screen position
 
+    rts
+}
+
+printShots:
+{
+	ldx #3
+	lda #0
+	!:
+  		sta screenRam+(22*40)+5,x
+		dex
+	bne !-		
+    
+	ldx shots
+	bne !+
+		rts
+	!:
+	lda #157
+	!:
+       	sta screenRam+(22*40)+5,x
+		dex
+	bne !-
     rts
 }

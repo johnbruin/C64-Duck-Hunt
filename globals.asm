@@ -30,3 +30,6 @@ spriteMemory:
 .var music = LoadSid("music/Hiraeth_part_1_mockup.sid")
 *=music.location "[MUSIC] Hiraeth by Jack-Paw-Judi"
 .fill music.size, music.getData(i)
+
+*=$c000 "[DATA] SoundFX"
+#import "Music\SoundFx.asm"

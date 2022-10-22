@@ -1,0 +1,180 @@
+.label moveDuck1LeftDown=$cb4b {
+}
+.label rndXPositionPointer=$c674
+.label score2=$c3f4
+.label score3=$c3f5
+.label playFly=$c4f8 {
+}
+.label moveDuck2Up=$cedf {
+}
+.label checkCrosshairGame=$d1e4 {
+}
+.label Duck1Left=$ccb5 {
+}
+.label crosshairYLowBoundary=$d110
+.label initCrosshair=$d112 {
+}
+.label crosshairTrigger=$d12b
+.label duck1Direction=$c8fe
+.label playHit=$c50d {
+}
+.label Duck2Down=$d101 {
+}
+.label duck2SpritesAnimationCounter=$cd23
+.label areAllDucksOnTheGround=$c877 {
+}
+.label moveDuck2LeftUp=$cf32 {
+}
+.label moveDuck1Down=$cafc {
+}
+.label moveDuck2DiagonalLeftDown=$d031 {
+}
+.label score1=$c3f3
+.label shots=$c45a
+.label Duck2Right=$d0e3 {
+}
+.label flashDuckHits=$c889 {
+}
+.label printDuckHit=$c4b3 {
+}
+.label initDuck1=$c8c6 {
+}
+.label Duck1Up=$ccdb {
+}
+.label crosshairXLowBoundary=$d10c
+.label initDuck2=$ccf1 {
+}
+.label playQuack=$c505 {
+}
+.label showCrosshairY=$d12e
+.label moveDuck2LeftDown=$cf66 {
+}
+.label showCrosshairX=$d12c
+.label spriteXPositions=$c37d
+.label moveDuck1DiagonalRightDown=$cc81 {
+}
+.label duck1Number=$c540
+.label isShotFired=$d12f
+.label moveDuck1Up=$cac4 {
+}
+.label moveDuck1RightUp=$cb7c {
+}
+.label moveDuck1LeftUp=$cb17 {
+}
+.label playSmile=$c515 {
+}
+.label duck2AnimSpeed=$cdff
+.label crosshairY=$d12a
+.label crosshairX=$d128
+.label screenRam=$4800
+.label duck1IsShot=$c8fd
+.label hide_sprites=$c371 {
+}
+.label duck2Number=$c541
+.label printScore=$c411 {
+}
+.label moveDuck1=$ca49 {
+}
+.label moveDuck2=$ce64 {
+}
+.label moveDuck2FlyAway=$cefa {
+}
+.label spriteMemory=$5000
+.label duck1Y=$c8fb
+.label duck1X=$c8f9
+.label duck1SpritesAnimationPointer=$c8f7
+.label Duck2Up=$d0f6 {
+}
+.label isHitDuck1=$d251 {
+}
+.label showDuck1=$c8ff {
+}
+.label crosshairXHighBoundary=$d10e
+.label showDuck2=$cd2a {
+}
+.label crosshairYHighBoundary=$d111
+.label initScore=$c395 {
+}
+.label printShots=$c45c {
+}
+.label rndDirection=$c574
+.label moveDuck2RightDown=$cfca {
+}
+.label moveDuck1DiagonalLeftUp=$cbdf {
+}
+.label moveDuck1DiagonalLeftDown=$cc16 {
+}
+.label isHitDuck2=$d301 {
+}
+.label duck2X=$cd24
+.label duck2Y=$cd26
+.label checkCrosshairTitleScreen=$d177 {
+}
+.label printDuckHits=$c480 {
+}
+.label playLaugh=$c51d {
+}
+.label Duck1Down=$cce6 {
+}
+.label playShot=$c4d5 {
+}
+.label playDrop=$c4f0 {
+}
+.label moveDuck1FlyAway=$cadf {
+}
+.label moveDuck2DiagonalRightDown=$d09c {
+}
+.label Duck2Left=$d0d0 {
+}
+.label showCrosshair=$d130 {
+}
+.label duckHits=$c476
+.label duck2IsShot=$cd28
+.label moveDuck1DiagonalRightUp=$cc4a {
+}
+.label duckMoveSpeed=$c542
+.label moveDuck2Down=$cf17 {
+}
+.label init_sprites=$c35b {
+}
+.label rndQuackPointer=$c775
+.label moveDuck2RightUp=$cf97 {
+}
+.label duck1AnimSpeed=$c9d4
+.label moveDuck2DiagonalRightUp=$d065 {
+}
+.label duck1SpritesAnimationCounter=$c8f8
+.label moveDuck1RightDown=$cbaf {
+}
+.label rndDirectionPointer=$c573
+.label duck1OnTheGround=$c875
+.label addScore=$c3f6 {
+}
+.label bullet=$c45b
+.label multiply=$d3af {
+  .label m0=$d3b4
+  .label m1=$d3b9
+}
+.label duck2IsDead=$cd27
+.label duck2Direction=$cd29
+.label screenRamIntro=$4c00
+.label duckSprites=$c543
+.label charRam=$4000
+.label duck2SpritesAnimationPointer=$cd22
+.label duck2OnTheGround=$c876
+.label spriteYPositions=$c38d
+.label Duck1Right=$ccc8 {
+}
+.label rndXPositions=$c675
+.label animateDuck2=$ce00 {
+}
+.label duck1IsDead=$c8fc
+.label rndQuacks=$c776
+.label show_sprites=$c377 {
+}
+.label moveDuck2DiagonalLeftUp=$cffa {
+}
+.label animateDuck1=$c9d5 {
+}
+.label playBark=$c525 {
+}

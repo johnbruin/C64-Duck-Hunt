@@ -16,6 +16,9 @@ showDog1:
 {
     lda #%01111110  
 
+    // sprite priority to back    
+    sta $d01b
+
     // x- and y-expanded.
     sta $d017
     sta $d01d

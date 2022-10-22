@@ -31,6 +31,41 @@ initDuck2:
     rts
 }
 
+duck2ScoreX: .word $0000
+duck2ScoreY: .byte 0
+showScoreDuck2:
+{        
+    // sprite priority to front    
+    lda #%10011110
+    sta $d01b
+
+    // Make sure no sprites are x- or y-expanded.    
+    sta $d017
+    sta $d01d
+
+    lda #WHITE
+    sta $d027+6
+
+    ldx #0
+    lda scoreSprites,x  
+    clc
+    adc #(>spriteMemory<<2)	
+    sta SPRITEPOINTER+6
+    
+    lda duck2ScoreX
+    sta spriteXPositions.lo+6
+
+    lda duck2ScoreX+1
+    sta spriteXPositions.hi+6
+
+    lda duck2ScoreY
+    sta spriteYPositions+6
+
+    :sprite_set_xy_positions(6)
+    :sprite_enable(6)
+    rts
+}
+
 duck2SpritesAnimationPointer: .byte 0
 duck2SpritesAnimationCounter: .byte 0
 duck2X: .word $0000
@@ -40,7 +75,6 @@ duck2IsShot: .byte 0
 duck2Direction: .byte flyRightUp
 showDuck2:
 {
-    :sprite_disable(5)
     :sprite_disable(6)
     :sprite_disable(7)    
     
@@ -72,12 +106,14 @@ showDuck2:
     beq !+
         lda #5*6
         sta duck2SpritesAnimationPointer
+        jsr showScoreDuck2
     !:
 
     lda duck2IsDead
     beq !+
         lda #7*6
         sta duck2SpritesAnimationPointer
+        jsr showScoreDuck2
     !:
 
     lda duck2SpritesAnimationPointer
@@ -123,14 +159,13 @@ animateDuck2:
         bcc !++
             lda duck2OnTheGround
             bne !+
-                lda #4    // sfx number
-                ldy #0    // voice number
-                jsr $c04a // play sound!
+                jsr playDrop                               
             !:
             lda #1
             sta duck2OnTheGround
-            sprite_disable(3)
-            sprite_disable(4) 
+            :sprite_disable(3)
+            :sprite_disable(4)
+            :sprite_disable(6)  
             jmp !duckisdead+
         !:
         inc duck2Y   

@@ -63,6 +63,9 @@ initScore:
 score1: .byte 0
 score2: .byte 0
 score3: .byte 0
+hiScore1: .byte 0
+hiScore2: .byte 0
+hiScore3: .byte $01
 addScore:
 {
     sed
@@ -122,6 +125,53 @@ printScore:
     and #$0f		            //ones
     ora #$30		            // -->ascii
     sta screenRam+(22*40)+29+5	//print on next screen position
+
+    rts
+}
+
+printHiScore:
+{
+    lda hiScore3
+    and #$f0	                //hundred-thousands
+    lsr
+    lsr
+    lsr
+    lsr
+    ora #$30		            // -->ascii
+    sta screenRamTitleScreen+(20*40)+22+0	//print on screen
+    
+    lda hiScore3
+    and #$0f		            //ten-thousands
+    ora #$30		            // -->ascii
+    sta screenRamTitleScreen+(20*40)+22+1	//print on next screen position
+
+    lda hiScore2
+    and #$f0	                //thousands
+    lsr
+    lsr
+    lsr
+    lsr
+    ora #$30		            // -->ascii
+    sta screenRamTitleScreen+(20*40)+22+2	//print on screen
+    
+    lda hiScore2
+    and #$0f		            //hundreds
+    ora #$30		            // -->ascii
+    sta screenRamTitleScreen+(20*40)+22+3	//print on next screen position
+
+    lda hiScore1
+    and #$f0	                //tens
+    lsr
+    lsr
+    lsr
+    lsr
+    ora #$30		            // -->ascii
+    sta screenRamTitleScreen+(20*40)+22+4	//print on screen
+
+    lda hiScore1
+    and #$0f		            //ones
+    ora #$30		            // -->ascii
+    sta screenRamTitleScreen+(20*40)+22+5	//print on next screen position
 
     rts
 }

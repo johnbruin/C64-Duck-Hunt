@@ -31,6 +31,41 @@ initDuck1:
     rts
 }
 
+duck1ScoreX: .word $0000
+duck1ScoreY: .byte 0
+showScoreDuck1:
+{        
+    // sprite priority to front    
+    lda #%10011110
+    sta $d01b
+
+    // Make sure no sprites are x- or y-expanded.    
+    sta $d017
+    sta $d01d
+
+    lda #WHITE
+    sta $d027+5
+
+    ldx #0
+    lda scoreSprites,x  
+    clc
+    adc #(>spriteMemory<<2)	
+    sta SPRITEPOINTER+5
+    
+    lda duck1ScoreX
+    sta spriteXPositions.lo+5
+
+    lda duck1ScoreX+1
+    sta spriteXPositions.hi+5
+
+    lda duck1ScoreY
+    sta spriteYPositions+5
+
+    :sprite_set_xy_positions(5)
+    :sprite_enable(5)
+    rts
+}
+
 duck1SpritesAnimationPointer: .byte 0
 duck1SpritesAnimationCounter: .byte 0
 duck1X: .word $0000
@@ -41,7 +76,6 @@ duck1Direction: .byte flyRightUp
 showDuck1:
 {
     :sprite_disable(5)
-    :sprite_disable(6)
     :sprite_disable(7)    
     
     // set sprites multicolor1
@@ -69,15 +103,17 @@ showDuck1:
     sta $d01c 
 
     lda duck1IsShot
-    beq !+
+    beq !+        
         lda #5*6
         sta duck1SpritesAnimationPointer
+        jsr showScoreDuck1
     !:
 
     lda duck1IsDead
     beq !+
         lda #7*6
         sta duck1SpritesAnimationPointer
+        jsr showScoreDuck1
     !:
 
     lda duck1SpritesAnimationPointer
@@ -122,13 +158,14 @@ animateDuck1:
         cmp #170
         bcc !++
             lda duck1OnTheGround
-            bne !+
+            bne !+                               
                 jsr playDrop
             !:
             lda #1
             sta duck1OnTheGround
-            sprite_disable(1)
-            sprite_disable(2)  
+            :sprite_disable(1)
+            :sprite_disable(2)
+            :sprite_disable(5)  
             jmp !duckisdead+
         !:
         inc duck1Y   

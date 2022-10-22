@@ -6,9 +6,13 @@
 
 *=* "[CODE] Duck common code"
 
+playWith1Duck: .byte 0
 duck1Number: .byte 0
 duck2Number: .byte 0
 duckMoveSpeed: .byte 2
+
+scoreSprites:
+.byte 53,54,55,56,57,58
 
 duckSprites:
 .byte 1, 3, 2, 1, 3, 2          //0=right
@@ -72,14 +76,26 @@ duck1OnTheGround: .byte 0
 duck2OnTheGround: .byte 0
 areAllDucksOnTheGround:
 {
+    lda playWith1Duck
+    bne !only1Duck+
+        lda duck1OnTheGround
+	    beq !++
+            jsr playSmile
+            lda #ClearWith1Duck
+            sta gameState 
+            rts
+        !:
+    !only1Duck:
+
     lda duck1OnTheGround
 	beq !++
-		lda duck2OnTheGround
-		beq !+
-		    jsr playSmile
-			lda #ClearWith2Ducks
-			sta gameState
-		!:
+        lda duck2OnTheGround
+        beq !+
+            jsr playSmile
+            lda #ClearWith2Ducks
+            sta gameState
+            rts
+        !:
 	!:
     rts
 }

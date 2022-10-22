@@ -54,6 +54,8 @@ initTitleScreen:
 	lda #WHITE
 	sta $d800+(15*40)+9
 
+	jsr printHiScore
+
 	rts
 }
 
@@ -62,6 +64,27 @@ roundNumber: .byte 0
 gameSpeed: .byte 1
 initGame:
 {
+	lda #0
+	sta $d418 // set volume to 15
+
+	// Char primary color
+	ldx #0
+	!:
+		.for (var i=0; i<4; i++) {
+			lda #13 	//GREEN
+			sta $d800 + i*250,x
+		}
+		inx
+	bne !-
+
+	// Char multi color 1
+	lda #BLUE
+	sta $D022           
+
+    // Char multi color 2
+	lda #BLACK
+	sta $D023
+
 	lda #0
 	sta duckNumber
 	sta roundNumber
@@ -86,7 +109,7 @@ initRound:
 
 playGame:
 {
-	jsr checkCrosshair
+	jsr checkCrosshairGame
 
 	lda gameState
 	
@@ -182,13 +205,15 @@ playGame:
 		inc duckNumber
 		lda duckNumber
 		sta duck1Number
-		
-		inc duckNumber
-		lda duckNumber
-		sta duck2Number
-
 		jsr initDuck1
-		jsr initDuck2
+
+		lda playWith1Duck
+		beq !only1Duck+
+			inc duckNumber
+			lda duckNumber
+			sta duck2Number
+			jsr initDuck2
+		!only1Duck:		
 		
 		lda #Playing
 		sta gameState
@@ -216,9 +241,13 @@ playDucks:
 		jsr moveDuck1
 		jsr animateDuck1	
 
-		jsr showDuck2
-		jsr moveDuck2
-		jsr animateDuck2
+		lda playWith1Duck
+		beq !only1Duck+
+			jsr showDuck2
+			jsr moveDuck2
+			jsr animateDuck2
+		!only1Duck:
+
 		lda #1
 		sta slowdown
 	!:

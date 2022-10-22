@@ -32,33 +32,9 @@ start:
 	ora #%00010000
     sta $d016
 
-	// Char primary color
-	ldx #0
-	!:
-		.for (var i=0; i<4; i++) {
-			lda #13 	//GREEN
-			sta $d800 + i*250,x
-		}
-		inx
-	bne !-
-
-	// Char multi color 1
-	lda #BLUE
-	sta $D022           
-
-    // Char multi color 2
-	lda #BLACK
-	sta $D023
-
-    //lda #music.startSong - 0
-    //ldx #music.startSong - 0
-	//jsr music.init
-
-	jsr initGame
-	jsr initRound
-
-	lda #EndRound
-	sta gameState
+    lda #music.startSong - 0
+    ldx #music.startSong - 0
+	jsr music.init
 
 	jsr initTitleScreen
 
@@ -77,7 +53,17 @@ irqTitleScreen:
 	
 	lda #BLACK
 	sta background_color 
-
+	
+	jsr music.play
+	jsr checkCrosshairTitleScreen
+	lda startGame
+	beq !+
+		jsr initGame
+		jsr initRound
+		lda #EndRound
+		sta gameState
+		:irq_next(irqGame1,0)
+	!:	
 	:irq_next(irqTitleScreen,0)
 }
 

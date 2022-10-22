@@ -3,6 +3,7 @@
 #import "Sprites_code.asm"
 #import "Score_code.asm"
 #import "SoundFx_code.asm"
+#import "Duck_code.asm"
 #import "Duck1_code.asm"
 #import "Duck2_code.asm"
 
@@ -72,7 +73,71 @@ showCrosshair:
     rts
 }
 
-checkCrosshair:
+startGame: .byte 0
+checkCrosshairTitleScreen:
+{
+	lda $d41a
+	sta crosshairTrigger
+
+	lda $d013		//LPX
+	sta fac1		//multiply LPX by 2
+	lda #2
+	sta fac2
+	jsr multiply
+	stx crosshairX	
+	sta crosshairX+1
+
+	sec				//substract 30+12 (half a sprite width)
+	lda crosshairX
+	sbc #30+12
+	sta crosshairX
+	lda crosshairX+1
+	sbc #0
+	sta crosshairX+1
+	
+	lda $d014		//LPY
+	sta crosshairY
+
+	cmp #170	
+    bcc !lower+
+    bne !higher+
+	!lower:
+		lda #BLACK
+		sta $d800+(17*40)+9
+		lda #WHITE
+		sta $d800+(15*40)+9
+		lda #0
+		sta playWith1Duck
+        jmp !+    
+    !higher:
+		lda #BLACK
+		sta $d800+(15*40)+9
+		lda #WHITE
+		sta $d800+(17*40)+9
+		lda #1
+		sta playWith1Duck
+        jmp !+
+	!:
+
+	lda isShotFired
+	bne !shotwasfired+
+		:sprite_disable(0)
+				
+		lda crosshairTrigger
+		bne !trigger+
+			lda #10
+			sta isShotFired
+			lda #1
+			sta startGame
+		!trigger:
+		jmp !skip+
+	!shotwasfired:
+	dec isShotFired
+	!skip:
+	rts
+}
+
+checkCrosshairGame:
 {
 	lda $d41a
 	sta crosshairTrigger
@@ -120,11 +185,15 @@ checkCrosshair:
 			!:
 
 			bne !++ // a=1 when duck1 was hit
-			lda duck2IsShot
-				bne !+
-					jsr isHitDuck2
+			
+			lda playWith1Duck
+			beq !only1Duck+
+				lda duck2IsShot
+					bne !+
+						jsr isHitDuck2
+					!:
 				!:
-			!:
+			!only1Duck:
 		!trigger:
 		jmp !skip+
 	!shotwasfired:
@@ -212,6 +281,13 @@ isHitDuck1:
 		ldx duck1Number
 		sta duckHits,x
 		jsr printDuckHits
+
+		lda crosshairX
+        sta duck1ScoreX
+        lda crosshairX+1
+        sta duck1ScoreX+1
+        lda crosshairY
+        sta duck1ScoreY
 
 		rts
 
@@ -311,6 +387,13 @@ isHitDuck2:
 		ldx duck2Number
 		sta duckHits,x
 		jsr printDuckHits
+
+		lda crosshairX
+        sta duck2ScoreX
+        lda crosshairX+1
+        sta duck2ScoreX+1
+        lda crosshairY
+        sta duck2ScoreY
 
 		rts
 

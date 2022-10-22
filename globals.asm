@@ -22,7 +22,7 @@ screenRam:
  	.fill 1000, charmap.get(i)
 
 *=$4C00 "[DATA] ScreenRam intro"
-screenRamIntro:
+screenRamTitleScreen:
 	.var charmapIntro = LoadBinary("Pictures/background - Map (40x50).bin")
  	.fill 1000, charmapIntro.get(1000+i)
 

@@ -47,6 +47,9 @@ initTitleScreen:
 		lda #WHITE
 		sta $d800+(22*40),x
 
+		lda #PURPLE
+		sta $d800+(24*40),x
+
 		inx
 		cpx #40
 	bne !-

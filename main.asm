@@ -46,7 +46,7 @@ start:
 	jmp *    
 }
 
-.pc =* "[CODE] irqGame1 Game loop"
+.pc =* "[CODE] irqTitleScreen"
 irqTitleScreen:   		
 {
 	:irq_enter()

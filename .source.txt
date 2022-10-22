@@ -1,689 +1,321 @@
-#importonce 
+#importonce
 
-#import "Duck_code.asm"
+#import "globals.asm"
+#import "Duck1_code.asm"
+#import "Duck2_code.asm"
+#import "Dog_code.asm"
+#import "Score_code.asm"
+#import "Crosshair_code.asm"
 
-*=* "[CODE] Duck2 code"
-
-initDuck2:
+initTitleScreen:
 {
-    lda #0
-    sta duck2IsDead
-    sta duck2IsShot
-    sta duck2OnTheGround
-    sta duck2SpritesAnimationCounter
-    
-    ldx rndDirectionPointer
-    lda rndDirection,x
-    sta duck2Direction
+	lda #%00110000
+    sta $d018
 
-    lda #160
-    sta duck2Y
-        
-    ldx rndXPositionPointer            
-    lda rndXPositions,x
-    sta duck2X
-    lda #0
-    sta duck2X+1
+	ldx #0 
+	!: 
+        lda #CYAN
+        sta $d800+(1*40),x
+        sta $d800+(2*40),x
+		sta $d800+(3*40),x
+        sta $d800+(4*40),x
+		sta $d800+(5*40),x   
+		
+		lda #RED
+		sta $d800+(7*40),x
 
-    inc rndXPositionPointer
-    inc rndDirectionPointer
+		lda #CYAN
+		sta $d800+(8*40),x
+        sta $d800+(9*40),x
+		sta $d800+(10*40),x
+        sta $d800+(11*40),x
+		sta $d800+(12*40),x 
+	
+	    inx
+        cpx #40
+    bne !-
 
-    rts
+	ldx #0 
+	!:
+		lda #RED
+		sta $d800+(15*40),x 
+		sta $d800+(17*40),x 
+		
+		lda #GREEN
+		sta $d800+(20*40),x 
+
+		lda #WHITE
+		sta $d800+(22*40),x
+
+		lda #PURPLE
+		sta $d800+(24*40),x
+
+		inx
+		cpx #40
+	bne !-
+
+	lda #WHITE
+	sta $d800+(15*40)+9
+
+	jsr printHiScore
+
+	rts
 }
 
-duck2ScoreX: .word $0000
-duck2ScoreY: .byte 0
-showScoreDuck2:
-{        
-    // sprite priority to front    
-    lda #%10011110
-    sta $d01b
+duckNumber:	.byte 0
+roundNumber: .byte 0
+gameSpeed: .byte 1
+initGame:
+{
+	lda #0
+	sta $d418 // set volume to 15
 
-    // Make sure no sprites are x- or y-expanded.    
-    sta $d017
-    sta $d01d
+	// Char primary color
+	ldx #0
+	!:
+		.for (var i=0; i<4; i++) {
+			lda #13 	//GREEN
+			sta $d800 + i*250,x
+		}
+		inx
+	bne !-
 
-    lda #WHITE
-    sta $d027+6
+	// Char multi color 1
+	lda #BLUE
+	sta $D022           
 
-    ldx #0
-    lda scoreSprites,x  
-    clc
-    adc #(>spriteMemory<<2)	
-    sta SPRITEPOINTER+6
-    
-    lda duck2ScoreX
-    sta spriteXPositions.lo+6
+    // Char multi color 2
+	lda #BLACK
+	sta $D023
 
-    lda duck2ScoreX+1
-    sta spriteXPositions.hi+6
+	lda #0
+	sta duckNumber
+	sta roundNumber
+	sta gameSpeed
 
-    lda duck2ScoreY
-    sta spriteYPositions+6
+	lda #1
+	sta duckMoveSpeed
 
-    :sprite_set_xy_positions(6)
-    :sprite_enable(6)
-    rts
+	rts
 }
 
-duck2SpritesAnimationPointer: .byte 0
-duck2SpritesAnimationCounter: .byte 0
-duck2X: .word $0000
-duck2Y: .byte 100
-duck2IsDead: .byte 0
-duck2IsShot: .byte 0
-duck2Direction: .byte flyRightUp
-showDuck2:
+initRound:
 {
-    :sprite_disable(6)
-    :sprite_disable(7)    
-    
-    // set sprites multicolor1
-    lda #WHITE
-    sta $d025
-
-    // set sprites multicolor2
-    lda #ORANGE
-    sta $d026
-
-    // set sprite color sprite1
-    lda #PURPLE
-    sta $d027+4
-
-    // set sprite color sprite2
-    lda #BLACK
-    sta $d027+3
-
-    // show sprites
-    :sprite_enable(3)
-	:sprite_enable(4)
-
-    //multicolor
-    lda #%00010100
-    sta $d01c 
-
-    lda duck2IsShot
-    beq !+
-        lda #5*6
-        sta duck2SpritesAnimationPointer
-        jsr showScoreDuck2
-    !:
-
-    lda duck2IsDead
-    beq !+
-        lda #7*6
-        sta duck2SpritesAnimationPointer
-        jsr showScoreDuck2
-    !:
-
-    lda duck2SpritesAnimationPointer
-    clc
-    adc duck2SpritesAnimationCounter
-    tax
-    lda duckSprites,x
-    clc
-    adc #(>spriteMemory<<2)	
-    adc #overlay_distance
-    sta SPRITEPOINTER+3
-
-    lda duckSprites,x  
-    clc
-    adc #(>spriteMemory<<2)	
-    sta SPRITEPOINTER+4
-
-    lda duck2X
-    sta spriteXPositions.lo+3
-    sta spriteXPositions.lo+4
-
-    lda duck2X+1
-    sta spriteXPositions.hi+3
-    sta spriteXPositions.hi+4
-
-    lda duck2Y
-    sta spriteYPositions+3
-    sta spriteYPositions+4
-
-    :sprite_set_xy_positions(3)
-    :sprite_set_xy_positions(4)
-
-    rts
+	jsr initScore
+	jsr init_sprites
+	jsr initCrosshair
+	jsr show_sprites
+	jsr initDuck1
+	jsr initDuck2
+	rts
 }
 
-duck2AnimSpeed: .byte 0
-animateDuck2:
+playGame:
 {
-    lda duck2IsDead
-    beq !duckisdead+
-        lda duck2Y
-        cmp #170
-        bcc !++
-            lda duck2OnTheGround
-            bne !+
-                jsr playDrop                               
-            !:
-            lda #1
-            sta duck2OnTheGround
-            :sprite_disable(3)
-            :sprite_disable(4)
-            :sprite_disable(6)  
-            jmp !duckisdead+
-        !:
-        inc duck2Y   
-        inc duck2Y 
-    !duckisdead:
+	jsr checkCrosshairGame
 
-    lda duck2AnimSpeed
-    cmp #8
-    bne !skipAnimation+  
+	lda gameState
+	
+	cmp #Intro
+	bne !+
+		jsr moveDog4
+		jsr showDog4	
+		rts
+	!:
 
-        lda duck2IsShot
-        beq !+
-            lda #1
-            sta duck2IsDead
-            lda #0
-            sta duck2IsShot
-        !:       
+	cmp #ClearWith1Duck
+	bne !+
+		jsr showDog1	
+		jsr moveDog1
+		rts
+	!:
 
-        inc duck2SpritesAnimationCounter
-        lda duck2SpritesAnimationCounter
-        cmp #6
+	cmp #ClearWith2Ducks
+	bne !+
+		jsr showDog2	
+		jsr moveDog2
+		rts
+	!:
+
+	cmp #FlyAway
+	bne !+
+		jsr playDucks
+		rts	
+	!:
+
+	cmp #Miss
+	bne !+++
+	    ldx duck1Number
+        lda duckHits,x
+        cmp #2
         bne !+
             lda #0
-            sta duck2SpritesAnimationCounter
+            sta duckHits,x        
         !:
+        jsr printDuckHit
+		
+		ldx duck2Number
+        lda duckHits,x
+        cmp #2
+        bne !+
+            lda #0
+            sta duckHits,x        
+        !:
+        jsr printDuckHit
 
-        lda #0
-        sta duck2AnimSpeed
-    !skipAnimation:
-    inc duck2AnimSpeed
-    rts
-}
+		jsr showDog3	
+		jsr moveDog3		
+		rts
+	!:
 
-moveDuck2:
-{
-    lda duck2IsShot
-    beq !+
-        rts
-    !:
+	cmp #NewRound
+	bne !+
+		lda #$ff
+		sta duckNumber
+
+		jsr initScore
+		jsr hideText
+
+		lda #NewSet
+		sta gameState
+		rts
+	!:
+
+	cmp #EndRound
+	bne !+
+		inc roundNumber
+		jsr showRoundText
+		jsr initScore
+		jsr initDog4
+		lda #Intro
+		sta gameState
+		rts
+	!:
+
+	cmp #NewSet
+	bne !++
+		lda duckNumber
+		cmp #9
+		bne !+
+			lda #EndRound
+			sta gameState
+			rts
+		!:
+		lda #3
+		sta shots
+		jsr printShots
+
+		inc duckNumber
+		lda duckNumber
+		sta duck1Number
+		jsr initDuck1
+
+		lda playWith1Duck
+		beq !only1Duck+
+			inc duckNumber
+			lda duckNumber
+			sta duck2Number
+			jsr initDuck2
+		!only1Duck:		
+		
+		lda #Playing
+		sta gameState
+		rts
+	!:
 	
-    lda duck2IsDead
-	beq !+
-        rts
-    !:
-
-    lda gameState
-    cmp #FlyAway
-    bne !+
-        jsr moveDuck2FlyAway
-        rts
-    !:
-
-    lda duck2Direction
-    cmp #flyRightUp
-    bne !+
-        jsr moveDuck2RightUp
-    !:
-
-    lda duck2Direction
-    cmp #flyRightDown
-    bne !+
-        jsr moveDuck2RightDown
-    !:
-
-    lda duck2Direction
-    cmp #flyLeftUp
-    bne !+
-        jsr moveDuck2LeftUp
-    !:
-
-    lda duck2Direction
-    cmp #flyLeftDown
-    bne !+
-        jsr moveDuck2LeftDown
-    !:
-
-    lda duck2Direction
-    cmp #flyDiagonalLeftUp
-    bne !+
-        jsr moveDuck2DiagonalLeftUp
-    !:
-
-    lda duck2Direction
-    cmp #flyDiagonalLeftDown
-    bne !+
-        jsr moveDuck2DiagonalLeftDown
-    !:
-
-    lda duck2Direction
-    cmp #flyDiagonalRightUp
-    bne !+
-        jsr moveDuck2DiagonalRightUp
-    !:
-
-    lda duck2Direction
-    cmp #flyDiagonalRightDown
-    bne !+
-        jsr moveDuck2DiagonalRightDown
-    !:
-
-    lda duck2Direction
-    cmp #flyUp
-    bne !+
-        jsr moveDuck2Up
-    !:
-
-    lda duck2Direction
-    cmp #flyDown
-    bne !+
-        jsr moveDuck2Down
-    !:
-       
-    rts
-}
-
-moveDuck2Up:
-{
-    lda #4*6
-    sta duck2SpritesAnimationPointer
-
-    jsr Duck2Up
-    jsr Duck2Up
-
-    lda duck2Y
-	cmp #upperBoundary
-    bcc !lower+
-    bne !higher+    
-
-    !higher:
-        rts
-    !lower:
-        lda #flyRightDown
-        sta duck2Direction
-        rts
-}
-
-moveDuck2FlyAway:
-{
-    lda #4*6
-    sta duck2SpritesAnimationPointer
-
-    jsr Duck2Up
-    jsr Duck2Up
-
-    lda duck2Y
-	cmp #4	
-    bcc !lower+
-    bne !higher+    
-
-    !higher:
-        rts
-    !lower:
-        jsr playLaugh
-        
-        lda #Miss
-        sta gameState
-        rts
-}
-
-moveDuck2Down:
-{
-    lda #4*6
-    sta duck2SpritesAnimationPointer
-
-    jsr Duck2Down
-    jsr Duck2Down
-
-    lda duck2Y
-	cmp #lowerBoundary	
-    bcc !lower+
-    bne !higher+    
-
-    !higher:
-        lda #flyDiagonalLeftUp
-        sta duck2Direction
-        rts
-    !lower:  
-        rts
-}
-
-moveDuck2LeftUp:
-{
-    lda #1*6
-    sta duck2SpritesAnimationPointer
-
-    jsr Duck2Up
-    jsr Duck2Left
-    
-    lda duck2Y
-	cmp #upperBoundary	
-    bcc !lower+
-    bne !higher+    
-
-    !higher:
-        jmp !skip+
-    !lower:
-        lda #flyLeftDown
-        sta duck2Direction
-        rts
-
-    !skip:
-
-    lda duck2X+1
-	cmp #>leftBoundary
+	cmp #Playing
 	bne !+
-	    lda duck2X
-	    cmp #<leftBoundary
+		jsr playDucks
+		jsr printDuckHits
+		jsr areAllDucksOnTheGround
+		rts
 	!:
-    bcc !lower+
-    bne !higher+    
 
-    !higher:
-        rts
-    !lower:
-        lda #flyDiagonalRightUp
-        sta duck2Direction
-         rts
+	rts
 }
 
-moveDuck2LeftDown:
+slowdown: .byte 1
+playDucks:
 {
-    lda #1*6
-    sta duck2SpritesAnimationPointer
-
-    jsr Duck2Down
-    jsr Duck2Left
-    
-    lda duck2Y
-	cmp #lowerBoundary
-    bcc !lower+
-    bne !higher+    
-
-    !higher:
-        lda #flyDiagonalLeftUp
-        sta duck2Direction
-        rts
-    !lower:
-
-    lda duck2X+1
-	cmp #>leftBoundary
+	lda slowdown
+	cmp gameSpeed
 	bne !+
-	    lda duck2X
-	    cmp #<leftBoundary
+		jsr showDuck1
+		jsr moveDuck1
+		jsr animateDuck1	
+
+		lda playWith1Duck
+		beq !only1Duck+
+			jsr showDuck2
+			jsr moveDuck2
+			jsr animateDuck2
+		!only1Duck:
+
+		lda #1
+		sta slowdown
 	!:
-    bcc !lower+
-    bne !higher+    
-
-    !higher:
-        rts
-    !lower:
-        lda #flyRightDown
-        sta duck2Direction
-        rts
+	dec slowdown
+	rts
 }
 
-moveDuck2RightUp:
+numberMappings:
+.byte 48,49,50,51,52,53,54,55,56,57
+
+gameText1:
+.text "  ROUND   "
+gameText2:
+.byte 0,0,0,0,0,0,0,0,0,0,0
+gameText3:
+.byte 0,0,0,0,0,0,0,0,0,0,0
+
+showRoundText:
 {
-    lda #0*6
-    sta duck2SpritesAnimationPointer
-
-    jsr Duck2Up
-    jsr Duck2Right
-    
-    lda duck2Y
-	cmp #upperBoundary
-    bcc !lower+
-    bne !higher+    
-
-    !higher:
-        jmp !skip+
-    !lower:
-        lda #flyRightDown
-        sta duck2Direction
-        rts
-
-    !skip:
-
-    lda duck2X+1
-	cmp #>rightBoundary
-	bne !+
-	    lda duck2X
-	    cmp #<rightBoundary
-	!:
-    bcc !lower+
-    bne !higher+    
-
-    !higher:
-        lda #flyDiagonalLeftUp
-        sta duck2Direction
-    !lower:
-        rts
+	ldx roundNumber
+	lda numberMappings,x
+	sta gameText3+4
+	sta screenRam+(22*40)+3
+	jsr showText
+	rts
 }
 
-moveDuck2RightDown:
+showText:
 {
-    lda #0*6
-    sta duck2SpritesAnimationPointer
+	ldx #0 
+	!:   
+		lda #WHITE
+		sta $d800+(4*40)+18,x
+		sta $d800+(5*40)+18,x
+		sta $d800+(6*40)+18,x
 
-    jsr Duck2Down
-    jsr Duck2Right
-    
-    lda duck2Y
-	cmp #lowerBoundary
-    bcc !lower+
-    bne !higher+    
-
-    !higher:
-        lda #flyDiagonalRightUp
-        sta duck2Direction
-        rts
-    !lower:
-
-    lda duck2X+1
-	cmp #>rightBoundary
-	bne !+
-	    lda duck2X
-	    cmp #<rightBoundary
-	!:
-    bcc !lower+
-    bne !higher+    
-
-    !higher:
-        lda #flyLeftDown
-        sta duck2Direction        
-    !lower:
-        rts    
+		clc
+		lda gameText1,x
+		adc #(154-'A')
+		sta screenRam+(4*40)+16,x		
+		cmp #(32+154-'A') // Space
+		bne !+
+			lda #0
+			sta screenRam+(4*40)+16,x
+		!:
+		lda gameText2,x		
+		sta screenRam+(5*40)+16,x
+		lda gameText3,x		
+		sta screenRam+(6*40)+16,x
+		inx
+		cpx #10
+	bne !--
+	rts
 }
 
-moveDuck2DiagonalLeftUp:
+hideText:
 {
-    lda #2*6
-    sta duck2SpritesAnimationPointer
-
-    jsr Duck2Up
-    jsr Duck2Up
-    jsr Duck2Left
-    
-    lda duck2Y
-	cmp #upperBoundary
-    bcc !lower+
-    bne !higher+    
-
-    !higher:
-        jmp !skip+
-    !lower:
-        lda #flyLeftDown
-        sta duck2Direction
-        rts
-
-    !skip:
-    lda duck2X+1
-	cmp #>leftBoundary
-	bne !+
-	    lda duck2X
-	    cmp #<leftBoundary
-	!:
-    bcc !lower+
-    bne !higher+    
-
-    !higher:
-        rts
-    !lower:
-        lda #flyDiagonalRightUp
-        sta duck2Direction
-        rts    
-}
-
-moveDuck2DiagonalLeftDown:
-{
-    lda #2*6
-    sta duck2SpritesAnimationPointer
-
-    jsr Duck2Down
-    jsr Duck2Down
-    jsr Duck2Left
-    
-    lda duck2Y
-	cmp #lowerBoundary
-    bcc !lower+
-    bne !higher+    
-
-    !higher:
-        lda #flyLeftUp
-        sta duck2Direction
-        rts
-    !lower:
-
-    lda duck2X+1
-	cmp #>leftBoundary
-	bne !+
-	    lda duck2X
-	    cmp #<leftBoundary
-	!:
-    bcc !lower+
-    bne !higher+    
-
-    !higher:
-        rts
-    !lower:
-        lda #flyRightDown
-        sta duck2Direction
-        rts    
-}
-
-moveDuck2DiagonalRightUp:
-{
-    lda #3*6
-    sta duck2SpritesAnimationPointer
-
-    jsr Duck2Up
-    jsr Duck2Up
-    jsr Duck2Right
-    
-    lda duck2Y
-	cmp #upperBoundary
-    bcc !lower+
-    bne !higher+    
-
-    !higher:
-        jmp !skip+
-    !lower:
-        lda #flyRightDown
-        sta duck2Direction
-        rts
-
-    !skip:
-    lda duck2X+1
-	cmp #>rightBoundary
-	bne !+
-	    lda duck2X
-	    cmp #<rightBoundary
-	!:
-    bcc !lower+
-    bne !higher+    
-
-    !higher:
-        lda #flyLeftUp
-        sta duck2Direction
-        rts
-    !lower:
-        rts
-}
-
-moveDuck2DiagonalRightDown:
-{
-    lda #3*6
-    sta duck2SpritesAnimationPointer
-
-    jsr Duck2Down
-    jsr Duck2Down
-    jsr Duck2Right
-    
-    lda duck2Y
-	cmp #lowerBoundary	
-    bcc !lower+
-    bne !higher+    
-
-    !higher:
-        lda #flyRightUp
-        sta duck2Direction
-        rts
-    !lower:
-    
-    lda duck2X+1
-	cmp #>rightBoundary
-	bne !+
-	    lda duck2X
-	    cmp #<rightBoundary
-	!:
-    bcc !lower+
-    bne !higher+    
-
-    !higher:
-        lda #flyLeftDown
-        sta duck2Direction
-        rts
-    !lower:
-        rts
-}
-
-Duck2Left:
-{
-    sec
-    lda duck2X
-    sbc duckMoveSpeed
-    sta duck2X
-    lda duck2X+1
-    sbc #0
-    sta duck2X+1
-    rts
-}
-
-Duck2Right:
-{
-    clc
-    lda duck2X
-    adc duckMoveSpeed
-    sta duck2X
-    lda duck2X+1
-    adc #0
-    sta duck2X+1
-    rts
-}
-
-Duck2Up:
-{
-    sec
-    lda duck2Y
-    sbc duckMoveSpeed
-    sta duck2Y
-    rts
-}
-
-Duck2Down:
-{
-    clc
-    lda duck2Y
-    adc duckMoveSpeed
-    sta duck2Y
-    rts
+	ldx #0 
+	!: 
+        lda #0
+        sta screenRam+(4*40)+16,x
+		sta screenRam+(5*40)+16,x
+        sta screenRam+(6*40)+16,x
+		inx
+		cpx #10
+	bne !-
+	rts
 }

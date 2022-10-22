@@ -4,7 +4,7 @@
 .label score2=$8266
 .label score3=$8267
 .label dog2Sprite4X=$9275
-.label showText=$9fb4 {
+.label showText=$9fb9 {
 }
 .label isDogVisible=$903b
 .label playFly=$81bf {
@@ -17,7 +17,7 @@
 .label jump=$9ad6 {
 }
 .label crosshairTrigger=$9b0e
-.label showRoundText=$9fa4 {
+.label showRoundText=$9fa9 {
 }
 .label duck1Direction=$87c8
 .label Duck2Down=$9030 {
@@ -72,7 +72,7 @@
 .label printScore=$8286 {
 }
 .label background_color=$d021
-.label gameSpeed=$9e35
+.label gameSpeed=$9e3a
 .label dog2Sprite4Y=$9276
 .label startGame=$9b5a
 .label moveDuck2FlyAway=$8e29 {
@@ -97,13 +97,13 @@
 }
 .label isHitDuck2=$9d0b {
 }
-.label playDucks=$9f52 {
+.label playDucks=$9f57 {
 }
 .label checkCrosshairTitleScreen=$9b5b {
 }
 .label playLaugh=$81e4 {
 }
-.label playGame=$9e82 {
+.label playGame=$9e87 {
 }
 .label moveDuck1FlyAway=$89af {
 }
@@ -132,11 +132,11 @@
 .label showDog2=$9277 {
 }
 .label dog2Sprite1X=$926f
-.label initGame=$9e36 {
+.label initGame=$9e3b {
 }
-.label gameText1=$9f84
+.label gameText1=$9f89
 .label dog2Sprite1Y=$9270
-.label gameText2=$9f8e
+.label gameText2=$9f93
 .label bullet=$8319
 .label multiply=$9dcb {
   .label m0=$9dd0
@@ -144,7 +144,7 @@
 }
 .label duck2IsDead=$8c54
 .label duck2Direction=$8c56
-.label gameText3=$9f99
+.label gameText3=$9f9e
 .label charRam=$4000
 .label duck2OnTheGround=$86d0
 .label start=$8000 {
@@ -164,7 +164,7 @@
 }
 .label checkCrosshairGame=$9bd7 {
 }
-.label roundNumber=$9e34
+.label roundNumber=$9e39
 .label dog1Sprite1X=$903d
 .label dog1Sprite1Y=$903e
 .label crosshairYLowBoundary=$9af3
@@ -194,7 +194,7 @@
 .label spriteXPositions=$8184
 .label moveDuck1DiagonalRightDown=$8b51 {
 }
-.label slowdown=$9f51
+.label slowdown=$9f56
 .label moveDuck1Up=$8994 {
 }
 .label dog4SpritesAnimationPointer=$9726
@@ -203,7 +203,7 @@
 .label playSmile=$81dc {
 }
 .label duck2AnimSpeed=$8d2a
-.label duckNumber=$9e33
+.label duckNumber=$9e38
 .label crosshairY=$9b0d
 .label crosshairX=$9b0b
 .label screenRam=$4800
@@ -228,7 +228,7 @@
 .label duck1Y=$87c5
 .label duck1X=$87c3
 .label dog4Sprite4X=$9724
-.label numberMappings=$9f7a
+.label numberMappings=$9f7f
 .label crosshairYHighBoundary=$9af4
 .label printShots=$831a {
 }
@@ -244,7 +244,7 @@
 }
 .label playShot=$819c {
 }
-.label initRound=$9e6f {
+.label initRound=$9e74 {
 }
 .label playDrop=$81b7 {
 }
@@ -255,7 +255,7 @@
 .label dog4Sprite2Y=$9721
 .label moveDuck2RightUp=$8ec6 {
 }
-.label hideText=$9fe5 {
+.label hideText=$9fea {
 }
 .label duck1AnimSpeed=$889c
 .label moveDuck2DiagonalRightUp=$8f94 {

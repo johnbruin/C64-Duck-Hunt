@@ -139,6 +139,8 @@ animateDuck1:
     cmp #8
     bne !skipAnimation+  
 
+        jsr flashDuckHits
+
         inc rndQuackPointer
         ldx rndQuackPointer
         lda rndQuacks,x
@@ -171,7 +173,6 @@ animateDuck1:
     rts
 }
 
-duck1MoveSpeed: .byte 1
 moveDuck1:
 {
     lda duck1IsShot
@@ -623,7 +624,7 @@ Duck1Left:
 {
     sec
     lda duck1X
-    sbc duck1MoveSpeed
+    sbc duckMoveSpeed
     sta duck1X
     lda duck1X+1
     sbc #0
@@ -635,7 +636,7 @@ Duck1Right:
 {
     clc
     lda duck1X
-    adc duck1MoveSpeed
+    adc duckMoveSpeed
     sta duck1X
     lda duck1X+1
     adc #0
@@ -647,7 +648,7 @@ Duck1Up:
 {
     sec
     lda duck1Y
-    sbc duck1MoveSpeed
+    sbc duckMoveSpeed
     sta duck1Y
     rts
 }
@@ -656,7 +657,7 @@ Duck1Down:
 {
     clc
     lda duck1Y
-    adc duck1MoveSpeed
+    adc duckMoveSpeed
     sta duck1Y
     rts
 }

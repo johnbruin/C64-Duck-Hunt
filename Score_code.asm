@@ -4,34 +4,56 @@
 
 initScore:
 {
-    .for(var x=0;x<6;x++)
-    {
-        lda #WHITE+8
-        sta $d800+(22*40)+29+x
-        sta $d800+(23*40)+29+x
-    }
+    lda bullet
+    bne !+
+        lda screenRam+(22*40)+6
+        sta bullet
+    !:
+    
+    ldx #0 
+	!: 
+        lda #WHITE
+        sta $d800+(22*40)+29,x
+        sta $d800+(23*40)+29,x
+        inx
+        cpx #6
+    bne !-
 
-    .for(var x=0;x<10;x++)
-    {
-        lda #WHITE+8
-        sta $d800+(22*40)+16+x   
-        lda #PURPLE+8
-        sta $d800+(23*40)+16+x   
-    }
+    ldx #0 
+	!: 
+        lda #GREEN
+        sta $d800+(22*40)+12,x 
+        inx
+        cpx #3
+    bne !-
+    
+    ldx #0 
+	!: 
+        lda #0
+        sta duckHits,x
+        lda #WHITE
+        sta $d800+(22*40)+16,x   
+        lda #CYAN
+        sta $d800+(23*40)+16,x   
+        inx
+        cpx #10
+    bne !-
 
-    .for(var x=0;x<4;x++)
-    {
-        lda #WHITE+8
-        sta $d800+(22*40)+6+x        
-    }
-
-    .for(var x=0;x<4;x++)
-    {
+    ldx #0 
+	!: 
+        lda #GREEN
+        sta $d800+(22*40)+1,x
         lda #CYAN+8
-        sta $d800+(22*40)+6+x
-        lda #PURPLE+8
-        sta $d800+(23*40)+6+x
-    }
+        sta $d800+(22*40)+6,x
+        lda #PURPLE
+        sta $d800+(23*40)+6,x
+        inx
+        cpx #3
+    bne !-
+
+	lda #3
+	sta shots
+	jsr printShots
 
     jsr printScore
 
@@ -104,6 +126,8 @@ printScore:
     rts
 }
 
+shots: .byte 3
+bullet: .byte 0
 printShots:
 {
 	ldx #3
@@ -117,10 +141,47 @@ printShots:
 	bne !+
 		rts
 	!:
-	lda #157
+	lda bullet
 	!:
        	sta screenRam+(22*40)+5,x
 		dex
 	bne !-
+    rts
+}
+
+duckHits:
+.fill 10, 0
+printDuckHits:
+{
+    .for(var x=0;x<10;x++)
+    {
+        ldx #x
+        jsr printDuckHit   
+    }
+    rts
+}
+
+printDuckHit:
+{    
+    lda duckHits,x        
+    cmp #0
+    bne !+
+        lda #WHITE
+        sta $d800+(22*40)+16,x
+        rts
+    !:
+    cmp #1
+    bne !+
+        lda #RED
+        sta $d800+(22*40)+16,x
+        rts
+    !:
+    cmp #2
+    bne !+
+        lda #BLACK
+        sta $d800+(22*40)+16,x
+        rts
+    !:                
+       
     rts
 }

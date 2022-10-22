@@ -7,15 +7,24 @@
 	,Playing
 	,ClearWith1Duck
 	,ClearWith2Ducks
-	,New
+	,EndRound
+	,StartRound
+	,GameOver
+	,NewRound
+	,NewSet
 	,FlyAway
 	,Miss
 }
 
-*=$4c00 "[DATA] ScreenRam"
+*=$4800 "[DATA] ScreenRam"
 screenRam:
-	.var charmap = LoadBinary("Pictures/background - Map (40x25).bin")
- 	.fill charmap.getSize(), charmap.get(i)
+	.var charmap = LoadBinary("Pictures/background - Map (40x50).bin")
+ 	.fill 1000, charmap.get(i)
+
+*=$4C00 "[DATA] ScreenRam intro"
+screenRamIntro:
+	.var charmapIntro = LoadBinary("Pictures/background - Map (40x50).bin")
+ 	.fill 1000, charmapIntro.get(1000+i)
 
 *=$4000 "[DATA] CharRam"
 charRam:

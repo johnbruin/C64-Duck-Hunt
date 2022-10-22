@@ -163,7 +163,7 @@ moveDog1:
         inc dog1Sprite3Y
         rts
     !:
-    lda #New
+    lda #NewSet
     sta gameState
     lda #0
     sta dogMoveDown 
@@ -351,7 +351,7 @@ moveDog2:
     lda dogMoveDown
     bne !moveDown+
         lda dog2Sprite1Y
-        cmp #120
+        cmp #125
         bcc !+
             dec dog2Sprite1Y
             dec dog2Sprite2Y
@@ -372,7 +372,7 @@ moveDog2:
         inc dog2Sprite4Y
         rts
     !:
-    lda #New
+    lda #NewSet
     sta gameState
     lda #0
     sta dogMoveDown 
@@ -539,7 +539,7 @@ moveDog3:
         inc dog3Sprite2Y
         rts
     !:
-    lda #New
+    lda #NewSet
     sta gameState
     lda #0
     sta dogMoveDown 
@@ -584,6 +584,32 @@ dog4Sprites:
 .byte 76,77,83,84       //alert
 .byte 140,141,147,148   //jump1
 .byte 142,143,149,150   //jump2
+
+initDog4:
+{
+    lda #0
+    sta dog4SpritesAnimationPointer
+
+    lda #0
+    sta dog4Sprite1X
+    lda #145
+    sta dog4Sprite1Y
+    lda #0+2*24
+    sta dog4Sprite2X
+    lda #145
+    sta dog4Sprite2Y
+
+    lda #0
+    sta dog4Sprite3X
+    lda #145+21*2
+    sta dog4Sprite3Y
+    lda #0+24*2
+    sta dog4Sprite4X
+    lda #145+21*2
+    sta dog4Sprite4Y
+
+    rts
+}
 
 showDog4:
 {
@@ -778,7 +804,7 @@ moveDog4:
     ldy dog4SpritesAnimationPointer
     cpy #50
     bne !+
-        lda #New
+        lda #NewRound
         sta gameState
         rts
     !:

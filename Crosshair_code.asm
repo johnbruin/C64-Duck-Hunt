@@ -1,3 +1,5 @@
+#importonce 
+
 #import "Sprites_code.asm"
 #import "Score_code.asm"
 #import "SoundFx_code.asm"
@@ -10,7 +12,6 @@
 .var fac1 = $58
 .var fac2 = $59
 
-shots: .byte 3
 crosshairXLowBoundary: .word 0
 crosshairXHighBoundary: .word 0
 crosshairYLowBoundary: .byte 0
@@ -206,6 +207,12 @@ isHitDuck1:
 		sta duck1IsShot
 		jsr addScore
 		jsr printScore
+
+		lda #1
+		ldx duck1Number
+		sta duckHits,x
+		jsr printDuckHits
+
 		rts
 
 	!nohit:
@@ -299,6 +306,12 @@ isHitDuck2:
 		sta duck2IsShot
 		jsr addScore
 		jsr printScore
+
+		lda #1
+		ldx duck2Number
+		sta duckHits,x
+		jsr printDuckHits
+
 		rts
 
 	!nohit:

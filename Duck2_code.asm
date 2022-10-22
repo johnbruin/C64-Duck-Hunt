@@ -139,7 +139,8 @@ animateDuck2:
 
     lda duck2AnimSpeed
     cmp #8
-    bne !skipAnimation+        
+    bne !skipAnimation+  
+
         lda duck2IsShot
         beq !+
             lda #1
@@ -163,7 +164,6 @@ animateDuck2:
     rts
 }
 
-duck2MoveSpeed: .byte 1
 moveDuck2:
 {
     lda duck2IsShot
@@ -283,9 +283,8 @@ moveDuck2FlyAway:
     !higher:
         rts
     !lower:
-        lda #5    // sfx number
-        ldy #0    // voice number
-        jsr $c04a // play sound!
+        jsr playLaugh
+        
         lda #Miss
         sta gameState
         rts
@@ -616,7 +615,7 @@ Duck2Left:
 {
     sec
     lda duck2X
-    sbc duck2MoveSpeed
+    sbc duckMoveSpeed
     sta duck2X
     lda duck2X+1
     sbc #0
@@ -628,7 +627,7 @@ Duck2Right:
 {
     clc
     lda duck2X
-    adc duck2MoveSpeed
+    adc duckMoveSpeed
     sta duck2X
     lda duck2X+1
     adc #0
@@ -640,7 +639,7 @@ Duck2Up:
 {
     sec
     lda duck2Y
-    sbc duck2MoveSpeed
+    sbc duckMoveSpeed
     sta duck2Y
     rts
 }
@@ -649,7 +648,7 @@ Duck2Down:
 {
     clc
     lda duck2Y
-    adc duck2MoveSpeed
+    adc duckMoveSpeed
     sta duck2Y
     rts
 }

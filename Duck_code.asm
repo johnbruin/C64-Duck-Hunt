@@ -2,8 +2,13 @@
 
 #import "Sprites_code.asm"
 #import "SoundFx_code.asm"
+#import "Score_code.asm"
 
 *=* "[CODE] Duck common code"
+
+duck1Number: .byte 0
+duck2Number: .byte 0
+duckMoveSpeed: .byte 2
 
 duckSprites:
 .byte 1, 3, 2, 1, 3, 2          //0=right
@@ -76,5 +81,40 @@ areAllDucksOnTheGround:
 			sta gameState
 		!:
 	!:
+    rts
+}
+
+flashDuckHits:
+{
+    ldx duck1Number
+    lda duckHits,x
+    cmp #1        
+    beq !++
+        cmp #0
+        bne !+
+            lda #2
+            sta duckHits,x
+            jmp !++
+        !: 
+        lda #0
+        sta duckHits,x
+    !:
+    jsr printDuckHit
+
+    ldx duck2Number
+    lda duckHits,x
+    cmp #1        
+    beq !++
+        cmp #0
+        bne !+
+            lda #2
+            sta duckHits,x
+            jmp !++
+        !: 
+        lda #0
+        sta duckHits,x
+    !:
+    jsr printDuckHit
+
     rts
 }

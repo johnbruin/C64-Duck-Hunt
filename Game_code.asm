@@ -205,6 +205,7 @@ playGame:
 
 	cmp #EndRound
 	bne !+
+		jsr flashHits
 		lda wait
 		bne !wait+
 			inc roundNumber			
@@ -218,8 +219,7 @@ playGame:
 			lda #Intro
 			sta gameState
 		!wait:
-		dec wait	
-		jsr flashHitsAnimation
+		dec wait			
 		rts
 	!:
 

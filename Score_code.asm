@@ -84,12 +84,15 @@ addScore:
 {
     sed
     lda #0 
+    clc
     adc score1	//ones and tens
     sta score1
     lda score2	//hundreds and thousands
+    clc
     adc #05
     sta score2
     lda score3	//ten-thousands and hundred-thousands
+    clc
     adc #0
     sta score3
     cld
@@ -100,12 +103,15 @@ addPerfectScore:
 {
     sed
     lda #0    
+    clc
     adc score1	//ones and tens
     sta score1
     lda score2	//hundreds and thousands
+    clc
     adc #0
     sta score2
     lda score3	//ten-thousands and hundred-thousands
+    clc
     adc #01
     sta score3
     cld
@@ -327,42 +333,28 @@ flashHits:
         dec flashHitsAnimation
         rts
     !:
+
     lda #5
     sta flashHitsAnimation
 
     lda flashHitsFlag
-    bne !white+
-        ldx #0 
-        !:         
-            lda #WHITE
-            sta $d800+(22*40)+16,x  
-            inx 
-            cpx #10
-        bne !-
-        lda #0
+    bne !clear+
+        jsr clearHits
+        lda #1
         sta flashHitsFlag
         rts
-    !white:
+    !clear:
 
-    ldx #0
-    ldy #0 
-	!:  
-        lda duckHits,y
-        beq !isHit+            
-            lda #RED
-            sta $d800+(22*40)+16,x
-            inx 
-        !isHit:
-        iny 
-        cpy #10
-    bne !-
-    lda #1
+    jsr markHits
+
+    lda #0
     sta flashHitsFlag
+    
     rts
 }
 
-evalHits:
-{   
+clearHits:
+{
     ldx #0 
 	!:         
         lda #WHITE
@@ -370,7 +362,11 @@ evalHits:
         inx 
         cpx #10
     bne !-
+    rts
+}
 
+markHits:
+{
     ldx #0
     ldy #0 
 	!:  
@@ -383,7 +379,13 @@ evalHits:
         iny 
         cpy #10
     bne !-
+    rts
+}
 
+evalHits:
+{   
+    jsr clearHits
+    jsr markHits
     cpx hitsNeeded
     bcc !lower+
     bne !higher+
@@ -396,6 +398,7 @@ evalHits:
         cpx #10
         bne !+
             jsr addPerfectScore
+            jsr printScore
             jsr showPerfectText
         !:
         lda #EndRound

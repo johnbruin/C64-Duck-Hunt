@@ -1,0 +1,68 @@
+.label spriteMemory=$5000
+.label showGameOverText=$c412 {
+}
+.label score2=$c509
+.label score3=$c50a
+.label markHits=$c6a3 {
+}
+.label showText=$c44e {
+}
+.label numberMappings=$c35b
+.label initScore=$c498 {
+}
+.label printShots=$c614 {
+}
+.label perfectText3=$c42d
+.label clearHits=$c696 {
+}
+.label flashHitsFlag=$c674
+.label roundNumberText=$c3ed
+.label perfectText1=$c423
+.label showPerfectText=$c437 {
+}
+.label hitsNeeded=$c665
+.label showRoundText=$c3ee {
+}
+.label printDuckHits=$c638 {
+}
+.label replaceChar=$c386 {
+}
+.label flashHitsAnimation=$c675
+.label score1=$c508
+.label shots=$c612
+.label duckHits=$c62e
+.label checkHiScore=$c5dc {
+  .label copyHiScore=$c5ff
+}
+.label printDuckHit=$c643 {
+}
+.label flashHits=$c676 {
+}
+.label hideText=$c47c {
+}
+.label addScore=$c50e {
+}
+.label gameText1=$c365
+.label gameText2=$c370
+.label bullet=$c613
+.label gameText3=$c37b
+.label printHitsNeeded=$c666 {
+}
+.label resetScore=$c4f9 {
+}
+.label charRam=$4000
+.label screenRam=$4800
+.label roundText=$c3e3
+.label printHiScore=$c593 {
+}
+.label evalHits=$c6b8 {
+}
+.label hiScore3=$c50d
+.label hiScore1=$c50b
+.label hiScore2=$c50c
+.label printScore=$c54a {
+}
+.label screenRamTitleScreen=$4c00
+.label gameOverText=$c408
+.label addPerfectScore=$c52c {
+}

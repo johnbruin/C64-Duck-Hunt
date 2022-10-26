@@ -1,128 +1,407 @@
-//#define DEBUG
+#importonce
 
-#import "Macros/irq_macros.asm"
-#import "Globals.asm"
+#import "globals.asm"
+#import "Text_code.asm"
 
-//Labels
-.label border_color         = $d020
-.label background_color     = $d021
+*=* "[CODE] Score code"
 
-.pc = $0801 "Basic Program Start"
-:BasicUpstart(start)			
-
-.pc = $3000 "[CODE] Main Program"
-start:		
+initScore:
 {
-	jsr $e544		// Clear screen	
-	
-	lda #BLACK     
-	sta border_color
-	lda #LIGHT_BLUE     
-	sta background_color   
+    lda bullet
+    bne !+
+        lda screenRam+(22*40)+6
+        sta bullet
+    !:
+    
+    ldx #0 
+	!: 
+        lda #WHITE
+        sta $d800+(22*40)+29,x
+        sta $d800+(23*40)+29,x
+        inx
+        cpx #6
+    bne !-
 
-	lda $DD00
-	and #%11111100 
-	ora #%00000010 //Change VIC bank to bank1: $4000-$7fff
-	sta $DD00
+    ldx #0 
+	!: 
+        lda #GREEN
+        sta $d800+(22*40)+12,x 
+        inx
+        cpx #3
+    bne !-
+    
+    ldx #0 
+	!: 
+        lda #0
+        sta duckHits,x
+        lda #WHITE
+        sta $d800+(22*40)+16,x   
+        lda #BLACK
+        sta $d800+(23*40)+16,x   
+        inx
+        cpx #10
+    bne !-
 
-    lda $d016
-	ora #%00010000
-    sta $d016
+    ldx #0 
+	!: 
+        lda #GREEN
+        sta $d800+(22*40)+1,x
+        lda #CYAN+8
+        sta $d800+(22*40)+6,x
+        lda #PURPLE
+        sta $d800+(23*40)+6,x
+        inx
+        cpx #3
+    bne !-
 
-    lda #music.startSong - 0
-    ldx #music.startSong - 0
-	jsr music.init
+	lda #3
+	sta shots
+	jsr printShots
 
-	jsr initTitleScreen
+    jsr printScore
+    jsr printHitsNeeded
 
-	sei
-	:irq_init()	
-    :irq_setup(irqTitleScreen, 0)
-	cli
-	
-	jmp *    
+    rts
 }
 
-.pc =* "[CODE] irqTitleScreen"
-irqTitleScreen:   		
+resetScore:
 {
-	:irq_enter()
-	
-	lda #%00110000
-    sta $d018
-
-	lda #BLACK
-	sta background_color 
-	
-	jsr music.play
-	jsr checkCrosshairTitleScreen
-	lda startGame
-	beq !+
-		jsr initGame
-		jsr initRound
-		lda #EndRound
-		sta gameState
-		:irq_next(irqGame1, 0)
-	!:	
-	:irq_next(irqTitleScreen, 0)
+    lda #0
+    sta score1
+    sta score2
+    sta score3
+    jsr printScore
+    rts
 }
 
-.pc =* "[CODE] irqGame1 Game loop"
-irqGame1:   		
+score1: .byte 0
+score2: .byte 0
+score3: .byte 0
+hiScore1: .byte 0
+hiScore2: .byte 0
+hiScore3: .byte $01
+addScore:
 {
-	:irq_enter()
-	#if DEBUG
-        dec border_color
-    #endif
-
-    lda #%00100000
-    sta $d018
-
-	lda #LIGHT_BLUE     
-	sta background_color 
-
-	lda #BLUE
-	sta $D022           // Char multi color 1
-
-	lda #BLACK
-	sta $D023           // Char multi color 2
-
-	jsr playGame
-	
-	jsr $c237 // play all voices!
-	//jsr music.play
-
-    #if DEBUG
-        inc border_color
-    #endif
-
-	lda startGame
-	bne !+		
-		:irq_next(irqTitleScreen,0)
-	!:		
-	:irq_next(irqGame2,50+16*8)
+    sed
+    lda #0 
+    clc
+    adc score1	//ones and tens
+    sta score1
+    lda score2	//hundreds and thousands
+    clc
+    adc #05
+    sta score2
+    lda score3	//ten-thousands and hundred-thousands
+    clc
+    adc #0
+    sta score3
+    cld
+    rts
 }
 
-.pc =* "[CODE] irqGame2 Screen split"
-irqGame2:
+addPerfectScore:
 {
-	irq_enter()
-	lda #LIGHT_GREEN
-	sta $D022           // Char multi color 1
-	irq_next(irqGame3,50+20*8)	
+    sed
+    lda #0    
+    clc
+    adc score1	//ones and tens
+    sta score1
+    lda score2	//hundreds and thousands
+    clc
+    adc #0
+    sta score2
+    lda score3	//ten-thousands and hundred-thousands
+    clc
+    adc #01
+    sta score3
+    cld
+    rts
 }
 
-.pc =* "[CODE] irqGame3 Screen split"
-irqGame3:
+printScore:
 {
-	irq_enter()
-	lda #BROWN
-	sta $D022           // Char multi color 1
+    lda score3
+    and #$f0	                //hundred-thousands
+    lsr
+    lsr
+    lsr
+    lsr
+    ora #$30		            // -->ascii
+    sta screenRam+(22*40)+29+0	//print on screen
+    
+    lda score3
+    and #$0f		            //ten-thousands
+    ora #$30		            // -->ascii
+    sta screenRam+(22*40)+29+1	//print on next screen position
 
-	lda #BLACK
-	sta background_color
+    lda score2
+    and #$f0	                //thousands
+    lsr
+    lsr
+    lsr
+    lsr
+    ora #$30		            // -->ascii
+    sta screenRam+(22*40)+29+2	//print on screen
+    
+    lda score2
+    and #$0f		            //hundreds
+    ora #$30		            // -->ascii
+    sta screenRam+(22*40)+29+3	//print on next screen position
 
-	irq_next(irqGame1,0)	
+    lda score1
+    and #$f0	                //tens
+    lsr
+    lsr
+    lsr
+    lsr
+    ora #$30		            // -->ascii
+    sta screenRam+(22*40)+29+4	//print on screen
+
+    lda score1
+    and #$0f		            //ones
+    ora #$30		            // -->ascii
+    sta screenRam+(22*40)+29+5	//print on next screen position
+
+    rts
 }
 
-#import "Game_code.asm"
+printHiScore:
+{
+    lda hiScore3
+    and #$f0	                //hundred-thousands
+    lsr
+    lsr
+    lsr
+    lsr
+    ora #$30		            // -->ascii
+    sta screenRamTitleScreen+(20*40)+22+0	//print on screen
+    
+    lda hiScore3
+    and #$0f		            //ten-thousands
+    ora #$30		            // -->ascii
+    sta screenRamTitleScreen+(20*40)+22+1	//print on next screen position
+
+    lda hiScore2
+    and #$f0	                //thousands
+    lsr
+    lsr
+    lsr
+    lsr
+    ora #$30		            // -->ascii
+    sta screenRamTitleScreen+(20*40)+22+2	//print on screen
+    
+    lda hiScore2
+    and #$0f		            //hundreds
+    ora #$30		            // -->ascii
+    sta screenRamTitleScreen+(20*40)+22+3	//print on next screen position
+
+    lda hiScore1
+    and #$f0	                //tens
+    lsr
+    lsr
+    lsr
+    lsr
+    ora #$30		            // -->ascii
+    sta screenRamTitleScreen+(20*40)+22+4	//print on screen
+
+    lda hiScore1
+    and #$0f		            //ones
+    ora #$30		            // -->ascii
+    sta screenRamTitleScreen+(20*40)+22+5	//print on next screen position
+
+    rts
+}
+
+checkHiScore:
+{
+    lda score3
+    cmp hiScore3
+    bcc !lower+
+    bne !higher+
+
+    !equal:
+        lda score2
+        cmp hiScore2
+        bcc !lower+
+        bne !higher+
+
+        lda score1
+        cmp hiScore1
+        bcc !lower+
+        bne !higher+
+        rts
+
+    !higher:
+        jmp copyHiScore
+
+    !lower:
+        rts
+
+    copyHiScore:
+        lda score1
+        sta hiScore1
+        lda score2
+        sta hiScore2
+        lda score3
+        sta hiScore3
+
+    rts
+}
+
+shots: .byte 3
+bullet: .byte 0
+printShots:
+{
+	ldx #3
+	lda #0
+	!:
+  		sta screenRam+(22*40)+5,x
+		dex
+	bne !-		
+    
+	ldx shots
+	bne !+
+		rts
+	!:
+	lda bullet
+	!:
+       	sta screenRam+(22*40)+5,x
+		dex
+	bne !-
+    rts
+}
+
+duckHits:
+.fill 10, 0
+printDuckHits:
+{
+    ldx #0 
+	!:         
+        jsr printDuckHit  
+        inx 
+        cpx #10
+    bne !-
+    
+    rts
+}
+
+printDuckHit:
+{    
+    lda duckHits,x        
+    cmp #0
+    bne !+
+        lda #WHITE
+        sta $d800+(22*40)+16,x
+        rts
+    !:
+    cmp #1
+    bne !+
+        lda #RED
+        sta $d800+(22*40)+16,x
+        rts
+    !:
+    cmp #2
+    bne !+
+        lda #BLACK
+        sta $d800+(22*40)+16,x
+        rts
+    !:                
+       
+    rts
+}
+
+hitsNeeded: .byte 5
+printHitsNeeded:
+{
+    ldx #0 
+	!:         
+        lda #CYAN
+        sta $d800+(23*40)+16,x  
+        inx 
+        cpx hitsNeeded
+    bne !-
+    
+    rts
+}
+
+flashHitsFlag: .byte 0
+flashHitsAnimation: .byte 5
+flashHits:
+{
+    lda flashHitsAnimation
+    beq !+
+        dec flashHitsAnimation
+        rts
+    !:
+
+    lda #5
+    sta flashHitsAnimation
+
+    lda flashHitsFlag
+    bne !clear+
+        jsr clearHits
+        lda #1
+        sta flashHitsFlag
+        rts
+    !clear:
+
+    jsr markHits
+
+    lda #0
+    sta flashHitsFlag
+    
+    rts
+}
+
+clearHits:
+{
+    ldx #0 
+	!:         
+        lda #WHITE
+        sta $d800+(22*40)+16,x  
+        inx 
+        cpx #10
+    bne !-
+    rts
+}
+
+markHits:
+{
+    ldx #0
+    ldy #0 
+	!:  
+        lda duckHits,y
+        beq !isHit+            
+            lda #RED
+            sta $d800+(22*40)+16,x
+            inx 
+        !isHit:
+        iny 
+        cpy #10
+    bne !-
+    rts
+}
+
+evalHits:
+{   
+    jsr clearHits
+    jsr markHits
+    cpx hitsNeeded
+    bcc !lower+
+    bne !higher+
+    !lower: 
+        jsr checkHiScore
+        lda #GameOver
+        sta gameState
+        rts
+    !higher:
+        cpx #10
+        bne !+
+            jsr addPerfectScore
+            jsr printScore
+            jsr showPerfectText
+        !:
+        lda #EndRound
+        sta gameState
+    rts
+}

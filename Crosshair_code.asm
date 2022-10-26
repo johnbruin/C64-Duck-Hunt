@@ -1,8 +1,6 @@
 #importonce 
 
-#import "Sprites_code.asm"
-#import "Score_code.asm"
-#import "SoundFx_code.asm"
+#import "globals.asm"
 #import "Duck_code.asm"
 #import "Duck1_code.asm"
 #import "Duck2_code.asm"

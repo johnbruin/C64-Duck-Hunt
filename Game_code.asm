@@ -1,11 +1,15 @@
 #importonce
 
 #import "globals.asm"
+#import "SoundFx_code.asm"
+#import "Score_code.asm"
+#import "Text_code.asm"
+#import "Sprites_code.asm"
+
+#import "Crosshair_code.asm"
 #import "Duck1_code.asm"
 #import "Duck2_code.asm"
 #import "Dog_code.asm"
-#import "Score_code.asm"
-#import "Crosshair_code.asm"
 
 initTitleScreen:
 {
@@ -91,6 +95,8 @@ initGame:
 
 	lda #1
 	sta duckMoveSpeed
+
+    jsr resetScore
 
 	rts
 }
@@ -201,13 +207,19 @@ playGame:
 	bne !+
 		lda wait
 		bne !wait+
-			inc roundNumber
+			inc roundNumber			
+			ldx roundNumber
+			lda numberMappings,x
+			sta roundNumberText
+			jsr hideText
 			jsr showRoundText
 			jsr initDog4
+			jsr initScore
 			lda #Intro
 			sta gameState
 		!wait:
 		dec wait	
+		jsr flashHitsAnimation
 		rts
 	!:
 
@@ -275,119 +287,5 @@ playDucks:
 	!:
 	dec slowdown
 	jsr areAllDucksOnTheGround
-	rts
-}
-
-numberMappings:
-.byte 48,49,50,51,52,53,54,55,56,57
-
-gameText1:
-.byte 0,0,0,0,0,0,0,0,0,0,0
-gameText2:
-.byte 0,0,0,0,0,0,0,0,0,0,0
-gameText3:
-.byte 0,0,0,0,0,0,0,0,0,0,0
-
-roundText: .text "  ROUND   "
-showRoundText:
-{
-	ldx #0 
-	!:  
-		lda roundText,x
-		sta gameText1,x
-		inx
-		cpx #10
-	bne !-
-	
-	ldx roundNumber
-	lda numberMappings,x
-	sta gameText3+4
-	sta screenRam+(22*40)+3
-	jsr showText
-	rts
-}
-
-gameOverText: .text "GAME OVER "
-showGameOverText:
-{
-	ldx #0 
-	!:  
-		lda gameOverText,x
-		sta gameText1,x
-		inx
-		cpx #10
-	bne !-
-		
-	jsr showText
-	
-	rts
-}
-
-perfectText1: .text "PERFECT!! "
-perfectText3: .text "  10000   "
-showPerfectText:
-{
-	ldx #0 
-	!:  
-		lda perfectText1,x
-		sta gameText1,x
-		lda perfectText3,x
-		sta gameText3,x
-		inx
-		cpx #10
-	bne !-
-		
-	jsr showText
-	
-	rts
-}
-
-showText:
-{
-	ldx #0 
-	!:   
-		lda #WHITE
-		sta $d800+(4*40)+16,x
-		sta $d800+(5*40)+16,x
-		sta $d800+(6*40)+16,x
-
-		lda gameText1,x
-		cmp #' '
-		bne !replace+
-			lda #0
-			jmp !print+
-		!replace:
-		clc
-		adc #(154-'A')
-		
-		!print:
-		sta screenRam+(4*40)+16,x		
-				
-		lda gameText2,x		
-		sta screenRam+(5*40)+16,x
-
-		lda gameText3,x		
-		sta screenRam+(6*40)+16,x
-		
-		inx
-		cpx #10
-	bne !-
-	rts
-}
-
-hideText:
-{
-	ldx #0 
-	!: 
-        lda #0
-        sta gameText1,x
-		sta gameText2,x
-		sta gameText3,x
-		sta screenRam+(4*40)+16,x
-		sta screenRam+(5*40)+16,x
-        sta screenRam+(6*40)+16,x
-		inx
-		cpx #10
-	bne !-
 	rts
 }

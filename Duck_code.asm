@@ -4,7 +4,7 @@
 #import "SoundFx_code.asm"
 #import "Score_code.asm"
 
-*=* "[CODE] Duck common code"
+*=$8000 "[CODE] Duck common code"
 
 playWith1Duck: .byte 0
 duck1Number: .byte 0

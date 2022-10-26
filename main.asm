@@ -10,7 +10,7 @@
 .pc = $0801 "Basic Program Start"
 :BasicUpstart(start)			
 
-.pc = $8000 "[CODE] Main Program"
+.pc = $3000 "[CODE] Main Program"
 start:		
 {
 	jsr $e544		// Clear screen	
@@ -24,9 +24,6 @@ start:
 	and #%11111100 
 	ora #%00000010 //Change VIC bank to bank1: $4000-$7fff
 	sta $DD00
-
-    lda #%00100000
-    sta $d018
 
     lda $d016
 	ora #%00010000
@@ -65,9 +62,9 @@ irqTitleScreen:
 		jsr initRound
 		lda #EndRound
 		sta gameState
-		:irq_next(irqGame1,0)
+		:irq_next(irqGame1, 0)
 	!:	
-	:irq_next(irqTitleScreen,0)
+	:irq_next(irqTitleScreen, 0)
 }
 
 .pc =* "[CODE] irqGame1 Game loop"

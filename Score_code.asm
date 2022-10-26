@@ -1,6 +1,9 @@
 #importonce
 
 #import "globals.asm"
+#import "Text_code.asm"
+
+*=* "[CODE] Score code"
 
 initScore:
 {
@@ -80,7 +83,7 @@ hiScore3: .byte $01
 addScore:
 {
     sed
-    lda #0    //50 points scored
+    lda #0 
     adc score1	//ones and tens
     sta score1
     lda score2	//hundreds and thousands
@@ -88,6 +91,22 @@ addScore:
     sta score2
     lda score3	//ten-thousands and hundred-thousands
     adc #0
+    sta score3
+    cld
+    rts
+}
+
+addPerfectScore:
+{
+    sed
+    lda #0    
+    adc score1	//ones and tens
+    sta score1
+    lda score2	//hundreds and thousands
+    adc #0
+    sta score2
+    lda score3	//ten-thousands and hundred-thousands
+    adc #01
     sta score3
     cld
     rts
@@ -189,19 +208,19 @@ printHiScore:
 
 checkHiScore:
 {
-    lda hiScore3
-    cmp score3
+    lda score3
+    cmp hiScore3
     bcc !lower+
     bne !higher+
 
     !equal:
-        lda hiScore2
-        cmp score2
+        lda score2
+        cmp hiScore2
         bcc !lower+
         bne !higher+
 
-        lda hiScore1
-        cmp score1
+        lda score1
+        cmp hiScore1
         bcc !lower+
         bne !higher+
         rts
@@ -299,6 +318,49 @@ printHitsNeeded:
     rts
 }
 
+flashHitsFlag: .byte 0
+flashHitsAnimation: .byte 5
+flashHits:
+{
+    lda flashHitsAnimation
+    beq !+
+        dec flashHitsAnimation
+        rts
+    !:
+    lda #5
+    sta flashHitsAnimation
+
+    lda flashHitsFlag
+    bne !white+
+        ldx #0 
+        !:         
+            lda #WHITE
+            sta $d800+(22*40)+16,x  
+            inx 
+            cpx #10
+        bne !-
+        lda #0
+        sta flashHitsFlag
+        rts
+    !white:
+
+    ldx #0
+    ldy #0 
+	!:  
+        lda duckHits,y
+        beq !isHit+            
+            lda #RED
+            sta $d800+(22*40)+16,x
+            inx 
+        !isHit:
+        iny 
+        cpy #10
+    bne !-
+    lda #1
+    sta flashHitsFlag
+    rts
+}
+
 evalHits:
 {   
     ldx #0 
@@ -327,11 +389,15 @@ evalHits:
     bne !higher+
     !lower: 
         jsr checkHiScore
-        jsr resetScore
         lda #GameOver
         sta gameState
         rts
     !higher:
+        cpx #10
+        bne !+
+            jsr addPerfectScore
+            jsr showPerfectText
+        !:
         lda #EndRound
         sta gameState
     rts

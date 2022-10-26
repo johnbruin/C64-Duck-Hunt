@@ -51,6 +51,9 @@ irqTitleScreen:
 {
 	:irq_enter()
 	
+	lda #%00110000
+    sta $d018
+
 	lda #BLACK
 	sta background_color 
 	
@@ -95,6 +98,11 @@ irqGame1:
     #if DEBUG
         inc border_color
     #endif
+
+	lda startGame
+	bne !+		
+		:irq_next(irqTitleScreen,0)
+	!:		
 	:irq_next(irqGame2,50+16*8)
 }
 

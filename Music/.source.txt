@@ -1,92 +1,54 @@
-#importonce 
-
-*=* "[CODE] SoundFX"
-
-playShot:
-{
-    lda #15
-    sta $d418 // set volume to 15
-
-    lda #0    // sfx number
-    ldy #0    // voice number
-    jsr $c04a // play sound!
-    
-    lda #0    // sfx number
-    ldy #1    // voice number
-    jsr $c04a // play sound!
-
-    lda #0    // sfx number
-    ldy #2    // voice number
-    jsr $c04a // play sound!
-    rts
-}
-
-playDrop:
-{
-    lda #4    // sfx number
-    ldy #0    // voice number
-    jsr $c04a // play sound!
-    rts
-}
-
-playFly:
-{
-    lda #15
-    sta $d418 // set volume to 15
-
-    lda #1    // sfx number
-    ldy #0    // voice number
-    jsr $c04a // play sound!
-    rts
-}
-
-playQuack:
-{
-    lda #2    // sfx number
-    ldy #2    // voice number
-    jsr $c04a // play sound!
-    rts
-}
-playHit:
-{
-    lda #3    // sfx number
-    ldy #2    // voice number
-    jsr $c04a // play sound!
-    rts
-}
-
-playSmile:
-{
-    lda #6    // sfx number
-   	ldy #1    // voice number
-   	jsr $c04a // play sound!
-    rts
-}
-
-playLaugh:
-{
-    lda #5    // sfx number
-    ldy #1    // voice number
-    jsr $c04a // play sound!
-    rts
-}
-
-playBark:
-{
-    lda #15
-    sta $d418 // set volume to 15
-
-    lda #7    // sfx number
-    ldy #0    // voice number
-    jsr $c04a // play sound!
-    
-    lda #7    // sfx number
-    ldy #1    // voice number
-    jsr $c04a // play sound!
-
-    lda #7    // sfx number
-    ldy #2    // voice number
-    jsr $c04a // play sound!
-
-    rts
-}
+.byte $bd,$fb,$c2,$99,$68,$c2,$bd,$03,$c3,$99,$6b,$c2,$bd,$1b,$c3,$99
+.byte $74,$c2,$bd,$23,$c3,$99,$77,$c2,$bd,$0b,$c3,$99,$6e,$c2,$bd,$13
+.byte $c3,$99,$71,$c2,$60,$bd,$2b,$c3,$99,$68,$c2,$bd,$33,$c3,$99,$6b
+.byte $c2,$bd,$4b,$c3,$99,$74,$c2,$bd,$53,$c3,$99,$77,$c2,$bd,$3b,$c3
+.byte $99,$6e,$c2,$bd,$43,$c3,$99,$71,$c2,$60,$99,$5c,$c2,$aa,$98,$48
+.byte $b9,$59,$c2,$85,$fe,$a9,$d4,$85,$ff,$bd,$eb,$c2,$99,$62,$c2,$bd
+.byte $f3,$c2,$99,$65,$c2,$bd,$a3,$c2,$99,$86,$c2,$bd,$ab,$c2,$99,$89
+.byte $c2,$bd,$b3,$c2,$99,$8c,$c2,$bd,$9b,$c2,$c9,$41,$d0,$18,$bd,$cb
+.byte $c2,$99,$8f,$c2,$bd,$d3,$c2,$99,$92,$c2,$bd,$db,$c2,$99,$95,$c2
+.byte $bd,$e3,$c2,$99,$98,$c2,$a9,$00,$99,$7a,$c2,$99,$7d,$c2,$99,$80
+.byte $c2,$99,$83,$c2,$20,$00,$c0,$bd,$9b,$c2,$c9,$41,$d0,$0d,$a0,$02
+.byte $bd,$cb,$c2,$91,$fe,$c8,$bd,$d3,$c2,$91,$fe,$bd,$bb,$c2,$a0,$05
+.byte $91,$fe,$bd,$c3,$c2,$c8,$91,$fe,$bd,$9b,$c2,$a0,$04,$91,$fe,$68
+.byte $a8,$a9,$00,$99,$5f,$c2,$60,$b9,$5c,$c2,$c9,$ff,$f0,$f8,$aa,$b9
+.byte $59,$c2,$85,$fe,$a9,$d4,$85,$ff,$b9,$5f,$c2,$c9,$02,$f0,$18,$4c
+.byte $16,$c1,$a9,$ff,$99,$5c,$c2,$b9,$59,$c2,$85,$fe,$a9,$d4,$85,$ff
+.byte $a9,$00,$a0,$04,$91,$fe,$60,$a9,$ff,$99,$5c,$c2,$bd,$9b,$c2,$29
+.byte $fe,$a0,$04,$91,$fe,$60,$86,$fc,$84,$fd,$a6,$fd,$bd,$8c,$c2,$f0
+.byte $5b,$a0,$00,$18,$bd,$62,$c2,$7d,$7d,$c2,$91,$fe,$c8,$bd,$65,$c2
+.byte $7d,$80,$c2,$91,$fe,$bd,$83,$c2,$d0,$24,$18,$bd,$7d,$c2,$7d,$86
+.byte $c2,$9d,$7d,$c2,$bd,$80,$c2,$7d,$89,$c2,$9d,$80,$c2,$fe,$7a,$c2
+.byte $bd,$7a,$c2,$dd,$8c,$c2,$d0,$31,$fe,$83,$c2,$4c,$89,$c1,$38,$bd
+.byte $7d,$c2,$fd,$86,$c2,$9d,$7d,$c2,$bd,$80,$c2,$fd,$89,$c2,$9d,$80
+.byte $c2,$de,$7a,$c2,$d0,$13,$de,$83,$c2,$4c,$89,$c1,$a0,$00,$bd,$62
+.byte $c2,$91,$fe,$bd,$65,$c2,$c8,$91,$fe,$a4,$fc,$b9,$9b,$c2,$c9,$41
+.byte $d0,$3b,$a0,$02,$bd,$8f,$c2,$91,$fe,$c8,$bd,$92,$c2,$91,$fe,$bd
+.byte $5f,$c2,$d0,$16,$18,$bd,$8f,$c2,$7d,$95,$c2,$9d,$8f,$c2,$bd,$92
+.byte $c2,$7d,$98,$c2,$9d,$92,$c2,$4c,$cd,$c1,$38,$bd,$8f,$c2,$fd,$95
+.byte $c2,$9d,$8f,$c2,$bd,$92,$c2,$fd,$98,$c2,$9d,$92,$c2,$18,$bd,$62
+.byte $c2,$7d,$68,$c2,$9d,$62,$c2,$bd,$65,$c2,$7d,$6b,$c2,$9d,$65,$c2
+.byte $30,$3a,$18,$bd,$68,$c2,$7d,$6e,$c2,$9d,$68,$c2,$bd,$6b,$c2,$7d
+.byte $71,$c2,$9d,$6b,$c2,$bd,$6b,$c2,$10,$11,$bd,$65,$c2,$dd,$77,$c2
+.byte $d0,$06,$98,$dd,$74,$c2,$f0,$14,$90,$12,$60,$bd,$65,$c2,$dd,$77
+.byte $c2,$90,$08,$d0,$07,$98,$dd,$74,$c2,$b0,$01,$60,$fe,$5f,$c2,$bd
+.byte $5f,$c2,$c9,$01,$d0,$07,$a6,$fc,$a4,$fd,$20,$25,$c0,$60,$a0,$00
+.byte $20,$d7,$c0,$ad,$0d,$dc,$40,$a0,$00,$20,$d7,$c0,$a0,$01,$20,$d7
+.byte $c0,$a0,$02,$4c,$d7,$c0,$20,$37,$c2,$4c,$31,$ea,$78,$a9,$46,$8d
+.byte $14,$03,$a9,$c2,$8d,$15,$03,$58,$60,$00,$07,$0e,$ff,$ff,$ff,$02
+.byte $00,$00,$df,$00,$00,$17,$00,$00,$56,$00,$00,$ff,$00,$00,$00,$00
+.byte $00,$00,$00,$00,$d8,$00,$00,$17,$00,$00,$00,$00,$00,$00,$00,$00
+.byte $00,$00,$00,$00,$00,$00,$2b,$00,$00,$05,$00,$00,$01,$00,$00,$00
+.byte $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$81,$81,$21,$21,$41
+.byte $11,$11,$11,$0b,$00,$00,$2b,$00,$40,$21,$00,$0e,$00,$00,$05,$00
+.byte $04,$11,$00,$01,$00,$00,$01,$00,$03,$03,$00,$0a,$12,$5a,$99,$70
+.byte $5f,$3d,$0f,$ca,$21,$51,$11,$64,$46,$10,$23,$00,$00,$00,$00,$a0
+.byte $33,$00,$00,$00,$00,$00,$00,$0e,$01,$00,$00,$00,$00,$00,$00,$a1
+.byte $27,$00,$00,$00,$00,$00,$00,$06,$00,$00,$00,$64,$35,$21,$ea,$9c
+.byte $3d,$59,$fa,$0f,$2a,$2c,$5c,$0c,$30,$34,$0d,$31,$5f,$eb,$f5,$ca
+.byte $be,$23,$6b,$fb,$01,$fc,$fb,$fd,$ff,$00,$04,$d5,$23,$be,$2b,$bd
+.byte $ec,$02,$82,$ff,$00,$ff,$ff,$ff,$ff,$00,$00,$6c,$21,$fc,$54,$83
+.byte $de,$7e,$7d,$0c,$2c,$21,$42,$0b,$2e,$3e,$19,$81,$00,$da,$56,$02
+.byte $d4,$d2,$7b,$ff,$00,$01,$ff,$fe,$ff,$ff,$fd,$f8,$00,$1e,$00,$b6
+.byte $00,$00,$00,$ff,$00,$00,$00,$ff,$00,$00,$00,$e9,$00,$d7,$d8,$5f
+.byte $af,$b5,$be,$08,$00,$28,$17,$01,$1b,$32,$02

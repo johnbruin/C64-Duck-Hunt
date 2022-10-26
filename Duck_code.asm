@@ -117,20 +117,23 @@ flashDuckHits:
     !:
     jsr printDuckHit
 
-    ldx duck2Number
-    lda duckHits,x
-    cmp #1        
-    beq !++
-        cmp #0
-        bne !+
-            lda #2
+    lda playWith1Duck
+	beq !only1Duck+
+        ldx duck2Number
+        lda duckHits,x
+        cmp #1        
+        beq !++
+            cmp #0
+            bne !+
+                lda #2
+                sta duckHits,x
+                jmp !++
+            !: 
+            lda #0
             sta duckHits,x
-            jmp !++
-        !: 
-        lda #0
-        sta duckHits,x
-    !:
-    jsr printDuckHit
-
+        !:
+        jsr printDuckHit
+    !only1Duck:
+    
     rts
 }

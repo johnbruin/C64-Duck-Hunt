@@ -18,14 +18,16 @@ playShot:
     lda #0    // sfx number
     ldy #2    // voice number
     jsr $c04a // play sound!
+
     rts
 }
 
 playDrop:
 {
     lda #4    // sfx number
-    ldy #0    // voice number
+    ldy #1    // voice number
     jsr $c04a // play sound!
+
     rts
 }
 
@@ -37,28 +39,32 @@ playFly:
     lda #1    // sfx number
     ldy #0    // voice number
     jsr $c04a // play sound!
+
     rts
 }
 
 playQuack:
 {
     lda #2    // sfx number
-    ldy #2    // voice number
+    ldy #1    // voice number
     jsr $c04a // play sound!
+
     rts
 }
+
 playHit:
 {
     lda #3    // sfx number
-    ldy #2    // voice number
+    ldy #1    // voice number
     jsr $c04a // play sound!
+
     rts
 }
 
 playSmile:
 {
     lda #6    // sfx number
-   	ldy #1    // voice number
+   	ldy #2    // voice number
    	jsr $c04a // play sound!
     rts
 }
@@ -66,8 +72,9 @@ playSmile:
 playLaugh:
 {
     lda #5    // sfx number
-    ldy #1    // voice number
+    ldy #2    // voice number
     jsr $c04a // play sound!
+    
     rts
 }
 
@@ -87,6 +94,40 @@ playBark:
     lda #7    // sfx number
     ldy #2    // voice number
     jsr $c04a // play sound!
+
+    rts
+}
+
+resetSid:
+{
+    lda #$ff
+
+    !resetSidLoop:
+    
+    ldx #$17
+    !:               
+        sta $d400,x
+        dex
+    bpl !-
+    tax
+    bpl !+
+        lda #$08
+    bpl !resetSidLoop-
+    !:
+
+    !:
+        bit $d011
+    bpl !-
+
+    !:
+        bit $d011
+    bmi !-
+
+    eor #$08
+    beq !resetSidLoop-
+
+    lda #$0f
+    sta $d418
 
     rts
 }

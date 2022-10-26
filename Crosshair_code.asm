@@ -166,6 +166,12 @@ checkCrosshairGame:
 	lda isShotFired
 	bne !shotwasfired+
 		:sprite_disable(0)
+
+		lda gameState
+		cmp #Playing
+		beq !+
+			rts
+		!:
 				
 		lda crosshairTrigger
 		bne !trigger+
@@ -184,7 +190,7 @@ checkCrosshairGame:
 				jsr isHitDuck1
 			!:
 
-			bne !++ // a=1 when duck1 was hit
+			bne !trigger+ // a=1 when duck1 was hit
 			
 			lda playWith1Duck
 			beq !only1Duck+
@@ -204,12 +210,6 @@ checkCrosshairGame:
 
 isHitDuck1:
 {
-	lda gameState
-	cmp #Playing
-	beq !+
-		rts
-	!:
-
 	sec
 	lda crosshairY
 	sbc #11*2
@@ -299,23 +299,15 @@ isHitDuck1:
 		lda crosshairY
 		sta showCrosshairY
 		jsr showCrosshair
-		lda shots
-		bne !+
-			lda #FlyAway
-			sta gameState     	
-		!:
+
+		jsr areWeOutOfShots
+
 		lda #0
 		rts
 }
 
 isHitDuck2:
 {
-	lda gameState
-	cmp #Playing
-	beq !+
-		rts
-	!:
-
 	sec
 	lda crosshairY
 	sbc #11*2
@@ -405,11 +397,9 @@ isHitDuck2:
 		lda crosshairY
 		sta showCrosshairY
 		jsr showCrosshair
-		lda shots
-		bne !+
-			lda #FlyAway
-			sta gameState     	
-		!:
+
+		jsr areWeOutOfShots
+
 		rts
 }
 
@@ -432,5 +422,15 @@ multiply:
 	dex
 	bpl m0
 	ldx fac1
+	rts
+}
+
+areWeOutOfShots:
+{
+	lda shots
+	bne !shots+
+		lda #FlyAway
+		sta gameState     	
+	!shots:
 	rts
 }

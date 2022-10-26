@@ -9,9 +9,6 @@
 
 initTitleScreen:
 {
-	lda #%00110000
-    sta $d018
-
 	ldx #0 
 	!: 
         lda #CYAN
@@ -67,9 +64,8 @@ roundNumber: .byte 0
 gameSpeed: .byte 1
 initGame:
 {
-	lda #0
-	sta $d418 // set volume to 15
-
+	jsr resetSid
+	
 	// Char primary color
 	ldx #0
 	!:
@@ -101,6 +97,9 @@ initGame:
 
 initRound:
 {
+	lda #0
+	sta wait
+
 	jsr initScore
 	jsr init_sprites
 	jsr initCrosshair
@@ -110,12 +109,26 @@ initRound:
 	rts
 }
 
+wait: .byte 0
 playGame:
 {
 	jsr checkCrosshairGame
 
 	lda gameState
 	
+	cmp #GameOver
+	bne !+
+		jsr showGameOverText
+		lda wait
+		bne !wait+
+			lda #0
+			sta startGame
+			jsr initTitleScreen			
+		!wait:
+		dec wait
+		rts
+	!:
+
 	cmp #Intro
 	bne !+
 		jsr moveDog4
@@ -139,7 +152,7 @@ playGame:
 
 	cmp #FlyAway
 	bne !+
-		jsr playDucks
+		jsr playDucks		
 		rts	
 	!:
 
@@ -154,14 +167,17 @@ playGame:
         !:
         jsr printDuckHit
 		
-		ldx duck2Number
-        lda duckHits,x
-        cmp #2
-        bne !+
-            lda #0
-            sta duckHits,x        
-        !:
-        jsr printDuckHit
+		lda playWith1Duck
+		beq !only1Duck+
+			ldx duck2Number
+			lda duckHits,x
+			cmp #2
+			bne !+
+				lda #0
+				sta duckHits,x        
+			!:
+			jsr printDuckHit
+		!only1Duck:
 
 		jsr showDog3	
 		jsr moveDog3		
@@ -183,12 +199,15 @@ playGame:
 
 	cmp #EndRound
 	bne !+
-		inc roundNumber
-		jsr showRoundText
-		jsr initScore
-		jsr initDog4
-		lda #Intro
-		sta gameState
+		lda wait
+		bne !wait+
+			inc roundNumber
+			jsr showRoundText
+			jsr initDog4
+			lda #Intro
+			sta gameState
+		!wait:
+		dec wait	
 		rts
 	!:
 
@@ -197,8 +216,9 @@ playGame:
 		lda duckNumber
 		cmp #9
 		bne !+
-			lda #EndRound
-			sta gameState
+			lda #255
+			sta wait
+			jsr evalHits
 			rts
 		!:
 		lda #3
@@ -227,7 +247,6 @@ playGame:
 	bne !+
 		jsr playDucks
 		jsr printDuckHits
-		jsr areAllDucksOnTheGround
 		rts
 	!:
 
@@ -255,6 +274,7 @@ playDucks:
 		sta slowdown
 	!:
 	dec slowdown
+	jsr areAllDucksOnTheGround
 	rts
 }
 
@@ -262,14 +282,23 @@ numberMappings:
 .byte 48,49,50,51,52,53,54,55,56,57
 
 gameText1:
-.text "  ROUND   "
+.byte 0,0,0,0,0,0,0,0,0,0,0
 gameText2:
 .byte 0,0,0,0,0,0,0,0,0,0,0
 gameText3:
 .byte 0,0,0,0,0,0,0,0,0,0,0
 
+roundText: .text "  ROUND   "
 showRoundText:
 {
+	ldx #0 
+	!:  
+		lda roundText,x
+		sta gameText1,x
+		inx
+		cpx #10
+	bne !-
+	
 	ldx roundNumber
 	lda numberMappings,x
 	sta gameText3+4
@@ -278,31 +307,71 @@ showRoundText:
 	rts
 }
 
+gameOverText: .text "GAME OVER "
+showGameOverText:
+{
+	ldx #0 
+	!:  
+		lda gameOverText,x
+		sta gameText1,x
+		inx
+		cpx #10
+	bne !-
+		
+	jsr showText
+	
+	rts
+}
+
+perfectText1: .text "PERFECT!! "
+perfectText3: .text "  10000   "
+showPerfectText:
+{
+	ldx #0 
+	!:  
+		lda perfectText1,x
+		sta gameText1,x
+		lda perfectText3,x
+		sta gameText3,x
+		inx
+		cpx #10
+	bne !-
+		
+	jsr showText
+	
+	rts
+}
+
 showText:
 {
 	ldx #0 
 	!:   
 		lda #WHITE
-		sta $d800+(4*40)+18,x
-		sta $d800+(5*40)+18,x
-		sta $d800+(6*40)+18,x
+		sta $d800+(4*40)+16,x
+		sta $d800+(5*40)+16,x
+		sta $d800+(6*40)+16,x
 
-		clc
 		lda gameText1,x
-		adc #(154-'A')
-		sta screenRam+(4*40)+16,x		
-		cmp #(32+154-'A') // Space
-		bne !+
+		cmp #' '
+		bne !replace+
 			lda #0
-			sta screenRam+(4*40)+16,x
-		!:
+			jmp !print+
+		!replace:
+		clc
+		adc #(154-'A')
+		
+		!print:
+		sta screenRam+(4*40)+16,x		
+				
 		lda gameText2,x		
 		sta screenRam+(5*40)+16,x
+
 		lda gameText3,x		
 		sta screenRam+(6*40)+16,x
+		
 		inx
 		cpx #10
-	bne !--
+	bne !-
 	rts
 }
 
@@ -311,7 +380,10 @@ hideText:
 	ldx #0 
 	!: 
         lda #0
-        sta screenRam+(4*40)+16,x
+        sta gameText1,x
+		sta gameText2,x
+		sta gameText3,x
+		sta screenRam+(4*40)+16,x
 		sta screenRam+(5*40)+16,x
         sta screenRam+(6*40)+16,x
 		inx

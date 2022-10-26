@@ -33,7 +33,7 @@ initScore:
         sta duckHits,x
         lda #WHITE
         sta $d800+(22*40)+16,x   
-        lda #CYAN
+        lda #BLACK
         sta $d800+(23*40)+16,x   
         inx
         cpx #10
@@ -56,7 +56,18 @@ initScore:
 	jsr printShots
 
     jsr printScore
+    jsr printHitsNeeded
 
+    rts
+}
+
+resetScore:
+{
+    lda #0
+    sta score1
+    sta score2
+    sta score3
+    jsr printScore
     rts
 }
 
@@ -176,6 +187,42 @@ printHiScore:
     rts
 }
 
+checkHiScore:
+{
+    lda hiScore3
+    cmp score3
+    bcc !lower+
+    bne !higher+
+
+    !equal:
+        lda hiScore2
+        cmp score2
+        bcc !lower+
+        bne !higher+
+
+        lda hiScore1
+        cmp score1
+        bcc !lower+
+        bne !higher+
+        rts
+
+    !higher:
+        jmp copyHiScore
+
+    !lower:
+        rts
+
+    copyHiScore:
+        lda score1
+        sta hiScore1
+        lda score2
+        sta hiScore2
+        lda score3
+        sta hiScore3
+
+    rts
+}
+
 shots: .byte 3
 bullet: .byte 0
 printShots:
@@ -203,11 +250,13 @@ duckHits:
 .fill 10, 0
 printDuckHits:
 {
-    .for(var x=0;x<10;x++)
-    {
-        ldx #x
-        jsr printDuckHit   
-    }
+    ldx #0 
+	!:         
+        jsr printDuckHit  
+        inx 
+        cpx #10
+    bne !-
+    
     rts
 }
 
@@ -233,5 +282,57 @@ printDuckHit:
         rts
     !:                
        
+    rts
+}
+
+hitsNeeded: .byte 5
+printHitsNeeded:
+{
+    ldx #0 
+	!:         
+        lda #CYAN
+        sta $d800+(23*40)+16,x  
+        inx 
+        cpx hitsNeeded
+    bne !-
+    
+    rts
+}
+
+evalHits:
+{   
+    ldx #0 
+	!:         
+        lda #WHITE
+        sta $d800+(22*40)+16,x  
+        inx 
+        cpx #10
+    bne !-
+
+    ldx #0
+    ldy #0 
+	!:  
+        lda duckHits,y
+        beq !isHit+            
+            lda #RED
+            sta $d800+(22*40)+16,x
+            inx 
+        !isHit:
+        iny 
+        cpy #10
+    bne !-
+
+    cpx hitsNeeded
+    bcc !lower+
+    bne !higher+
+    !lower: 
+        jsr checkHiScore
+        jsr resetScore
+        lda #GameOver
+        sta gameState
+        rts
+    !higher:
+        lda #EndRound
+        sta gameState
     rts
 }

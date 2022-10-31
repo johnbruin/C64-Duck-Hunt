@@ -64,8 +64,7 @@ initTitleScreen:
 }
 
 duckNumber:	.byte 0
-roundNumber: .byte 0
-gameSpeed: .byte 1
+gameSpeed: .byte 0
 initGame:
 {
 	jsr resetSid
@@ -90,28 +89,20 @@ initGame:
 
 	lda #0
 	sta duckNumber
+	lda #8
 	sta roundNumber
-	sta gameSpeed
-
-	lda #1
-	sta duckMoveSpeed
 
     jsr resetScore
 
-	rts
-}
-
-initRound:
-{
 	lda #0
 	sta wait
-
 	jsr initScore
 	jsr init_sprites
 	jsr initCrosshair
 	jsr show_sprites
 	jsr initDuck1
 	jsr initDuck2
+
 	rts
 }
 
@@ -124,7 +115,6 @@ playGame:
 	
 	cmp #GameOver
 	bne !+
-		jsr showGameOverText
 		lda wait
 		bne !wait+
 			lda #0
@@ -212,6 +202,7 @@ playGame:
 			ldx roundNumber
 			lda numberMappings,x
 			sta roundNumberText
+			jsr setDifficulty
 			jsr hideText
 			jsr showRoundText
 			jsr initDog4
@@ -269,7 +260,7 @@ slowdown: .byte 1
 playDucks:
 {
 	lda slowdown
-	cmp gameSpeed
+	cmp #0
 	bne !+
 		jsr showDuck1
 		jsr moveDuck1
@@ -282,10 +273,33 @@ playDucks:
 			jsr animateDuck2
 		!only1Duck:
 
-		lda #1
+		lda gameSpeed
 		sta slowdown
 	!:
 	dec slowdown
 	jsr areAllDucksOnTheGround
 	rts
 }
+
+setDifficulty:
+{
+	ldx roundNumber
+	dex
+	lda hitsNeededRound,x
+	sta hitsNeeded
+
+	lda gameSpeedRound,x
+	sta gameSpeed
+
+	lda duckMoveSpeedRound,x
+	sta duckMoveSpeed
+
+	rts
+}
+
+hitsNeededRound:
+.byte 3,4,5,6,7,8,9,10,10
+gameSpeedRound:
+.byte 1,1,1,1,1,1,1,1,1
+duckMoveSpeedRound:
+.byte 1,1,1,2,2,2,2,3,3

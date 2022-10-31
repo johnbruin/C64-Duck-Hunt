@@ -5,6 +5,8 @@
 
 *=* "[CODE] Score code"
 
+roundNumber: .byte 0
+
 initScore:
 {
     lda bullet
@@ -80,19 +82,27 @@ score3: .byte 0
 hiScore1: .byte 0
 hiScore2: .byte 0
 hiScore3: .byte $01
+hitScore: .byte $05
+scoreSprites:
+.byte 53,53,54,55,56,57,58,58,58
+hitScoreRound:
+.byte $05,$05,$08,$10,$20,$24,$30,$30,$30
 addScore:
 {
+    ldx roundNumber
+    dex
+    lda hitScoreRound,x
+    sta hitScore
+    
     sed
     lda #0 
     clc
     adc score1	//ones and tens
     sta score1
     lda score2	//hundreds and thousands
-    clc
-    adc #05
+    adc hitScore
     sta score2
     lda score3	//ten-thousands and hundred-thousands
-    clc
     adc #0
     sta score3
     cld
@@ -107,12 +117,27 @@ addPerfectScore:
     adc score1	//ones and tens
     sta score1
     lda score2	//hundreds and thousands
-    clc
     adc #0
     sta score2
     lda score3	//ten-thousands and hundred-thousands
-    clc
     adc #01
+    sta score3
+    cld
+    rts
+}
+
+addFinishedScore:
+{
+    sed
+    lda #0    
+    clc
+    adc score1	//ones and tens
+    sta score1
+    lda score2	//hundreds and thousands
+    adc #0
+    sta score2
+    lda score3	//ten-thousands and hundred-thousands
+    adc #10
     sta score3
     cld
     rts
@@ -391,6 +416,7 @@ evalHits:
     bne !higher+
     !lower: 
         jsr checkHiScore
+        jsr showGameOverText
         lda #GameOver
         sta gameState
         rts
@@ -400,7 +426,21 @@ evalHits:
             jsr addPerfectScore
             jsr printScore
             jsr showPerfectText
+            jmp !endRound+
         !:
+        jsr showGoodText
+        !endRound:
+        
+        lda roundNumber
+        cmp #9
+		bne !+
+			jsr addFinishedScore
+            jsr checkHiScore
+            jsr showFinishedText
+            lda #GameOver
+            sta gameState
+            rts
+		!:
         lda #EndRound
         sta gameState
     rts

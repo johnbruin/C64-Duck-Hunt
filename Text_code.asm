@@ -134,6 +134,22 @@ showGameOverText:
 	rts
 }
 
+goodText: .text "   GOOD!  "
+showGoodText:
+{
+	ldx #0 
+	!:  
+		lda goodText,x
+		sta gameText1,x
+		inx
+		cpx #10
+	bne !-
+		
+	jsr showText
+	
+	rts
+}
+
 perfectText1: .text "PERFECT!! "
 perfectText3: .text " 10000    "
 showPerfectText:
@@ -143,6 +159,25 @@ showPerfectText:
 		lda perfectText1,x
 		sta gameText1,x
 		lda perfectText3,x
+		sta gameText3,x
+		inx
+		cpx #10
+	bne !-
+		
+	jsr showText
+	
+	rts
+}
+
+finishedText1: .text "FINISHED!!"
+finishedText3: .text " 100000   "
+showFinishedText:
+{
+	ldx #0 
+	!:  
+		lda finishedText1,x
+		sta gameText1,x
+		lda finishedText3,x
 		sta gameText3,x
 		inx
 		cpx #10

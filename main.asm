@@ -59,7 +59,6 @@ irqTitleScreen:
 	lda startGame
 	beq !+
 		jsr initGame
-		jsr initRound
 		lda #EndRound
 		sta gameState
 		:irq_next(irqGame1, 0)

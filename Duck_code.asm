@@ -11,9 +11,6 @@ duck1Number: .byte 0
 duck2Number: .byte 0
 duckMoveSpeed: .byte 2
 
-scoreSprites:
-.byte 53,54,55,56,57,58
-
 duckSprites:
 .byte 1, 3, 2, 1, 3, 2          //0=right
 .byte 40, 42, 41, 40, 42, 41    //1=left

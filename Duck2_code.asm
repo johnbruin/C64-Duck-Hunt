@@ -46,8 +46,9 @@ showScoreDuck2:
     lda #WHITE
     sta $d027+6
 
-    ldx #0
-    lda scoreSprites,x  
+    ldx roundNumber
+    dex
+    lda scoreSprites,x 
     clc
     adc #(>spriteMemory<<2)	
     sta SPRITEPOINTER+6
@@ -311,7 +312,7 @@ moveDuck2FlyAway:
     jsr Duck2Up
 
     lda duck2Y
-	cmp #4	
+	cmp #5
     bcc !lower+
     bne !higher+    
 

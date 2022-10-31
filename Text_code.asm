@@ -134,12 +134,28 @@ showGameOverText:
 	rts
 }
 
-goodText: .text "   GOOD!  "
+goodText: .text "  GOOD!   "
 showGoodText:
 {
 	ldx #0 
 	!:  
 		lda goodText,x
+		sta gameText2,x
+		inx
+		cpx #10
+	bne !-
+		
+	jsr showText
+	
+	rts
+}
+
+flyAwayText: .text " FLY AWAY "
+showflyAwayText:
+{
+	ldx #0 
+	!:  
+		lda flyAwayText,x
 		sta gameText1,x
 		inx
 		cpx #10

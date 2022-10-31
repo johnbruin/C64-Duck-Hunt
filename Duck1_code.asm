@@ -331,7 +331,7 @@ moveDuck1FlyAway:
         rts
     !lower:
         jsr playLaugh
-
+        jsr hideText
         lda #Miss
         sta gameState
         rts

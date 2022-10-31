@@ -410,10 +410,10 @@ markHits:
 evalHits:
 {   
     jsr clearHits
-    jsr markHits
+    jsr markHits    
     cpx hitsNeeded
-    bcc !lower+
-    bne !higher+
+    bcs !higher+
+    bne !lower+
     !lower: 
         jsr checkHiScore
         jsr showGameOverText
@@ -435,6 +435,7 @@ evalHits:
         cmp #9
 		bne !+
 			jsr addFinishedScore
+            jsr printScore
             jsr checkHiScore
             jsr showFinishedText
             lda #GameOver

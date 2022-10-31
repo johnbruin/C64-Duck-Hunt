@@ -77,8 +77,16 @@ irqGame1:
     lda #%00100000
     sta $d018
 
+	lda gameState
+	cmp #FlyAway
+	bne !+
+		lda #LIGHT_RED
+		sta background_color
+		jmp !skip+
+	!:
 	lda #LIGHT_BLUE     
 	sta background_color 
+	!skip:
 
 	lda #BLUE
 	sta $D022           // Char multi color 1

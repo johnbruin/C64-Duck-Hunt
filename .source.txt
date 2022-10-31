@@ -147,7 +147,7 @@ playGame:
 	!:
 
 	cmp #FlyAway
-	bne !+
+	bne !+		
 		jsr playDucks		
 		rts	
 	!:
@@ -186,7 +186,6 @@ playGame:
 		sta duckNumber
 
 		jsr initScore
-		jsr hideText
 
 		lda #NewSet
 		sta gameState
@@ -224,9 +223,15 @@ playGame:
 			jsr evalHits
 			rts
 		!:
+
 		lda #3
 		sta shots
 		jsr printShots
+
+		lda #0
+		sta secondsToFlyAway
+
+		jsr hideText
 
 		inc duckNumber
 		lda duckNumber
@@ -257,8 +262,27 @@ playGame:
 }
 
 slowdown: .byte 1
+framesToFlyAway: .byte 0
+secondsToFlyAway: .byte 0
 playDucks:
 {
+	inc framesToFlyAway
+	lda framesToFlyAway
+	cmp #50
+	bne !+
+		inc secondsToFlyAway
+		lda #0
+		sta framesToFlyAway
+	!:
+
+	lda secondsToFlyAway
+	cmp #8
+	bne !+		
+		jsr showflyAwayText
+		lda #FlyAway
+		sta gameState
+	!:
+
 	lda slowdown
 	cmp #0
 	bne !+
@@ -298,7 +322,7 @@ setDifficulty:
 }
 
 hitsNeededRound:
-.byte 3,4,5,6,7,8,9,10,10
+.byte 6,6,7,7,8,8,9,9,10
 gameSpeedRound:
 .byte 1,1,1,1,1,1,1,1,1
 duckMoveSpeedRound:

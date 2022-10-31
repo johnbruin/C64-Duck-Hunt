@@ -425,8 +425,47 @@ multiply:
 
 areWeOutOfShots:
 {
+	lda duck1IsShot
+    beq !duck1isshot+
+		lda playWith1Duck
+		beq !only1Duck+
+			lda duck2IsShot
+			beq !duck2isshot+
+				rts
+			!duck2isshot:
+			lda duck2IsDead
+			beq !duck2isdead+
+				rts
+			!duck2isdead:
+			jmp !skip+
+		!only1Duck:
+		rts
+    !duck1isshot:
+	
+	!skip:
+
+    lda duck1IsDead
+	beq !duck1isdead+
+        lda playWith1Duck
+		beq !only1Duck+
+			lda duck2IsShot
+			beq !duck2isshot+
+				rts
+			!duck2isshot:
+			lda duck2IsDead
+			beq !duck2isdead+
+				rts
+			!duck2isdead:
+			jmp !skip+
+		!only1Duck:
+		rts
+    !duck1isdead:
+
+	!skip:
+
 	lda shots
 	bne !shots+
+		jsr showflyAwayText
 		lda #FlyAway
 		sta gameState     	
 	!shots:

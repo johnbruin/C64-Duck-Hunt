@@ -77,6 +77,7 @@ areAllDucksOnTheGround:
     bne !only1Duck+
         lda duck1OnTheGround
 	    beq !++
+            jsr hideText
             jsr playSmile
             lda #ClearWith1Duck
             sta gameState 
@@ -88,6 +89,7 @@ areAllDucksOnTheGround:
 	beq !++
         lda duck2OnTheGround
         beq !+
+            jsr hideText
             jsr playSmile
             lda #ClearWith2Ducks
             sta gameState

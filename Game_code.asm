@@ -89,7 +89,7 @@ initGame:
 
 	lda #0
 	sta duckNumber
-	lda #8
+	lda #0
 	sta roundNumber
 
     jsr resetScore

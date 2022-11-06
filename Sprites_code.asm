@@ -2,7 +2,8 @@
 
 #import "globals.asm"
 
-.const SPRITEPOINTER = screenRam+$03f8
+.var SPRITEPOINTER = screenRam+$03f8
+.var SPRITEPOINTER_title = screenRamTitleScreen+$03f8
 
 *=* "[CODE] Sprite common code"
 init_sprites:

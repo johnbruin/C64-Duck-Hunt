@@ -13,6 +13,14 @@
 
 initTitleScreen:
 {
+	lda #366/2
+	sta crosshairX
+	lda #0
+	sta crosshairX+1
+	lda #30+254/2
+	sta crosshairY
+
+	jsr Joystick.Reset
 	ldx #0 
 	!: 
         lda #CYAN
@@ -67,6 +75,13 @@ duckNumber:	.byte 0
 gameSpeed: .byte 0
 initGame:
 {
+	lda #366/2
+	sta crosshairX
+	lda #0
+	sta crosshairX+1
+	lda #254/2
+	sta crosshairY
+
 	jsr resetSid
 	
 	// Char primary color

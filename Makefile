@@ -32,3 +32,4 @@ clean:
 	del *.vs
 	del *.dbg
 	del *.d64
+	del /S .source.txt

@@ -120,30 +120,29 @@ getLightGunInputTitle:
 	rts
 }
 
-
-getJoystickInput:
+getJoystick1Input:
 {
 	lda #1
 	sta crosshairTrigger
 
-	jsr Joystick.Poll
+	jsr Joystick1.Poll
 
-	ldx #Joystick.UP
-	jsr Joystick.Held
+	ldx #Joystick1.UP
+	jsr Joystick1.Held
 	bne !+
 		dec crosshairY
 		dec crosshairY
 	!:
 
-	ldx #Joystick.DOWN
-	jsr Joystick.Held
+	ldx #Joystick1.DOWN
+	jsr Joystick1.Held
 	bne !+
 		inc crosshairY
 		inc crosshairY
 	!:
 
-	ldx #Joystick.LEFT
-	jsr Joystick.Held
+	ldx #Joystick1.LEFT
+	jsr Joystick1.Held
 	bne !+
 		sec
 		lda crosshairX
@@ -154,8 +153,8 @@ getJoystickInput:
 		sta crosshairX+1
 	!:
 
-	ldx #Joystick.RIGHT
-	jsr Joystick.Held
+	ldx #Joystick1.RIGHT
+	jsr Joystick1.Held
 	bne !+
 		clc
 		lda crosshairX
@@ -166,8 +165,8 @@ getJoystickInput:
 		sta crosshairX+1
 	!:
 
-	ldx #Joystick.FIRE
-	jsr Joystick.Held
+	ldx #Joystick1.FIRE
+	jsr Joystick1.Held
 	bne !+
 		lda #0
 		sta crosshairTrigger
@@ -181,7 +180,7 @@ checkCrosshairTitleScreen:
 {
 	lda #1
 	sta isJoystick
-	jsr getJoystickInput
+	jsr getJoystick1Input
 	cpy #$ff
 	bne !+
 		jsr getLightGunInputTitle
@@ -240,14 +239,13 @@ checkCrosshairGame:
 	lda gameState
 	cmp #Playing
 	beq !+
-		:sprite_disable(0)
-		
+		:sprite_disable(0)		
 		rts
 	!:
 
 	lda isJoystick
 	beq !+
-		jsr getJoystickInput
+		jsr getJoystick1Input
 		lda crosshairX
 		sta showCrosshairX
 		lda crosshairX+1
@@ -261,7 +259,12 @@ checkCrosshairGame:
 	!skip:
 
 	lda isShotFired
-	bne !shotwasfired+		
+	bne !shotwasfired+	
+		lda isJoystick
+		bne !+
+			:sprite_disable(0)
+			
+		!:
 		lda crosshairTrigger
 		bne !trigger+
 			lda #10
@@ -357,6 +360,8 @@ isHitDuck1:
 	
 	!hit:
 	    jsr playHit
+
+		inc hitsThisSet
 
 		lda #0
 		sta duck1AnimSpeed
@@ -455,6 +460,8 @@ isHitDuck2:
 
 	!hit:
 		jsr playHit
+
+		inc hitsThisSet
 
 		lda #0
 		sta duck2AnimSpeed

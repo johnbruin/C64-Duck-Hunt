@@ -1,8 +1,9 @@
 #importonce 
 
 #import "Duck_code.asm"
+#import "Joystick_code.asm"
 
-*=* "[CODE] Duck1 code"
+*=$8000 "[CODE] Duck1 code"
 
 initDuck1:
 {
@@ -48,7 +49,13 @@ showScoreDuck1:
 
     ldx roundNumber
     dex
-    lda scoreSprites,x  
+    ldy hitScoreRound,x  
+    lda hitsThisSet
+    cmp #2
+    bne !+
+        iny
+    !:
+    lda scoreSprites,y
     clc
     adc #(>spriteMemory<<2)	
     sta SPRITEPOINTER+5
@@ -213,6 +220,19 @@ animateDuck1:
 
 moveDuck1:
 {
+    lda playWith1Duck
+    bne !only1Duck+
+        jsr getJoystick2Input
+        beq !+
+            jsr ChangeMovementDuck1
+            jmp !skip+
+        !:
+        lda #15
+        sta changeMovementCounterDuck1        
+    !only1Duck:    
+    jsr ChangeMovementDuck1
+    !skip:
+
     lda duck1IsShot
     beq !+
         rts
@@ -261,21 +281,9 @@ moveDuck1:
     !:
 
     lda duck1Direction
-    cmp #flyDiagonalLeftDown
-    bne !+
-        jsr moveDuck1DiagonalLeftDown
-    !:
-
-    lda duck1Direction
     cmp #flyDiagonalRightUp
     bne !+
         jsr moveDuck1DiagonalRightUp
-    !:
-
-    lda duck1Direction
-    cmp #flyDiagonalRightDown
-    bne !+
-        jsr moveDuck1DiagonalRightDown
     !:
 
     lda duck1Direction
@@ -301,6 +309,7 @@ moveDuck1Up:
     jsr Duck1Up
     jsr Duck1Up
 
+check:
     lda duck1Y
 	cmp #upperBoundary
     bcc !lower+
@@ -345,6 +354,7 @@ moveDuck1Down:
     jsr Duck1Down
     jsr Duck1Down
 
+check:
     lda duck1Y
 	cmp #lowerBoundary	
     bcc !lower+
@@ -366,6 +376,7 @@ moveDuck1LeftUp:
     jsr Duck1Up
     jsr Duck1Left
     
+check:
     lda duck1Y
 	cmp #upperBoundary	
     bcc !lower+
@@ -392,9 +403,9 @@ moveDuck1LeftUp:
     !higher:
         rts
     !lower:
-        lda #flyDiagonalRightUp
+        lda #flyRightDown
         sta duck1Direction
-         rts
+        rts
 }
 
 moveDuck1LeftDown:
@@ -404,7 +415,8 @@ moveDuck1LeftDown:
 
     jsr Duck1Down
     jsr Duck1Left
-    
+
+check:
     lda duck1Y
 	cmp #lowerBoundary
     bcc !lower+
@@ -428,7 +440,7 @@ moveDuck1LeftDown:
     !higher:
         rts
     !lower:
-        lda #flyRightDown
+        lda #flyDiagonalRightUp
         sta duck1Direction
         rts
 }
@@ -440,7 +452,8 @@ moveDuck1RightUp:
 
     jsr Duck1Up
     jsr Duck1Right
-    
+
+check:
     lda duck1Y
 	cmp #upperBoundary
     bcc !lower+
@@ -465,7 +478,7 @@ moveDuck1RightUp:
     bne !higher+    
 
     !higher:
-        lda #flyDiagonalLeftUp
+        lda #flyLeftDown
         sta duck1Direction
     !lower:
         rts
@@ -478,7 +491,8 @@ moveDuck1RightDown:
 
     jsr Duck1Down
     jsr Duck1Right
-    
+
+check:
     lda duck1Y
 	cmp #lowerBoundary
     bcc !lower+
@@ -500,8 +514,8 @@ moveDuck1RightDown:
     bne !higher+    
 
     !higher:
-        lda #flyLeftDown
-        sta duck1Direction        
+        lda #flyLeftUp
+        sta duck1Direction   
     !lower:
         rts    
 }
@@ -514,7 +528,8 @@ moveDuck1DiagonalLeftUp:
     jsr Duck1Up
     jsr Duck1Up
     jsr Duck1Left
-    
+
+check:    
     lda duck1Y
 	cmp #upperBoundary
     bcc !lower+
@@ -528,43 +543,6 @@ moveDuck1DiagonalLeftUp:
         rts
 
     !skip:
-    lda duck1X+1
-	cmp #>leftBoundary
-	bne !+
-	    lda duck1X
-	    cmp #<leftBoundary
-	!:
-    bcc !lower+
-    bne !higher+    
-
-    !higher:
-        rts
-    !lower:
-        lda #flyDiagonalRightUp
-        sta duck1Direction
-        rts    
-}
-
-moveDuck1DiagonalLeftDown:
-{
-    lda #2*6
-    sta duck1SpritesAnimationPointer
-
-    jsr Duck1Down
-    jsr Duck1Down
-    jsr Duck1Left
-    
-    lda duck1Y
-	cmp #lowerBoundary
-    bcc !lower+
-    bne !higher+    
-
-    !higher:
-        lda #flyLeftUp
-        sta duck1Direction
-        rts
-    !lower:
-
     lda duck1X+1
 	cmp #>leftBoundary
 	bne !+
@@ -590,7 +568,8 @@ moveDuck1DiagonalRightUp:
     jsr Duck1Up
     jsr Duck1Up
     jsr Duck1Right
-    
+
+check:  
     lda duck1Y
 	cmp #upperBoundary
     bcc !lower+
@@ -604,43 +583,6 @@ moveDuck1DiagonalRightUp:
         rts
 
     !skip:
-    lda duck1X+1
-	cmp #>rightBoundary
-	bne !+
-	    lda duck1X
-	    cmp #<rightBoundary
-	!:
-    bcc !lower+
-    bne !higher+    
-
-    !higher:
-        lda #flyLeftUp
-        sta duck1Direction
-        rts
-    !lower:
-        rts
-}
-
-moveDuck1DiagonalRightDown:
-{
-    lda #3*6
-    sta duck1SpritesAnimationPointer
-
-    jsr Duck1Down
-    jsr Duck1Down
-    jsr Duck1Right
-    
-    lda duck1Y
-	cmp #lowerBoundary	
-    bcc !lower+
-    bne !higher+    
-
-    !higher:
-        lda #flyRightUp
-        sta duck1Direction
-        rts
-    !lower:
-    
     lda duck1X+1
 	cmp #>rightBoundary
 	bne !+
@@ -698,4 +640,112 @@ Duck1Down:
     adc duckMoveSpeed
     sta duck1Y
     rts
+}
+
+changeMovementCounterDuck1: .byte 15
+ChangeMovementDuck1:
+{
+    lda changeMovementCounterDuck1
+    bne !changeMovement+
+        inc rndMovementsPointer
+        ldx rndMovementsPointer
+        lda rndMovements,x
+        cmp #$ff
+        beq !+
+            sta duck1Direction
+        !:
+        lda #15
+        sta changeMovementCounterDuck1
+    !changeMovement:
+    dec changeMovementCounterDuck1
+    rts
+}
+
+isJoystick2Input: .byte 0
+getJoystick2Input:
+{
+    lda #1
+    sta isJoystick2Input
+
+	jsr Joystick2.Poll
+
+	ldx #Joystick2.UP
+	jsr Joystick2.Held
+	bne !+++
+        ldx #Joystick2.LEFT
+	    jsr Joystick2.Held
+	    bne !+
+		    lda #flyDiagonalLeftUp
+            sta duck1Direction
+            jsr moveDuck1DiagonalLeftUp.check
+            rts
+	    !:
+    	ldx #Joystick2.RIGHT
+	    jsr Joystick2.Held
+	    bne !+
+		    lda #flyDiagonalRightUp
+            sta duck1Direction
+            jsr moveDuck1DiagonalRightUp.check
+            rts
+	    !:
+		lda #flyUp
+        sta duck1Direction
+        jsr moveDuck1Up.check
+        rts
+	!:
+
+	ldx #Joystick2.DOWN
+	jsr Joystick2.Held
+	bne !+++
+        ldx #Joystick2.LEFT
+	    jsr Joystick2.Held
+	    bne !+
+		    lda #flyLeftDown
+            sta duck1Direction
+            jsr moveDuck1LeftDown.check
+            rts
+	    !:
+    	ldx #Joystick2.RIGHT
+	    jsr Joystick2.Held
+	    bne !+
+		    lda #flyRightDown
+            sta duck1Direction
+            jsr moveDuck1RightDown.check
+            rts
+	    !:
+		lda #flyDown
+        sta duck1Direction
+        jsr moveDuck1Down.check
+        rts
+	!:
+
+	ldx #Joystick2.LEFT
+	jsr Joystick2.Held
+	bne !+
+		lda #flyLeftDown
+        sta duck1Direction
+        jsr moveDuck1LeftDown.check
+        rts
+	!:
+
+	ldx #Joystick2.RIGHT
+	jsr Joystick2.Held
+	bne !+
+		lda #flyRightDown
+        sta duck1Direction
+        jsr moveDuck1RightDown.check
+        rts
+	!:
+
+	ldx #Joystick2.FIRE
+	jsr Joystick2.Held
+	bne !+
+		jsr playQuack
+        rts
+	!:
+
+    lda #0
+    sta isJoystick2Input
+
+	rts
 }

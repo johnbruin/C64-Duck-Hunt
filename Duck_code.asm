@@ -4,7 +4,7 @@
 #import "SoundFx_code.asm"
 #import "Score_code.asm"
 
-*=$8000 "[CODE] Duck common code"
+*=* "[CODE] Duck common code"
 
 playWith1Duck: .byte 0
 duck1Number: .byte 0
@@ -28,11 +28,9 @@ duckSprites:
     ,flyRightUp
     ,flyDiagonalLeftUp
     ,flyDiagonalRightUp
-    ,flyDown    
     ,flyLeftDown
     ,flyRightDown    
-    ,flyDiagonalLeftDown
-    ,flyDiagonalRightDown
+    ,flyDown 
 }
 
 .var upperBoundary = 50
@@ -67,6 +65,21 @@ rndQuacks:
     {
         .var q = round(random()*15)        
         .byte q
+    }
+
+rndMovementsPointer:
+rndMovements:
+    .for (var i=0; i< 255; i++)
+    {
+        .var m = round(random()*150)        
+        .if (m<=8)
+        {
+            .byte m
+        }
+        else
+        {
+            .byte $ff
+        }
     }
 
 duck1OnTheGround: .byte 0

@@ -84,14 +84,23 @@ hiScore2: .byte 0
 hiScore3: .byte $01
 hitScore: .byte $05
 scoreSprites:
-.byte 53,53,54,55,56,57,58,58,58
+.byte 53,54,55,56,57,58
 hitScoreRound:
-.byte $05,$05,$08,$10,$20,$24,$30,$30,$30
+.byte 0,1,1,2,2,3,3,4,4
+hitScoreRoundValue:
+.byte $05,$08,$10,$20,$24,$30
+hitsThisSet: .byte 0
 addScore:
 {
     ldx roundNumber
     dex
-    lda hitScoreRound,x
+    ldy hitScoreRound,x
+    lda hitsThisSet
+    cmp #2
+    bne !+
+        iny
+    !:
+    lda hitScoreRoundValue,y
     sta hitScore
     
     sed

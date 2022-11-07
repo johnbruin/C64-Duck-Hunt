@@ -6,6 +6,8 @@
 //Labels
 .label border_color         = $d020
 .label background_color     = $d021
+.label charmulticolor1		= $d022
+.label charmulticolor2		= $d023
 
 .pc = $0801 "Basic Program Start"
 :BasicUpstart(start)			
@@ -89,10 +91,10 @@ irqGame1:
 	!skip:
 
 	lda #BLUE
-	sta $D022           // Char multi color 1
+	sta charmulticolor1
 
 	lda #BLACK
-	sta $D023           // Char multi color 2
+	sta charmulticolor2
 
 	jsr playGame
 	
@@ -115,7 +117,7 @@ irqGame2:
 {
 	irq_enter()
 	lda #LIGHT_GREEN
-	sta $D022           // Char multi color 1
+	sta charmulticolor1
 	irq_next(irqGame3,50+20*8)	
 }
 
@@ -124,7 +126,7 @@ irqGame3:
 {
 	irq_enter()
 	lda #BROWN
-	sta $D022           // Char multi color 1
+	sta charmulticolor1
 
 	lda #BLACK
 	sta background_color

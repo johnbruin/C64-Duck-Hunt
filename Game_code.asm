@@ -20,7 +20,8 @@ initTitleScreen:
 	lda #30+254/2
 	sta crosshairY
 
-	jsr Joystick.Reset
+	jsr Joystick1.Reset
+	jsr Joystick2.Reset
 	ldx #0 
 	!: 
         lda #CYAN
@@ -245,6 +246,7 @@ playGame:
 
 		lda #0
 		sta secondsToFlyAway
+		sta hitsThisSet
 
 		jsr hideText
 

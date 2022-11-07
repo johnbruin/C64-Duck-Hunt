@@ -48,7 +48,13 @@ showScoreDuck2:
 
     ldx roundNumber
     dex
-    lda scoreSprites,x 
+    ldy hitScoreRound,x  
+    lda hitsThisSet
+    cmp #2
+    bne !+
+        iny
+    !:
+    lda scoreSprites,y
     clc
     adc #(>spriteMemory<<2)	
     sta SPRITEPOINTER+6
@@ -202,6 +208,8 @@ animateDuck2:
 
 moveDuck2:
 {
+    jsr ChangeMovementDuck2
+
     lda duck2IsShot
     beq !+
         rts
@@ -250,21 +258,9 @@ moveDuck2:
     !:
 
     lda duck2Direction
-    cmp #flyDiagonalLeftDown
-    bne !+
-        jsr moveDuck2DiagonalLeftDown
-    !:
-
-    lda duck2Direction
     cmp #flyDiagonalRightUp
     bne !+
         jsr moveDuck2DiagonalRightUp
-    !:
-
-    lda duck2Direction
-    cmp #flyDiagonalRightDown
-    bne !+
-        jsr moveDuck2DiagonalRightDown
     !:
 
     lda duck2Direction
@@ -534,43 +530,6 @@ moveDuck2DiagonalLeftUp:
         rts    
 }
 
-moveDuck2DiagonalLeftDown:
-{
-    lda #2*6
-    sta duck2SpritesAnimationPointer
-
-    jsr Duck2Down
-    jsr Duck2Down
-    jsr Duck2Left
-    
-    lda duck2Y
-	cmp #lowerBoundary
-    bcc !lower+
-    bne !higher+    
-
-    !higher:
-        lda #flyLeftUp
-        sta duck2Direction
-        rts
-    !lower:
-
-    lda duck2X+1
-	cmp #>leftBoundary
-	bne !+
-	    lda duck2X
-	    cmp #<leftBoundary
-	!:
-    bcc !lower+
-    bne !higher+    
-
-    !higher:
-        rts
-    !lower:
-        lda #flyRightDown
-        sta duck2Direction
-        rts    
-}
-
 moveDuck2DiagonalRightUp:
 {
     lda #3*6
@@ -604,43 +563,6 @@ moveDuck2DiagonalRightUp:
 
     !higher:
         lda #flyLeftUp
-        sta duck2Direction
-        rts
-    !lower:
-        rts
-}
-
-moveDuck2DiagonalRightDown:
-{
-    lda #3*6
-    sta duck2SpritesAnimationPointer
-
-    jsr Duck2Down
-    jsr Duck2Down
-    jsr Duck2Right
-    
-    lda duck2Y
-	cmp #lowerBoundary	
-    bcc !lower+
-    bne !higher+    
-
-    !higher:
-        lda #flyRightUp
-        sta duck2Direction
-        rts
-    !lower:
-    
-    lda duck2X+1
-	cmp #>rightBoundary
-	bne !+
-	    lda duck2X
-	    cmp #<rightBoundary
-	!:
-    bcc !lower+
-    bne !higher+    
-
-    !higher:
-        lda #flyLeftDown
         sta duck2Direction
         rts
     !lower:
@@ -686,5 +608,24 @@ Duck2Down:
     lda duck2Y
     adc duckMoveSpeed
     sta duck2Y
+    rts
+}
+
+changeMovementCounterDuck2: .byte 15
+ChangeMovementDuck2:
+{
+    lda changeMovementCounterDuck2
+    bne !changeMovement+
+        inc rndMovementsPointer
+        ldx rndMovementsPointer
+        lda rndMovements,x
+        cmp #$ff
+        beq !+
+            sta duck2Direction
+        !:
+        lda #15
+        sta changeMovementCounterDuck2
+    !changeMovement:
+    dec changeMovementCounterDuck2
     rts
 }

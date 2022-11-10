@@ -5,6 +5,7 @@
 #import "Duck1_code.asm"
 #import "Duck2_code.asm"
 #import "Joystick_code.asm"
+#import "Mouse_code.asm"
 
 *=* "[CODE] Crosshair code"
 
@@ -13,6 +14,7 @@
 .var fac2 = $59
 
 isJoystick: .byte 1
+isMouse: .byte 0
 crosshairXLowBoundary: .word 0
 crosshairXHighBoundary: .word 0
 crosshairYLowBoundary: .byte 0
@@ -28,7 +30,7 @@ initCrosshair:
 	lda startGame
 	bne !+
 		// set sprite colors
-    	lda #WHITE
+    	lda #LIGHT_GRAY
     	sta $d027
 
 		//Set sprite pointer
@@ -40,7 +42,7 @@ initCrosshair:
 	!:
 	
 	// set sprite colors
-    lda #CYAN
+    lda #LIGHT_GRAY
     sta $d027
 
 	//Set sprite pointer
@@ -59,6 +61,13 @@ showCrosshairY: .byte 100
 isShotFired: .byte 0
 showCrosshair:
 {  
+	lda crosshairX
+	sta showCrosshairX
+	lda crosshairX+1
+	sta showCrosshairX+1
+	lda crosshairY
+	sta showCrosshairY
+
     jsr initCrosshair 
     :sprite_enable(0)
 
@@ -122,9 +131,6 @@ getLightGunInputTitle:
 
 getJoystick1Input:
 {
-	lda #1
-	sta crosshairTrigger
-
 	jsr Joystick1.Poll
 
 	ldx #Joystick1.UP
@@ -165,6 +171,8 @@ getJoystick1Input:
 		sta crosshairX+1
 	!:
 
+	lda #1
+	sta crosshairTrigger
 	ldx #Joystick1.FIRE
 	jsr Joystick1.Held
 	bne !+
@@ -175,25 +183,69 @@ getJoystick1Input:
 	rts
 }
 
+getMouseInput:
+{
+	lda $d41a
+	sta crosshairTrigger
+	bne !+
+		rts
+	!:
+
+	lda Mouse.potx
+	cmp #$ff
+	bne !+
+		lda Mouse.poty
+		cmp #$ff
+		bne !+
+			lda #0
+			sta isMouse
+			rts
+		!:		
+	!:
+
+	lda #1
+	sta isMouse
+	lda #0
+	sta isJoystick
+
+	jsr Mouse.cbm1351_poll 
+
+	lda #1
+	sta crosshairTrigger
+	jsr Joystick1.Poll
+	ldx #Joystick1.FIRE
+	jsr Joystick1.Held
+	bne !+
+		lda #0
+		sta crosshairTrigger
+	!:
+
+	lda Mouse.pos_x_lo
+	sta crosshairX
+	lda Mouse.pos_x_hi
+	sta crosshairX+1
+	lda Mouse.pos_y_lo
+	sta crosshairY
+	rts
+}
+
 startGame: .byte 0
 checkCrosshairTitleScreen:
 {
-	lda #1
-	sta isJoystick
-	jsr getJoystick1Input
-	cpy #$ff
-	bne !+
-		jsr getLightGunInputTitle
-		lda #0
+	jsr getMouseInput
+	lda isMouse
+	bne !ismouse+
+		lda #1
 		sta isJoystick
-	!:
-
-	lda crosshairX
-	sta showCrosshairX
-	lda crosshairX+1
-	sta showCrosshairX+1
-	lda crosshairY
-	sta showCrosshairY
+		jsr getJoystick1Input
+		cpy #$ff
+		bne !+		
+			jsr getLightGunInputTitle
+			lda #0
+			sta isJoystick			
+			sta isMouse
+		!:
+	!ismouse:
 	jsr showCrosshair
 
 	lda crosshairY
@@ -218,19 +270,13 @@ checkCrosshairTitleScreen:
         jmp !+
 	!:
 
-	lda isShotFired
-	bne !shotwasfired+
-		lda crosshairTrigger
-		bne !trigger+
-			lda #20
-			sta isShotFired
-			lda #1
-			sta startGame
-		!trigger:
-		jmp !skip+
-	!shotwasfired:
-	dec isShotFired
-	!skip:
+	lda crosshairTrigger
+	bne !+
+		lda #1
+		sta crosshairTrigger
+		sta startGame
+	!:
+
 	rts
 }
 
@@ -246,25 +292,32 @@ checkCrosshairGame:
 	lda isJoystick
 	beq !+
 		jsr getJoystick1Input
-		lda crosshairX
-		sta showCrosshairX
-		lda crosshairX+1
-		sta showCrosshairX+1
-		lda crosshairY
-		sta showCrosshairY
 		jsr showCrosshair
 		jmp !skip+
 	!:
+
+	lda isMouse
+	beq !+
+		jsr getMouseInput
+		jsr showCrosshair
+		jmp !skip+
+	!:
+
 	jsr getLightGunInput
+	
 	!skip:
 
 	lda isShotFired
 	bne !shotwasfired+	
+		
 		lda isJoystick
-		bne !+
-			:sprite_disable(0)
-			
-		!:
+		bne !isjoystick+
+			lda isMouse
+			bne !+
+				:sprite_disable(0)	
+			!:		
+		!isjoystick:
+
 		lda crosshairTrigger
 		bne !trigger+
 			lda #10
@@ -386,12 +439,6 @@ isHitDuck1:
 		rts
 
 	!nohit:
-		lda crosshairX
-		sta showCrosshairX
-		lda crosshairX+1
-		sta showCrosshairX+1
-		lda crosshairY
-		sta showCrosshairY
 		jsr showCrosshair
 
 		jsr areWeOutOfShots
@@ -486,12 +533,6 @@ isHitDuck2:
 		rts
 
 	!nohit:
-		lda crosshairX
-		sta showCrosshairX
-		lda crosshairX+1
-		sta showCrosshairX+1
-		lda crosshairY
-		sta showCrosshairY
 		jsr showCrosshair
 
 		jsr areWeOutOfShots

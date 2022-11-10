@@ -38,6 +38,11 @@ duckSprites:
 .var leftBoundary = 30
 .var rightBoundary = 295
 
+.var upperBoundary2 = upperBoundary+21
+.var lowerBoundary2 = lowerBoundary-21
+.var leftBoundary2 = leftBoundary+24
+.var rightBoundary2 = rightBoundary-24
+
 rndDirectionPointer: .byte 0
 rndDirection: 
     .for (var i=0; i< 128; i++)
@@ -59,20 +64,12 @@ rndXPositions:
         .byte x1, x2
     }
 
-rndQuackPointer: .byte 0
-rndQuacks:
-    .for (var i=0; i< 255; i++)
-    {
-        .var q = round(random()*15)        
-        .byte q
-    }
-
 rndMovementsPointer:
 rndMovements:
     .for (var i=0; i< 255; i++)
     {
         .var m = round(random()*150)        
-        .if (m<=8)
+        .if (m<=6)
         {
             .byte m
         }

@@ -16,7 +16,7 @@ VICE="G:\Mijn Drive\c64\VICE\bin\x64sc.exe"
 # Build a final version
 duckhunt.prg:
 	java -jar $(KICKASS) "main.asm"	
-	$(EXOMIZER) sfx sys main.prg -o "duckhunt.prg" -n
+	$(EXOMIZER) sfx sys main.prg -o "duckhunt.prg" -s "lda #00 sta 53280 sta 53265" -f "lda #27 sta 53265"
 	$(VICE) "duckhunt.prg"
 	del main.prg
 	del main.sym

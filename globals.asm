@@ -1,5 +1,6 @@
 #importonce 
 
+.var state_now	= $fb
 .var overlay_distance = 19
 .var gameState = $f0
 .enum {

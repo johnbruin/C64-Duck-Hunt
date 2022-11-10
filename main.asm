@@ -31,10 +31,6 @@ start:
 	ora #%00010000
     sta $d016
 
-    lda #music.startSong - 0
-    ldx #music.startSong - 0
-	jsr music.init
-
 	jsr initTitleScreen
 
 	sei
@@ -42,7 +38,7 @@ start:
     :irq_setup(irqTitleScreen, 0)
 	cli
 	
-	jmp *    
+	jmp *
 }
 
 .pc =* "[CODE] irqTitleScreen"

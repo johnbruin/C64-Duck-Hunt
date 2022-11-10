@@ -13,6 +13,10 @@
 
 initTitleScreen:
 {
+	lda #music.startSong - 0
+    ldx #music.startSong - 0
+	jsr music.init
+
 	lda #366/2
 	sta crosshairX
 	lda #0
@@ -83,7 +87,10 @@ initGame:
 	lda #254/2
 	sta crosshairY
 
+	jsr Joystick1.Reset
+	jsr Joystick2.Reset
 	jsr resetSid
+	jsr playShot
 	
 	// Char primary color
 	ldx #0

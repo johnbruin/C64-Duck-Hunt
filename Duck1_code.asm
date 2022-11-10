@@ -186,13 +186,6 @@ animateDuck1:
 
         jsr flashDuckHits
 
-        inc rndQuackPointer
-        ldx rndQuackPointer
-        lda rndQuacks,x
-        bne !+
-            jsr playQuack
-        !:
-
         jsr playFly
 
         lda duck1IsShot
@@ -310,17 +303,183 @@ moveDuck1Up:
     jsr Duck1Up
 
 check:
-    lda duck1Y
-	cmp #upperBoundary
-    bcc !lower+
-    bne !higher+    
+    jsr crossUpperBoundary
+    beq !+
+        jsr playQuack
+        lda #flyRightDown
+        sta duck1Direction
+    !:
+    rts
+}
 
-    !higher:
+moveDuck1Down:
+{
+    lda #4*6
+    sta duck1SpritesAnimationPointer
+
+    jsr Duck1Down
+    jsr Duck1Down
+
+check:
+    jsr crossLowerBoundary
+    beq !+
+        jsr playQuack
+        lda #flyDiagonalLeftUp
+        sta duck1Direction
+    !:
+    rts
+}
+
+moveDuck1LeftUp:
+{
+    lda #1*6
+    sta duck1SpritesAnimationPointer
+
+    jsr Duck1Up
+    jsr Duck1Left
+    
+check:
+    jsr crossUpperBoundary
+    beq !+
+        jsr playQuack
+        lda #flyLeftDown
+        sta duck1Direction
         rts
-    !lower:
+    !:
+    jsr crossLeftBoundary
+    beq !+
+        jsr playQuack
+        lda #flyRightDown
+        sta duck1Direction
+    !:
+    rts
+}
+
+moveDuck1LeftDown:
+{
+    lda #1*6
+    sta duck1SpritesAnimationPointer
+
+    jsr Duck1Down
+    jsr Duck1Left
+
+check:
+    jsr crossLowerBoundary
+    beq !+
+        jsr playQuack
+        lda #flyDiagonalLeftUp
+        sta duck1Direction
+        rts
+    !:
+    jsr crossLeftBoundary
+    beq !+
+        jsr playQuack
+        lda #flyDiagonalRightUp
+        sta duck1Direction
+    !:
+    rts
+}
+
+moveDuck1RightUp:
+{
+    lda #0*6
+    sta duck1SpritesAnimationPointer
+
+    jsr Duck1Up
+    jsr Duck1Right
+
+check:
+    jsr crossUpperBoundary
+    beq !+
+        jsr playQuack
         lda #flyRightDown
         sta duck1Direction
         rts
+    !:
+    jsr crossRightBoundary
+    beq !+
+        jsr playQuack
+        lda #flyLeftDown
+        sta duck1Direction
+    !:
+    rts
+}
+
+moveDuck1RightDown:
+{
+    lda #0*6
+    sta duck1SpritesAnimationPointer
+
+    jsr Duck1Down
+    jsr Duck1Right
+
+check:
+    jsr crossLowerBoundary
+    beq !+
+        jsr playQuack
+        lda #flyDiagonalRightUp
+        sta duck1Direction
+        rts
+    !:
+    jsr crossRightBoundary
+    beq !+
+        jsr playQuack
+        lda #flyLeftUp
+        sta duck1Direction 
+    !:
+    rts
+}
+
+moveDuck1DiagonalLeftUp:
+{
+    lda #2*6
+    sta duck1SpritesAnimationPointer
+
+    jsr Duck1Up
+    jsr Duck1Up
+    jsr Duck1Left
+
+check:
+    jsr crossUpperBoundary
+    beq !+
+        jsr playQuack
+        lda #flyLeftDown
+        sta duck1Direction
+        rts
+    !:
+    jsr crossLeftBoundary
+    beq !+
+        jsr playQuack
+        lda #flyRightDown
+        sta duck1Direction
+    !:
+    rts    
+}
+
+moveDuck1DiagonalRightUp:
+{
+    lda #3*6
+    sta duck1SpritesAnimationPointer
+
+    jsr Duck1Up
+    jsr Duck1Up
+    jsr Duck1Right
+
+check:
+    jsr crossUpperBoundary
+    beq !+
+        jsr playQuack
+        lda #flyRightDown
+        sta duck1Direction
+        rts
+    !:
+    jsr crossRightBoundary
+    beq !+
+        jsr playQuack
+        lda #flyLeftDown
+        sta duck1Direction        
+    !:
+    rts
 }
 
 moveDuck1FlyAway:
@@ -343,260 +502,6 @@ moveDuck1FlyAway:
         jsr hideText
         lda #Miss
         sta gameState
-        rts
-}
-
-moveDuck1Down:
-{
-    lda #4*6
-    sta duck1SpritesAnimationPointer
-
-    jsr Duck1Down
-    jsr Duck1Down
-
-check:
-    lda duck1Y
-	cmp #lowerBoundary	
-    bcc !lower+
-    bne !higher+    
-
-    !higher:
-        lda #flyDiagonalLeftUp
-        sta duck1Direction
-        rts
-    !lower:  
-        rts
-}
-
-moveDuck1LeftUp:
-{
-    lda #1*6
-    sta duck1SpritesAnimationPointer
-
-    jsr Duck1Up
-    jsr Duck1Left
-    
-check:
-    lda duck1Y
-	cmp #upperBoundary	
-    bcc !lower+
-    bne !higher+    
-
-    !higher:
-        jmp !skip+
-    !lower:
-        lda #flyLeftDown
-        sta duck1Direction
-        rts
-
-    !skip:
-
-    lda duck1X+1
-	cmp #>leftBoundary
-	bne !+
-	    lda duck1X
-	    cmp #<leftBoundary
-	!:
-    bcc !lower+
-    bne !higher+    
-
-    !higher:
-        rts
-    !lower:
-        lda #flyRightDown
-        sta duck1Direction
-        rts
-}
-
-moveDuck1LeftDown:
-{
-    lda #1*6
-    sta duck1SpritesAnimationPointer
-
-    jsr Duck1Down
-    jsr Duck1Left
-
-check:
-    lda duck1Y
-	cmp #lowerBoundary
-    bcc !lower+
-    bne !higher+    
-
-    !higher:
-        lda #flyDiagonalLeftUp
-        sta duck1Direction
-        rts
-    !lower:
-
-    lda duck1X+1
-	cmp #>leftBoundary
-	bne !+
-	    lda duck1X
-	    cmp #<leftBoundary
-	!:
-    bcc !lower+
-    bne !higher+    
-
-    !higher:
-        rts
-    !lower:
-        lda #flyDiagonalRightUp
-        sta duck1Direction
-        rts
-}
-
-moveDuck1RightUp:
-{
-    lda #0*6
-    sta duck1SpritesAnimationPointer
-
-    jsr Duck1Up
-    jsr Duck1Right
-
-check:
-    lda duck1Y
-	cmp #upperBoundary
-    bcc !lower+
-    bne !higher+    
-
-    !higher:
-        jmp !skip+
-    !lower:
-        lda #flyRightDown
-        sta duck1Direction
-        rts
-
-    !skip:
-
-    lda duck1X+1
-	cmp #>rightBoundary
-	bne !+
-	    lda duck1X
-	    cmp #<rightBoundary
-	!:
-    bcc !lower+
-    bne !higher+    
-
-    !higher:
-        lda #flyLeftDown
-        sta duck1Direction
-    !lower:
-        rts
-}
-
-moveDuck1RightDown:
-{
-    lda #0*6
-    sta duck1SpritesAnimationPointer
-
-    jsr Duck1Down
-    jsr Duck1Right
-
-check:
-    lda duck1Y
-	cmp #lowerBoundary
-    bcc !lower+
-    bne !higher+    
-
-    !higher:
-        lda #flyDiagonalRightUp
-        sta duck1Direction
-        rts
-    !lower:
-
-    lda duck1X+1
-	cmp #>rightBoundary
-	bne !+
-	    lda duck1X
-	    cmp #<rightBoundary
-	!:
-    bcc !lower+
-    bne !higher+    
-
-    !higher:
-        lda #flyLeftUp
-        sta duck1Direction   
-    !lower:
-        rts    
-}
-
-moveDuck1DiagonalLeftUp:
-{
-    lda #2*6
-    sta duck1SpritesAnimationPointer
-
-    jsr Duck1Up
-    jsr Duck1Up
-    jsr Duck1Left
-
-check:    
-    lda duck1Y
-	cmp #upperBoundary
-    bcc !lower+
-    bne !higher+    
-
-    !higher:
-        jmp !skip+
-    !lower:
-        lda #flyLeftDown
-        sta duck1Direction
-        rts
-
-    !skip:
-    lda duck1X+1
-	cmp #>leftBoundary
-	bne !+
-	    lda duck1X
-	    cmp #<leftBoundary
-	!:
-    bcc !lower+
-    bne !higher+    
-
-    !higher:
-        rts
-    !lower:
-        lda #flyRightDown
-        sta duck1Direction
-        rts    
-}
-
-moveDuck1DiagonalRightUp:
-{
-    lda #3*6
-    sta duck1SpritesAnimationPointer
-
-    jsr Duck1Up
-    jsr Duck1Up
-    jsr Duck1Right
-
-check:  
-    lda duck1Y
-	cmp #upperBoundary
-    bcc !lower+
-    bne !higher+    
-
-    !higher:
-        jmp !skip+
-    !lower:
-        lda #flyRightDown
-        sta duck1Direction
-        rts
-
-    !skip:
-    lda duck1X+1
-	cmp #>rightBoundary
-	bne !+
-	    lda duck1X
-	    cmp #<rightBoundary
-	!:
-    bcc !lower+
-    bne !higher+    
-
-    !higher:
-        lda #flyLeftDown
-        sta duck1Direction
-        rts
-    !lower:
         rts
 }
 
@@ -653,6 +558,7 @@ ChangeMovementDuck1:
         cmp #$ff
         beq !+
             sta duck1Direction
+            jsr playQuack
         !:
         lda #15
         sta changeMovementCounterDuck1
@@ -669,73 +575,92 @@ getJoystick2Input:
 
 	jsr Joystick2.Poll
 
-	ldx #Joystick2.UP
-	jsr Joystick2.Held
-	bne !+++
+    jsr crossUpperBoundary2
+    beq !+
+        jmp !skip+
+    !:
+    jsr crossLowerBoundary2
+    beq !+
+        jmp !skip+
+    !:
+    jsr crossLeftBoundary2
+    beq !+
+        jmp !skip+
+    !:
+    jsr crossRightBoundary2
+    beq !+
+        jmp !skip+
+    !:
+
+    ldx #Joystick2.UP
+    jsr Joystick2.Held
+    bne !joy2up+
         ldx #Joystick2.LEFT
-	    jsr Joystick2.Held
-	    bne !+
-		    lda #flyDiagonalLeftUp
+        jsr Joystick2.Held
+        bne !+
+            lda #flyDiagonalLeftUp
             sta duck1Direction
             jsr moveDuck1DiagonalLeftUp.check
             rts
-	    !:
-    	ldx #Joystick2.RIGHT
-	    jsr Joystick2.Held
-	    bne !+
-		    lda #flyDiagonalRightUp
+        !:
+        ldx #Joystick2.RIGHT
+        jsr Joystick2.Held
+        bne !+
+            lda #flyDiagonalRightUp
             sta duck1Direction
             jsr moveDuck1DiagonalRightUp.check
             rts
-	    !:
-		lda #flyUp
+        !:
+        lda #flyUp
         sta duck1Direction
         jsr moveDuck1Up.check
         rts
-	!:
+    !joy2up:
 
-	ldx #Joystick2.DOWN
-	jsr Joystick2.Held
-	bne !+++
+    ldx #Joystick2.DOWN
+    jsr Joystick2.Held
+    bne !joy2down+
         ldx #Joystick2.LEFT
-	    jsr Joystick2.Held
-	    bne !+
-		    lda #flyLeftDown
+        jsr Joystick2.Held
+        bne !+
+            lda #flyLeftDown
             sta duck1Direction
             jsr moveDuck1LeftDown.check
             rts
-	    !:
-    	ldx #Joystick2.RIGHT
-	    jsr Joystick2.Held
-	    bne !+
-		    lda #flyRightDown
+        !:
+        ldx #Joystick2.RIGHT
+        jsr Joystick2.Held
+        bne !+
+            lda #flyRightDown
             sta duck1Direction
             jsr moveDuck1RightDown.check
             rts
-	    !:
-		lda #flyDown
+        !:
+        lda #flyDown
         sta duck1Direction
         jsr moveDuck1Down.check
         rts
-	!:
+    !joy2down:
 
-	ldx #Joystick2.LEFT
-	jsr Joystick2.Held
-	bne !+
-		lda #flyLeftDown
+    ldx #Joystick2.LEFT
+    jsr Joystick2.Held
+    bne !+
+        lda #flyLeftDown
         sta duck1Direction
         jsr moveDuck1LeftDown.check
         rts
-	!:
+    !:
 
-	ldx #Joystick2.RIGHT
-	jsr Joystick2.Held
-	bne !+
-		lda #flyRightDown
+    ldx #Joystick2.RIGHT
+    jsr Joystick2.Held
+    bne !+
+        lda #flyRightDown
         sta duck1Direction
         jsr moveDuck1RightDown.check
         rts
-	!:
+    !:
+    
+    !skip:
 
 	ldx #Joystick2.FIRE
 	jsr Joystick2.Held
@@ -748,4 +673,140 @@ getJoystick2Input:
     sta isJoystick2Input
 
 	rts
+}
+
+crossUpperBoundary:
+{
+    lda duck1Y
+	cmp #upperBoundary
+    bcc !lower+
+    bne !higher+    
+
+    !higher:
+        lda #0
+        rts
+    !lower:
+        lda #1
+    rts
+}
+
+crossLowerBoundary:
+{
+    lda duck1Y
+	cmp #lowerBoundary
+    bcc !lower+
+    bne !higher+    
+
+    !higher:
+        lda #1
+        rts
+    !lower:
+        lda #0
+    rts
+}
+
+crossLeftBoundary:
+{
+    lda duck1X+1
+	cmp #>leftBoundary
+	bne !+
+	    lda duck1X
+	    cmp #<leftBoundary
+	!:
+    bcc !lower+
+    bne !higher+    
+
+    !higher:
+        lda #0
+        rts
+    !lower:
+        lda #1
+    rts
+}
+
+crossRightBoundary:
+{
+    lda duck1X+1
+	cmp #>rightBoundary
+	bne !+
+	    lda duck1X
+	    cmp #<rightBoundary
+	!:
+    bcc !lower+
+    bne !higher+    
+
+    !higher:
+        lda #1
+        rts
+    !lower:
+        lda #0
+    rts
+}
+
+crossUpperBoundary2:
+{
+    lda duck1Y
+	cmp #upperBoundary2
+    bcc !lower+
+    bne !higher+    
+
+    !higher:
+        lda #0
+        rts
+    !lower:
+        lda #1
+    rts
+}
+
+crossLowerBoundary2:
+{
+    lda duck1Y
+	cmp #lowerBoundary2
+    bcc !lower+
+    bne !higher+    
+
+    !higher:
+        lda #1
+        rts
+    !lower:
+        lda #0
+    rts
+}
+
+crossLeftBoundary2:
+{
+    lda duck1X+1
+	cmp #>leftBoundary2
+	bne !+
+	    lda duck1X
+	    cmp #<leftBoundary2
+	!:
+    bcc !lower+
+    bne !higher+    
+
+    !higher:
+        lda #0
+        rts
+    !lower:
+        lda #1
+    rts
+}
+
+crossRightBoundary2:
+{
+    lda duck1X+1
+	cmp #>rightBoundary2
+	bne !+
+	    lda duck1X
+	    cmp #<rightBoundary2
+	!:
+    bcc !lower+
+    bne !higher+    
+
+    !higher:
+        lda #1
+        rts
+    !lower:
+        lda #0
+    rts
 }

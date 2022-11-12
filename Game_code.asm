@@ -5,6 +5,7 @@
 #import "Score_code.asm"
 #import "Text_code.asm"
 #import "Sprites_code.asm"
+#import "Keyboard_code.asm"
 
 #import "Crosshair_code.asm"
 #import "Duck1_code.asm"
@@ -13,15 +14,20 @@
 
 initTitleScreen:
 {
+	jsr hide_sprites
+	
 	lda #music.startSong - 0
     ldx #music.startSong - 0
 	jsr music.init
+
+	lda $d014
+	sta lpyOld
 
 	lda #366/2
 	sta crosshairX
 	lda #0
 	sta crosshairX+1
-	lda #30+254/2
+	lda #22+254/2
 	sta crosshairY
 
 	jsr Joystick1.Reset
@@ -64,6 +70,9 @@ initTitleScreen:
 		lda #PURPLE
 		sta $d800+(24*40),x
 
+		lda #0
+		sta screenRamTitleScreen+(24*40),x
+
 		inx
 		cpx #40
 	bne !-
@@ -80,6 +89,8 @@ duckNumber:	.byte 0
 gameSpeed: .byte 0
 initGame:
 {
+	jsr resetSid
+
 	lda #366/2
 	sta crosshairX
 	lda #0
@@ -89,9 +100,7 @@ initGame:
 
 	jsr Joystick1.Reset
 	jsr Joystick2.Reset
-	jsr resetSid
-	jsr playShot
-	
+
 	// Char primary color
 	ldx #0
 	!:
@@ -126,12 +135,24 @@ initGame:
 	jsr initDuck1
 	jsr initDuck2
 
+	jsr playShot
+
 	rts
 }
 
 wait: .byte 0
 playGame:
 {
+	jsr ReadKeyb
+    jsr GetKey
+    cmp #03 //runstop
+    bne !+
+    	lda #0
+		sta startGame
+		jsr initTitleScreen
+		rts	
+	!:
+
 	jsr checkCrosshairGame
 
 	lda gameState
@@ -300,7 +321,7 @@ playDucks:
 	!:
 
 	lda secondsToFlyAway
-	cmp #8
+	cmp #7
 	bne !+		
 		jsr showflyAwayText
 		lda #FlyAway
@@ -350,4 +371,4 @@ hitsNeededRound:
 gameSpeedRound:
 .byte 1,1,1,1,1,1,1,1,1
 duckMoveSpeedRound:
-.byte 1,1,1,2,2,2,2,3,3
+.byte 1,1,2,2,2,2,3,3,3

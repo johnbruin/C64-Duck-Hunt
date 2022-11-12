@@ -117,14 +117,17 @@ getLightGunInput:
 	rts
 }
 
+lpyOld: .byte 0
 getLightGunInputTitle:
 {
 	lda $d41a
 	sta crosshairTrigger
 
 	lda $d014		//LPY
+	cmp lpyOld
 	beq !+
 		sta crosshairY
+		sta lpyOld
 	!:
 	rts
 }
@@ -171,13 +174,12 @@ getJoystick1Input:
 		sta crosshairX+1
 	!:
 
-	lda #1
-	sta crosshairTrigger
 	ldx #Joystick1.FIRE
 	jsr Joystick1.Held
 	bne !+
 		lda #0
 		sta crosshairTrigger
+		ldy #1
 	!:
 
 	rts
@@ -210,8 +212,6 @@ getMouseInput:
 
 	jsr Mouse.cbm1351_poll 
 
-	lda #1
-	sta crosshairTrigger
 	jsr Joystick1.Poll
 	ldx #Joystick1.FIRE
 	jsr Joystick1.Held
@@ -234,7 +234,7 @@ checkCrosshairTitleScreen:
 {
 	jsr getMouseInput
 	lda isMouse
-	bne !ismouse+
+	bne !ismouse+	
 		lda #1
 		sta isJoystick
 		jsr getJoystick1Input
@@ -272,8 +272,7 @@ checkCrosshairTitleScreen:
 
 	lda crosshairTrigger
 	bne !+
-		lda #1
-		sta crosshairTrigger
+		lda #1		
 		sta startGame
 	!:
 
@@ -289,6 +288,8 @@ checkCrosshairGame:
 		rts
 	!:
 
+	lda #1
+	sta crosshairTrigger
 	lda isJoystick
 	beq !+
 		jsr getJoystick1Input

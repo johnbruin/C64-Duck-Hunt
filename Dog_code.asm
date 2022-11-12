@@ -3,17 +3,21 @@
 #import "Sprites_code.asm"
 #import "SoundFx_code.asm"
 
+.const dogPosX = 160
+.const dogMinY = 120
+.const dogMaxY = 120+47
+
 *=* "[CODE] Dog code"
 
 isDogVisible: .byte 0
 dogMoveDown: .byte 0
 
-dog1Sprite1X: .byte 160
-dog1Sprite1Y: .byte 120+50
-dog1Sprite2X: .byte 160+24*2
-dog1Sprite2Y: .byte 120+50
-dog1Sprite3X: .byte 160
-dog1Sprite3Y: .byte 120+21*2+50
+dog1Sprite1X: .byte dogPosX
+dog1Sprite1Y: .byte dogMaxY
+dog1Sprite2X: .byte dogPosX+24*2
+dog1Sprite2Y: .byte dogMaxY
+dog1Sprite3X: .byte dogPosX
+dog1Sprite3Y: .byte dogMaxY+21*2
 showDog1:
 {
     lda #%01111110  
@@ -115,7 +119,7 @@ showDog1:
     :sprite_set_xy_positions(6)
 
     lda dog1Sprite1Y
-    cmp #120+48
+    cmp #dogMaxY
     bcc !+
         :sprite_disable(1)
         :sprite_disable(4)
@@ -131,7 +135,7 @@ showDog1:
     !skip:
 
     lda dog1Sprite3Y
-    cmp #120+48+18
+    cmp #dogMaxY+18
     bcc !+
         :sprite_disable(3)
         :sprite_disable(6)
@@ -149,7 +153,7 @@ moveDog1:
     lda dogMoveDown
     bne !moveDown+
         lda dog1Sprite1Y
-        cmp #120
+        cmp #dogMinY
         bcc !+
             dec dog1Sprite1Y
             dec dog1Sprite2Y
@@ -161,7 +165,7 @@ moveDog1:
 
     !moveDown:
     lda dog1Sprite1Y
-    cmp #120+50
+    cmp #dogMaxY
     bcs !+
         inc dog1Sprite1Y
         inc dog1Sprite2Y
@@ -177,14 +181,14 @@ moveDog1:
     rts
 }
 
-dog2Sprite1X: .byte 160-24*2
-dog2Sprite1Y: .byte 120+50
-dog2Sprite2X: .byte 160
-dog2Sprite2Y: .byte 120+50
-dog2Sprite3X: .byte 160+24*2
-dog2Sprite3Y: .byte 120+50
-dog2Sprite4X: .byte 160
-dog2Sprite4Y: .byte 120+21*2+50
+dog2Sprite1X: .byte dogPosX-24*2
+dog2Sprite1Y: .byte dogMaxY
+dog2Sprite2X: .byte dogPosX
+dog2Sprite2Y: .byte dogMaxY
+dog2Sprite3X: .byte dogPosX+24*2
+dog2Sprite3Y: .byte dogMaxY
+dog2Sprite4X: .byte dogPosX
+dog2Sprite4Y: .byte dogMaxY+21*2
 showDog2:
 {
     // show sprites
@@ -318,7 +322,7 @@ showDog2:
     :sprite_set_xy_positions(7)
 
     lda dog2Sprite1Y
-    cmp #120+48
+    cmp #dogMaxY
     bcc !+
         :sprite_disable(0)
         :sprite_disable(1)
@@ -338,7 +342,7 @@ showDog2:
     !skip:
 
     lda dog2Sprite4Y
-    cmp #120+48+18
+    cmp #dogMaxY+18
     bcc !+
         :sprite_disable(3)
         :sprite_disable(7)
@@ -356,7 +360,7 @@ moveDog2:
     lda dogMoveDown
     bne !moveDown+
         lda dog2Sprite1Y
-        cmp #125
+        cmp #dogMinY
         bcc !+
             dec dog2Sprite1Y
             dec dog2Sprite2Y
@@ -369,7 +373,7 @@ moveDog2:
 
     !moveDown:
     lda dog2Sprite1Y
-    cmp #120+50
+    cmp #dogMaxY
     bcs !+
         inc dog2Sprite1Y
         inc dog2Sprite2Y
@@ -386,10 +390,10 @@ moveDog2:
     rts
 }
 
-dog3Sprite1X: .byte 160
-dog3Sprite1Y: .byte 120+50
-dog3Sprite2X: .byte 160
-dog3Sprite2Y: .byte 120+50+21*2
+dog3Sprite1X: .byte dogPosX
+dog3Sprite1Y: .byte dogMaxY
+dog3Sprite2X: .byte dogPosX
+dog3Sprite2Y: .byte dogMaxY+21*2
 dog3Animation: .byte 0
 dog3AnimSpeed: .byte 4
 showDog3:
@@ -498,7 +502,7 @@ showDog3:
     :sprite_set_xy_positions(3)
 
     lda dog3Sprite1Y
-    cmp #120+48
+    cmp #dogMaxY
     bcc !+
         :sprite_disable(0)
         :sprite_disable(2)
@@ -509,7 +513,7 @@ showDog3:
     !skip:
 
     lda dog3Sprite2Y
-    cmp #120+48+18
+    cmp #dogMaxY+18
     bcc !+
         :sprite_disable(1)
         :sprite_disable(3)
@@ -527,7 +531,7 @@ moveDog3:
     lda dogMoveDown
     bne !moveDown+
         lda dog3Sprite1Y
-        cmp #120
+        cmp #dogMinY
         bcc !+
             dec dog3Sprite1Y
             dec dog3Sprite2Y
@@ -538,7 +542,7 @@ moveDog3:
 
     !moveDown:
     lda dog3Sprite1Y
-    cmp #120+50
+    cmp #dogMaxY
     bcs !+
         inc dog3Sprite1Y
         inc dog3Sprite2Y
@@ -802,12 +806,11 @@ showDog4:
     rts
 }
 
-dog4MoveSpeed: .byte 0
 dog4AnimSpeed: .byte 0
 moveDog4:
 {
     ldy dog4SpritesAnimationPointer
-    cpy #50
+    cpy #49
     bne !+
         lda #NewRound
         sta gameState
@@ -815,7 +818,7 @@ moveDog4:
     !:
 
     lda dog4AnimSpeed
-    cmp #6
+    cmp #5
     bne !skipAnimation+
         lda #0
         sta dog4AnimSpeed  
@@ -832,34 +835,27 @@ moveDog4:
         bne !+
             jsr playBark
         !:    
-    !skipAnimation:
 
-    ldy dog4SpritesAnimationPointer
-    ldx dog4SpritesAnimation,y
-    cpx #4*4
-    bne !+
-        inc dog4AnimSpeed
-        rts
-    !:
-    cpx #5*4
-    bne !+
-        inc dog4AnimSpeed
-        rts
-    !:
-    cpx #6*4
-    bne !+
-        inc dog4AnimSpeed
-        rts
-    !:
+        ldy dog4SpritesAnimationPointer
+        ldx dog4SpritesAnimation,y
+        cpx #0*4
+        bne !+
+            jmp !skipAnimation+
+        !:
+        cpx #4*4
+        bne !+
+            jmp !skipAnimation+
+        !:
+        cpx #5*4
+        bne !+
+            jmp !skipAnimation+
+        !:
+        cpx #6*4
+        bne !+
+            jmp !skipAnimation+
+        !:
 
-    lda dog4MoveSpeed
-    cmp #2
-    bne !skipMove+
-        inc dog4Sprite1X
-        inc dog4Sprite2X
-        inc dog4Sprite3X
-        inc dog4Sprite4X
-
+        jsr walk
         ldy dog4SpritesAnimationPointer
         cpy #38
         bcc !++
@@ -870,19 +866,21 @@ moveDog4:
             !:            
             jsr jump
         !:
-        lda #0
-        sta dog4MoveSpeed
-    !skipMove:
-    
-    inc dog4MoveSpeed
+    !skipAnimation:
     inc dog4AnimSpeed
 
     rts
 }
 
-move:
+walk:
 {
-
+    .for(var i=0;i<4;i++)
+    {
+        inc dog4Sprite1X
+        inc dog4Sprite2X
+        inc dog4Sprite3X
+        inc dog4Sprite4X
+    }
     rts
 }
 
@@ -890,13 +888,13 @@ land:
 {
     clc
     lda dog4Sprite1Y
-    adc #2
+    adc #6
     sta dog4Sprite1Y
     sta dog4Sprite2Y
 
     clc
     lda dog4Sprite3Y
-    adc #2
+    adc #6
     sta dog4Sprite3Y
     sta dog4Sprite4Y
 
@@ -907,13 +905,13 @@ jump:
 {
     sec
     lda dog4Sprite1Y
-    sbc #6
+    sbc #18
     sta dog4Sprite1Y
     sta dog4Sprite2Y
 
     sec
     lda dog4Sprite3Y
-    sbc #6
+    sbc #18
     sta dog4Sprite3Y
     sta dog4Sprite4Y
     

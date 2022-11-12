@@ -1,0 +1,520 @@
+.label crossLowerBoundary2=$8517 {
+}
+.label moveDuck1LeftDown=$82bd {
+  .label check=$82c8
+}
+.label rndXPositionPointer=$38ab
+.label score2=$32bf
+.label score3=$32c0
+.label dog2Sprite4X=$9101
+.label showText=$c4af {
+}
+.label isDogVisible=$8ec7
+.label playFly=$31e0 {
+}
+.label showGoodText=$c42d {
+}
+.label KeyMapVec=$353a
+.label Duck1Left=$83a6 {
+}
+.label getLightGunInput=$8b60 {
+}
+.label flashHitsFlag=$346f
+.label dog4Sprites=$95e9
+.label dog2Sprite3X=$90ff
+.label dog2Sprite3Y=$9100
+.label SMC_A=$36cc
+.label jump=$997d {
+}
+.label hitScore=$32c4
+.label showRoundText=$c3ee {
+}
+.label crosshairTrigger=$8afd
+.label duck1Direction=$80a2
+.label Duck2Down=$8958 {
+}
+.label duck2SpritesAnimationCounter=$85ee
+.label irqGame3=$318c {
+}
+.label irqGame2=$3160 {
+}
+.label areAllDucksOnTheGround=$3aad {
+}
+.label secondsToFlyAway=$9b9c
+.label moveDuck1Down=$827d {
+  .label check=$8288
+}
+.label dog2Sprite2Y=$90fe
+.label score1=$32be
+.label dog2Sprite2X=$90fd
+.label irqGame1=$30ea {
+}
+.label shots=$340d
+.label Duck2Right=$893a {
+}
+.label crossUpperBoundary2=$8508 {
+}
+.label checkHiScore=$33d7 {
+  .label copyHiScore=$33fa
+}
+.label initDuck1=$8000 {
+}
+.label initDuck2=$8552 {
+}
+.label SMC_Row=$36a1
+.label playQuack=$31ed {
+}
+.label duck1Number=$3777
+.label isJoystick=$8ac9
+.label isShotFired=$8b01
+.label initDog4=$960d {
+}
+.label moveDuck1RightUp=$82e4 {
+  .label check=$82ef
+}
+.label Loop_Debounce=$36a6
+.label moveDog4=$98c7 {
+}
+.label moveDog3=$9577 {
+}
+.label Joystick1=$3b1a {
+  .label pressedBit=$3b1a
+  .label DOWN=$1
+  .label Pressed=$3b41 {
+    .label noaction=$3b53
+  }
+  .label LEFT=$2
+  .label data=$3b5c
+  .label FIRE=$4
+  .label Held=$3b56 {
+  }
+  .label RIGHT=$3
+  .label Poll=$3b28 {
+  }
+  .label UP=$0
+  .label Reset=$3b1b {
+  }
+}
+.label moveDog2=$9390 {
+}
+.label irqTitleScreen=$3053 {
+}
+.label moveDog1=$90c2 {
+}
+.label irqScroller=$30c0 {
+}
+.label Joystick2=$3b64 {
+  .label pressedBit=$3b64
+  .label DOWN=$1
+  .label Pressed=$3b8b {
+    .label noaction=$3b9d
+  }
+  .label LEFT=$2
+  .label data=$3ba6
+  .label FIRE=$4
+  .label Held=$3ba0 {
+  }
+  .label RIGHT=$3
+  .label Poll=$3b72 {
+  }
+  .label UP=$0
+  .label Reset=$3b65 {
+  }
+}
+.label dog4AnimSpeed=$98c6
+.label duck1IsShot=$80a1
+.label initTitleScreen=$9996 {
+}
+.label roundText=$c3e3
+.label ChangeMovementDuck1=$83e3 {
+}
+.label SYS_Kount=$3657
+.label ChangeMovementDuck2=$8964 {
+}
+.label evalHits=$34b8 {
+}
+.label playWith1Duck=$3776
+.label hitsNeededRound=$9bff
+.label duck2Number=$3778
+.label printScore=$3345 {
+}
+.label background_color=$d021
+.label gameSpeed=$9a16
+.label duckMoveSpeedRound=$9c11
+.label dog2Sprite4Y=$9102
+.label startGame=$8c4e
+.label moveDuck2FlyAway=$87b6 {
+}
+.label dog4SpritesAnimation=$95b3
+.label duck1SpritesAnimationPointer=$809b
+.label Duck2Up=$894d {
+}
+.label isMouse=$8aca
+.label isJoystick2Input=$8404
+.label isHitDuck1=$8d29 {
+}
+.label Process=$36de
+.label showDuck1=$80a3 {
+}
+.label crosshairXHighBoundary=$8acd
+.label showDuck2=$85f5 {
+}
+.label IsKey=$375f
+.label initScore=$324e {
+}
+.label rndDirection=$37ab
+.label moveDuck2RightDown=$8889 {
+}
+.label moveDuck1DiagonalLeftUp=$8332 {
+  .label check=$8340
+}
+.label isHitDuck2=$8dcf {
+}
+.label ReadKeyb=$3677
+.label showPerfectText=$c46d {
+}
+.label playDucks=$9b9d {
+}
+.label Keyb_Init=$3659
+.label checkCrosshairTitleScreen=$8c4f {
+}
+.label charmulticolor2=$d023
+.label charmulticolor1=$d022
+.label NotShift=$36c9
+.label playLaugh=$3205 {
+}
+.label playGame=$9a7b {
+}
+.label hitsThisSet=$32da
+.label EndDelay=$36fd
+.label SMC_Vec=$36b6
+.label moveDuck1FlyAway=$8386 {
+}
+.label Duck2Left=$8927 {
+}
+.label duck2ScoreY=$8585
+.label showCrosshair=$8b02 {
+}
+.label moveDuck1DiagonalRightUp=$835c {
+  .label check=$836a
+}
+.label NoKey=$375b
+.label duckMoveSpeed=$3779
+.label moveDuck2Down=$87d6 {
+}
+.label flashHits=$3471 {
+}
+.label init_sprites=$3500 {
+}
+.label Cleanup=$370d
+.label setDifficulty=$9be8 {
+}
+.label dog3AnimSpeed=$93d4
+.label showDog3=$93d5 {
+}
+.label showDog4=$963b {
+}
+.label showDog1=$8ecf {
+}
+.label showDog2=$9103 {
+}
+.label gameText1=$c365
+.label dog2Sprite1X=$90fb
+.label initGame=$9a17 {
+}
+.label gameText2=$c370
+.label dog2Sprite1Y=$90fc
+.label bullet=$340e
+.label multiply=$8e73 {
+  .label m0=$8e78
+  .label m1=$8e7d
+}
+.label gameText3=$c37b
+.label printHitsNeeded=$3461 {
+}
+.label duck2IsDead=$85f2
+.label duck2Direction=$85f4
+.label lpyOld=$8b90
+.label Loop=$3764
+.label charRam=$4000
+.label duck2OnTheGround=$3aac
+.label start=$3000 {
+}
+.label spriteYPositions=$3532
+.label rndXPositions=$38ac
+.label SYS_Lstshf=$3658
+.label crossRightBoundary=$84f2 {
+}
+.label animateDuck2=$86c9 {
+}
+.label Mouse=$8982 {
+  .label min_x_lo=$8abd
+  .label cbm1351_poll=$898c {
+  }
+  .label min_x_hi=$8abf
+  .label LEFT_BUTTON=$10
+  .label restrictLeftBoundary=$8a39 {
+  }
+  .label restrict=$8a2c {
+  }
+  .label Y_STUFF=$1
+  .label restrictLowerBoundary=$8a9c {
+  }
+  .label sid=$d400
+  .label max_y_lo=$8ac2
+  .label BUTTON_PRESS_RIGHT=$2
+  .label pos_y_lo=$8ac6
+  .label X_STUFF=$0
+  .label pos_y_hi=$8ac8
+  .label max_y_hi=$8ac4
+  .label limit=$8984
+  .label min_y_lo=$8abe
+  .label min_y_hi=$8ac0
+  .label half_width=$898a
+  .label previous=$8986
+  .label restrictRightBoundary=$8a5a {
+  }
+  .label BUTTON_NOPRESS=$0
+  .label poty=$d41a
+  .label max_x_lo=$8ac1
+  .label BUTTON_PRESS_LEFT=$1
+  .label pos_x_lo=$8ac5
+  .label pos_x_hi=$8ac7
+  .label potx=$d419
+  .label max_x_hi=$8ac3
+  .label width=$8988
+  .label pot_delta=$89bd {
+    .label zero=$8a29
+    .label negative=$8a19
+    .label increase=$8a12
+    .label decrease=$8a26
+  }
+  .label minimum=$8982
+  .label restrictUpperBoundary=$8a7b {
+  }
+}
+.label duck1IsDead=$80a0
+.label gameOverText=$c408
+.label crossLeftBoundary=$84dc {
+}
+.label addPerfectScore=$330d {
+}
+.label moveDuck2DiagonalLeftUp=$88b9 {
+}
+.label animateDuck1=$8177 {
+}
+.label scoreSprites=$32c5
+.label getMouseInput=$8c02 {
+}
+.label crossRightBoundary2=$853c {
+}
+.label getLightGunInputTitle=$8b91 {
+}
+.label markHits=$34a3 {
+}
+.label rndMovementsPointer=$39ac
+.label Loop_Col=$36b0
+.label hitScoreRoundValue=$32d4
+.label moveDuck2Up=$879b {
+}
+.label checkCrosshairGame=$8ca9 {
+}
+.label roundNumber=$324d
+.label dog1Sprite1X=$8ec9
+.label perfectText3=$c463
+.label clearHits=$3496 {
+}
+.label dog1Sprite1Y=$8eca
+.label perfectText1=$c459
+.label NextKey=$36ce
+.label crosshairYLowBoundary=$8acf
+.label initCrosshair=$8ad1 {
+}
+.label Exit=$372d
+.label crossLowerBoundary=$84cd {
+}
+.label hitsNeeded=$3460
+.label ProcKeyImg=$3733
+.label getJoystick1Input=$8ba6 {
+}
+.label dog4Sprite1X=$95aa
+.label dog4Sprite1Y=$95ab
+.label border_color=$d020
+.label playHit=$31f5 {
+}
+.label rndMovements=$39ac
+.label flyAwayText=$c43e
+.label showFinishedText=$c498 {
+}
+.label moveDuck2LeftUp=$87f1 {
+}
+.label hitScoreRound=$32cb
+.label flashHitsAnimation=$3470
+.label dog3Animation=$93d3
+.label addFinishedScore=$3329 {
+}
+.label flashDuckHits=$3ad8 {
+}
+.label printDuckHit=$343e {
+}
+.label dogMoveDown=$8ec8
+.label Duck1Up=$83cc {
+}
+.label crosshairXLowBoundary=$8acb
+.label wait=$9a7a
+.label duck2ScoreX=$8583
+.label showCrosshairY=$8b00
+.label moveDuck2LeftDown=$8825 {
+}
+.label showCrosshairX=$8afe
+.label spriteXPositions=$3522
+.label Scrolltext=$c4f9 {
+  .label Init=$c5ac {
+  }
+  .label Scroll=$c5bb {
+    .label reset=$c5f0 {
+    }
+  }
+  .label Smooth=$c5b5 {
+  }
+  .label text=$c4fa
+  .label smooth=$c4f9
+}
+.label SYS_Xmax=$3652
+.label slowdown=$9b9a
+.label moveDuck1Up=$8264 {
+  .label check=$826f
+}
+.label SYS_Keyd=$3647
+.label dog4SpritesAnimationPointer=$95b2
+.label moveDuck1LeftUp=$8296 {
+  .label check=$82a1
+}
+.label playSmile=$31fd {
+}
+.label duck2AnimSpeed=$86c8
+.label duckNumber=$9a15
+.label crosshairY=$8afc
+.label crosshairX=$8afa
+.label screenRam=$4800
+.label crossLeftBoundary2=$8526 {
+}
+.label duck1ScoreX=$8031
+.label printHiScore=$338e {
+}
+.label duck1ScoreY=$8033
+.label hide_sprites=$3516 {
+}
+.label hiScore3=$32c3
+.label hiScore1=$32c1
+.label Cont=$3746
+.label hiScore2=$32c2
+.label moveDuck1=$81e5 {
+}
+.label joystick_port2=$dc00
+.label SYS_Delay=$3656
+.label joystick_port1=$dc01
+.label screenRamTitleScreen=$4c00
+.label moveDuck2=$8731 {
+}
+.label dog3Sprite2X=$93d1
+.label dog3Sprite2Y=$93d2
+.label spriteMemory=$5000
+.label dog4Sprite4Y=$95b1
+.label showGameOverText=$c412 {
+}
+.label duck1Y=$809f
+.label duck1X=$809d
+.label dog4Sprite4X=$95b0
+.label SYS_Sfdx=$3654
+.label numberMappings=$c35b
+.label crossUpperBoundary=$84be {
+}
+.label crosshairYHighBoundary=$8ad0
+.label gameSpeedRound=$9c08
+.label SYS_Ndx=$3651
+.label printShots=$340f {
+}
+.label roundNumberText=$c3ed
+.label dog3Sprite1Y=$93d0
+.label duck2X=$85ef
+.label dog3Sprite1X=$93cf
+.label finishedText3=$c48e
+.label SameKey=$36f1
+.label duck2Y=$85f1
+.label SYS_Shflag=$3653
+.label GetKey=$3756
+.label finishedText1=$c484
+.label KeyMap3=$35c4
+.label printDuckHits=$3433 {
+}
+.label KeyMap4=$3605
+.label KeyMap1=$3542
+.label KeyMap2=$3583
+.label SYS_Lstx=$3655
+.label Duck1Down=$83d7 {
+}
+.label playShot=$31bd {
+}
+.label replaceChar=$c386 {
+}
+.label playDrop=$31d8 {
+}
+.label showflyAwayText=$c448 {
+}
+.label duckHits=$3429
+.label duck2IsShot=$85f3
+.label changeMovementCounterDuck2=$8963
+.label dog4Sprite2X=$95ac
+.label dog4Sprite2Y=$95ad
+.label changeMovementCounterDuck1=$83e2
+.label getJoystick2Input=$8405 {
+}
+.label hideText=$c4dd {
+}
+.label moveDuck2RightUp=$8856 {
+}
+.label duck1AnimSpeed=$8176
+.label moveDuck2DiagonalRightUp=$88f0 {
+}
+.label duck1SpritesAnimationCounter=$809c
+.label moveDuck1RightDown=$830b {
+  .label check=$8316
+}
+.label SMC_Key=$36e1
+.label KeyR=$3646
+.label framesToFlyAway=$9b9b
+.label rndDirectionPointer=$37aa
+.label duck1OnTheGround=$3aab
+.label dog1Sprite3Y=$8ece
+.label addScore=$32db {
+}
+.label land=$9964 {
+}
+.label areWeOutOfShots=$8e86 {
+}
+.label SetDecodeTable=$373f
+.label resetScore=$32af {
+}
+.label dog4Sprite3X=$95ae
+.label dog4Sprite3Y=$95af
+.label resetSid=$3228 {
+}
+.label duckSprites=$377a
+.label duck2SpritesAnimationPointer=$85ed
+.label dog1Sprite3X=$8ecd
+.label showScoreDuck2=$8586 {
+}
+.label showScoreDuck1=$8034 {
+}
+.label Duck1Right=$83b9 {
+}
+.label dog1Sprite2Y=$8ecc
+.label goodText=$c423
+.label dog1Sprite2X=$8ecb
+.label show_sprites=$351c {
+}
+.label walk=$9933 {
+}
+.label playBark=$320d {
+}

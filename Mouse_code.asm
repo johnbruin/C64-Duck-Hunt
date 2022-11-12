@@ -9,7 +9,7 @@ Mouse:
 
         .const MIN_COORD_X	= 24
         .const MIN_COORD_Y	= 40
-        .const MAX_COORD_X	= 320 - 24
+        .const MAX_COORD_X	= 340
         .const MAX_COORD_Y	= 240
 
         .label BUTTON_NOPRESS	= 0

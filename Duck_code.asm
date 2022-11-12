@@ -68,7 +68,7 @@ rndMovementsPointer:
 rndMovements:
     .for (var i=0; i< 255; i++)
     {
-        .var m = round(random()*150)        
+        .var m = round(random()*100)        
         .if (m<=6)
         {
             .byte m

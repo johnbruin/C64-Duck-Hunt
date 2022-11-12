@@ -2,6 +2,7 @@
 
 #import "Macros/irq_macros.asm"
 #import "Globals.asm"
+#import "Scrolltext_code.asm"
 
 //Labels
 .label border_color         = $d020
@@ -19,19 +20,18 @@ start:
 	
 	lda #BLACK     
 	sta border_color
-	lda #LIGHT_BLUE     
 	sta background_color   
+
+	lda #%00110000
+    sta $d018
 
 	lda $DD00
 	and #%11111100 
 	ora #%00000010 //Change VIC bank to bank1: $4000-$7fff
 	sta $DD00
 
-    lda $d016
-	ora #%00010000
-    sta $d016
-
 	jsr initTitleScreen
+	jsr Scrolltext.Init
 
 	sei
 	:irq_init()	
@@ -46,6 +46,9 @@ irqTitleScreen:
 {
 	:irq_enter()
 	
+	lda $d8
+	sta $d016
+
 	lda #%00110000
     sta $d018
 
@@ -61,6 +64,14 @@ irqTitleScreen:
 		sta gameState
 		:irq_next(irqGame1, 0)
 	!:	
+	jsr Scrolltext.Scroll
+	:irq_next(irqScroller, 50+24*8)
+}
+
+irqScroller:
+{
+	irq_enter()
+	jsr Scrolltext.Smooth
 	:irq_next(irqTitleScreen, 0)
 }
 
@@ -105,7 +116,7 @@ irqGame1:
 	bne !+		
 		:irq_next(irqTitleScreen,0)
 	!:		
-	:irq_next(irqGame2,50+16*8)
+	:irq_next(irqGame2, 50+16*8)
 }
 
 .pc =* "[CODE] irqGame2 Screen split"
@@ -123,10 +134,8 @@ irqGame3:
 	irq_enter()
 	lda #BROWN
 	sta charmulticolor1
-
 	lda #BLACK
 	sta background_color
-
 	irq_next(irqGame1,0)	
 }
 

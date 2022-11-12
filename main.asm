@@ -46,8 +46,8 @@ irqTitleScreen:
 {
 	:irq_enter()
 	
-	lda $d8
-	sta $d016
+    lda #%000110000
+    sta $d016
 
 	lda #%00110000
     sta $d018
@@ -60,6 +60,7 @@ irqTitleScreen:
 	lda startGame
 	beq !+
 		jsr initGame
+		jsr Scrolltext.Init
 		lda #EndRound
 		sta gameState
 		:irq_next(irqGame1, 0)
@@ -71,6 +72,8 @@ irqTitleScreen:
 irqScroller:
 {
 	irq_enter()
+	lda #%000100000
+    sta $d016
 	jsr Scrolltext.Smooth
 	:irq_next(irqTitleScreen, 0)
 }
@@ -82,6 +85,10 @@ irqGame1:
 	#if DEBUG
         dec border_color
     #endif
+
+    lda $d016
+	ora #%00011000
+    sta $d016
 
     lda #%00100000
     sta $d018

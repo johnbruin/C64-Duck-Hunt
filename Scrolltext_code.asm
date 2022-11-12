@@ -8,15 +8,15 @@ Scrolltext:
 {
         smooth: .byte 0
         text: 
-        .text "               C64 VERSION BY MAHNA MAHNA IN 2022"
-        .text "               PLAY WITH LIGHTGUN JOYSTICK OR MOUSE IN PORT 1"
-        .text "               USE JOYSTICK IN PORT 2 TO CONTROL THE DUCK IN GAME A"
+        .text "           C64 VERSION BY MAHNA MAHNA IN 2022"
+        .text "           SHOOT WITH LIGHTGUN OR JOYSTICK OR MOUSE IN PORT 1"
+        .text "           USE JOYSTICK IN PORT 2 TO CONTROL THE DUCK IN GAME A"
         .byte $ff
         .var text_pointer = $50
 
         Init:
         {
-                lda #$00
+                lda #0
                 sta smooth          //clear var
                 jsr Scroll.reset
                 rts

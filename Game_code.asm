@@ -143,16 +143,19 @@ initGame:
 wait: .byte 0
 playGame:
 {
-	jsr ReadKeyb
-    jsr GetKey
-    cmp #03 //runstop
-    bne !+
-    	lda #0
-		sta startGame
-		jsr initTitleScreen
-		rts	
-	!:
-
+	lda isMouse
+	bne !ismouse+
+		jsr ReadKeyb
+		jsr GetKey
+		cmp #03 //runstop
+		bne !+
+			lda #0
+			sta startGame
+			jsr initTitleScreen
+			rts	
+		!:
+	!ismouse:
+	
 	jsr checkCrosshairGame
 
 	lda gameState

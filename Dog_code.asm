@@ -569,14 +569,14 @@ dog4Sprite4Y: .byte 145+21*2
 
 dog4SpritesAnimationPointer: .byte 0
 dog4SpritesAnimation: 
-.byte 0*4,1*4,2*4,3*4
-.byte 0*4,1*4,2*4,3*4
-.byte 0*4,1*4,2*4,3*4
+.byte 1*4,2*4,3*4,0*4
+.byte 1*4,2*4,3*4,0*4
+.byte 1*4,2*4,3*4,0*4
 .byte 4*4,5*4,4*4,5*4
 .byte 4*4,5*4
-.byte 0*4,1*4,2*4,3*4
-.byte 0*4,1*4,2*4,3*4
-.byte 0*4,1*4,2*4,3*4
+.byte 1*4,2*4,3*4,0*4
+.byte 1*4,2*4,3*4,0*4
+.byte 1*4,2*4,3*4,0*4
 .byte 4*4,5*4,4*4,5*4
 .byte 4*4,5*4
 .byte 6*4,6*4,6*4
@@ -818,10 +818,12 @@ moveDog4:
     !:
 
     lda dog4AnimSpeed
-    cmp #5
+    cmp animSpeed:#6
     bne !skipAnimation+
         lda #0
         sta dog4AnimSpeed  
+        lda #6
+        sta animSpeed
         inc dog4SpritesAnimationPointer  
         
         ldy dog4SpritesAnimationPointer
@@ -831,17 +833,13 @@ moveDog4:
         !:
 
         ldy dog4SpritesAnimationPointer
-        cpy #41
+        cpy #42
         bne !+
             jsr playBark
         !:    
 
         ldy dog4SpritesAnimationPointer
         ldx dog4SpritesAnimation,y
-        cpx #0*4
-        bne !+
-            jmp !skipAnimation+
-        !:
         cpx #4*4
         bne !+
             jmp !skipAnimation+
@@ -854,11 +852,13 @@ moveDog4:
         bne !+
             jmp !skipAnimation+
         !:
-
+        
         jsr walk
         ldy dog4SpritesAnimationPointer
         cpy #38
         bcc !++
+            lda #3
+            sta animSpeed
             cpy #41
             bcc !+
                 jsr land               

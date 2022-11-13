@@ -240,14 +240,17 @@ getMouseInput:
 startGame: .byte 0
 checkCrosshairTitleScreen:
 {
-	jsr getMouseInput
-	lda isMouse
-	bne !ismouse+	
-		lda #1
-		sta isJoystick
-		jsr getJoystick1Input		
-		jsr getLightGunInputTitle		
-	!ismouse:
+	// jsr getMouseInput
+	// lda isMouse
+	// bne !ismouse+	
+	// 	lda #1
+	// 	sta isJoystick
+	// 	jsr getJoystick1Input		
+	// 	jsr getLightGunInputTitle		
+	// !ismouse:
+
+	jsr getLightGunInputTitle
+
 	jsr showCrosshair
 
 	lda crosshairY

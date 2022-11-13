@@ -122,8 +122,10 @@ getLightGunInputTitle:
 {
 	lda $d41a
 	sta crosshairTrigger
-	bne !+
-		lda #0
+	cmp #$ff
+	beq !+
+		lda #0		
+		sta crosshairTrigger
 		sta isJoystick			
 		sta isMouse
 	!:

@@ -122,12 +122,20 @@ getLightGunInputTitle:
 {
 	lda $d41a
 	sta crosshairTrigger
+	bne !+
+		lda #0
+		sta isJoystick			
+		sta isMouse
+	!:
 
 	lda $d014		//LPY
 	cmp lpyOld
 	beq !+
 		sta crosshairY
 		sta lpyOld
+		lda #0
+		sta isJoystick			
+		sta isMouse
 	!:
 	rts
 }
@@ -237,14 +245,8 @@ checkCrosshairTitleScreen:
 	bne !ismouse+	
 		lda #1
 		sta isJoystick
-		jsr getJoystick1Input
-		cpy #$ff
-		bne !+		
-			jsr getLightGunInputTitle
-			lda #0
-			sta isJoystick			
-			sta isMouse
-		!:
+		jsr getJoystick1Input		
+		jsr getLightGunInputTitle		
 	!ismouse:
 	jsr showCrosshair
 

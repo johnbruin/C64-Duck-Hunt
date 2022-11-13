@@ -94,7 +94,12 @@ getLightGunInput:
 {
 	lda $d41a
 	sta crosshairTrigger
-
+	cmp #$ff
+	beq !+
+		lda #0		
+		sta crosshairTrigger
+	!:
+	
 	lda $d013		//LPX
 	sta fac1		//multiply LPX by 2
 	lda #2

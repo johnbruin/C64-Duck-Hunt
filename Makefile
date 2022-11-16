@@ -17,9 +17,9 @@ VICE="G:\Mijn Drive\c64\VICE\bin\x64sc.exe"
 duckhunt.prg:
 	java -jar $(KICKASS) "main.asm"	
 	$(EXOMIZER) sfx sys main.prg -o "duckhunt.prg" -n
-	$(VICE) "duckhunt.prg"
 	del main.prg
 	del main.sym
+	$(VICE) "duckhunt.prg"
 
 # Build and debug
 %.debug:

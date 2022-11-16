@@ -1,13 +1,14 @@
 #importonce 
 
 #import "Globals.asm"
-#import "Text_code.asm"
+#import "Text.asm"
 
 *=* "[CODE] Scrolltext"
+
 Scrolltext:
 {
-        smooth: .byte 0
-        text: 
+        _smooth: .byte 0
+        _text: 
         .text "           C64 VERSION BY MAHNA MAHNA IN 2022"
         .text "           SHOOT WITH LIGHTGUN OR JOYSTICK OR MOUSE IN PORT 1"
         .text "           USE JOYSTICK IN PORT 2 TO CONTROL THE DUCK IN GAME A"
@@ -17,33 +18,33 @@ Scrolltext:
         Init:
         {
                 lda #0
-                sta smooth          //clear var
+                sta _smooth          //clear var
                 jsr Scroll.reset
                 rts
         }
 
         Smooth:
         {
-                 lda smooth         //smooth it
+                 lda _smooth         //smooth it
                  sta $d016
         }       
 
         Scroll:
         {
-                lda smooth
+                lda _smooth
                 sec
                 sbc #$01            //$01-$07 Higher is faster scroll
                 bcc !+
-                        sta smooth
+                        sta _smooth
                         rts
                 !:
                 and #$07            //only 3 bits needed for smooth
-                sta smooth
+                sta _smooth
                 
                 ldx #0
                 !:
-                        lda screenRamTitleScreen+1+24*40,x         //move first $28 characters on bottom line
-                        sta screenRamTitleScreen+24*40,x
+                        lda ScreenRamTitleScreen+1+24*40,x         //move first $28 characters on bottom line
+                        sta ScreenRamTitleScreen+24*40,x
                         inx
                         cpx #$28
                 bne !-
@@ -53,8 +54,8 @@ Scrolltext:
                 cmp #$ff                //if value is $ff reset text
                 beq reset
                 
-                jsr replaceChar
-                sta screenRamTitleScreen+24*40+39
+                jsr Text.ReplaceChar
+                sta ScreenRamTitleScreen+24*40+39
 
                 inc text_pointer        //inc text_pointer to fetch next scrolltext char
                 lda text_pointer
@@ -65,9 +66,9 @@ Scrolltext:
 
                 reset:
                 {
-                        lda #<text
+                        lda #<_text
                         sta text_pointer
-                        lda #>text
+                        lda #>_text
                         sta text_pointer+1
                         rts
                 }

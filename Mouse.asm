@@ -1,8 +1,7 @@
 #importonce 
 
-#import "Globals.asm"
-
 *=* "[CODE] Mouse code"
+
 Mouse:
 {
         // 1351 driver (and compatibles, which might have a middle button)

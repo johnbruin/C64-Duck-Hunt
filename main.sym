@@ -1,0 +1,603 @@
+.label Loop_Col=$88c2
+.label Process=$88f0
+.label Duck1=$3200 {
+  .label crossLowerBoundary2=$3721 {
+  }
+  .label crossRightBoundary2=$3746 {
+  }
+  .label IsDead=$3209
+  .label showScore=$323b {
+  }
+  .label getJoystick2Input=$360f {
+  }
+  .label _spritesAnimationCounter=$32a3
+  .label crossUpperBoundary=$36c8 {
+  }
+  .label down=$35e1 {
+  }
+  .label OnTheGround=$3207
+  .label Init=$320a {
+  }
+  .label moveFlyAway=$3592 {
+  }
+  .label _animSpeed=$3378
+  .label Number=$3206
+  .label Move=$33f0 {
+  }
+  .label moveRightDown=$3517 {
+    .label check=$3522
+  }
+  .label InitAnimation=$3379 {
+  }
+  .label X=$3200
+  .label Y=$3202
+  .label _changeMovementCounter=$35ec
+  .label up=$35d6 {
+  }
+  .label _spritesAnimationPointer=$32a2
+  .label moveLeftDown=$34c9 {
+    .label check=$34d4
+  }
+  .label _isJoystick2Input=$360e
+  .label moveUp=$3470 {
+    .label check=$347b
+  }
+  .label crossLowerBoundary=$36d7 {
+  }
+  .label moveDiagonalRightUp=$3568 {
+    .label check=$3576
+  }
+  .label _direction=$32a4
+  .label moveRightUp=$34f0 {
+    .label check=$34fb
+  }
+  .label Animate=$3382 {
+  }
+  .label moveDiagonalLeftUp=$353e {
+    .label check=$354c
+  }
+  .label crossLeftBoundary2=$3730 {
+  }
+  .label IsShot=$3208
+  .label right=$35c3 {
+  }
+  .label moveDown=$3489 {
+    .label check=$3494
+  }
+  .label ScoreY=$3205
+  .label ScoreX=$3203
+  .label crossRightBoundary=$36fc {
+  }
+  .label moveLeftUp=$34a2 {
+    .label check=$34ad
+  }
+  .label changeMovement=$35ed {
+  }
+  .label left=$35b0 {
+  }
+  .label crossLeftBoundary=$36e6 {
+  }
+  .label Show=$32a5 {
+  }
+  .label crossUpperBoundary2=$3712 {
+  }
+}
+.label CharRam=$4000
+.label Duck2=$375c {
+  .label IsDead=$3765
+  .label showScore=$3797 {
+  }
+  .label _spritesAnimationCounter=$37ff
+  .label crossUpperBoundary=$3b52 {
+  }
+  .label down=$3b25 {
+  }
+  .label OnTheGround=$3763
+  .label Init=$3766 {
+  }
+  .label moveFlyAway=$3ad6 {
+  }
+  .label _animSpeed=$38d4
+  .label Number=$3762
+  .label Move=$3946 {
+  }
+  .label moveRightDown=$3a5b {
+    .label check=$3a66
+  }
+  .label InitAnimation=$38d5 {
+  }
+  .label X=$375c
+  .label Y=$375e
+  .label _changeMovementCounter=$3b30
+  .label up=$3b1a {
+  }
+  .label _spritesAnimationPointer=$37fe
+  .label moveLeftDown=$3a0d {
+    .label check=$3a18
+  }
+  .label moveUp=$39b4 {
+    .label check=$39bf
+  }
+  .label crossLowerBoundary=$3b61 {
+  }
+  .label moveDiagonalRightUp=$3aac {
+    .label check=$3aba
+  }
+  .label _direction=$3800
+  .label moveRightUp=$3a34 {
+    .label check=$3a3f
+  }
+  .label Animate=$38de {
+  }
+  .label moveDiagonalLeftUp=$3a82 {
+    .label check=$3a90
+  }
+  .label IsShot=$3764
+  .label right=$3b07 {
+  }
+  .label moveDown=$39cd {
+    .label check=$39d8
+  }
+  .label ScoreY=$3761
+  .label ScoreX=$375f
+  .label crossRightBoundary=$3b86 {
+  }
+  .label moveLeftUp=$39e6 {
+    .label check=$39f1
+  }
+  .label changeMovement=$3b31 {
+  }
+  .label left=$3af4 {
+  }
+  .label crossLeftBoundary=$3b70 {
+  }
+  .label Show=$3801 {
+  }
+}
+.label IsKey=$8971
+.label SoundFx=$3be3 {
+  .label Play=$3be3 {
+  }
+  .label Fly=$3c0a {
+  }
+  .label Hit=$3c1f {
+  }
+  .label Bark=$3c37 {
+  }
+  .label ResetSid=$3c52 {
+  }
+  .label Quack=$3c17 {
+  }
+  .label Smile=$3c27 {
+  }
+  .label Shot=$3be7 {
+  }
+  .label Laugh=$3c2f {
+  }
+  .label Drop=$3c02 {
+  }
+}
+.label ScreenRam=$4800
+.label Sprites=$3ba9 {
+  .label Hide=$3bbf {
+  }
+  .label Init=$3ba9 {
+  }
+  .label XPositions=$3bcb
+  .label overlay_distance=$13
+  .label SPRITEPOINTER=$4bf8
+  .label Show=$3bc5 {
+  }
+  .label YPositions=$3bdb
+  .label SPRITEPOINTER_TITLE=$4ff8
+}
+.label NextKey=$88e0
+.label Dog=$8efd {
+  .label MaxY=$a7
+  .label PosX=$a0
+  .label MinY=$78
+}
+.label SMC_A=$88de
+.label Exit=$893f
+.label ProcKeyImg=$8945
+.label SameKey=$8903
+.label NotShift=$88db
+.label Score=$8100 {
+  .label PrintShots=$82bf {
+  }
+  .label markHits=$8348 {
+  }
+  .label _hiScore1=$8118
+  .label _flashHitsFlag=$8314
+  .label PrintHitsNeeded=$8306 {
+  }
+  .label ScoreSprites=$8100
+  .label AddScore=$818d {
+  }
+  .label Init=$811d {
+  }
+  .label PrintDuckHit=$82e4 {
+  }
+  .label _score3=$8117
+  .label _flashHitsAnimation=$8315
+  .label clearHits=$833b {
+  }
+  .label Reset=$817e {
+  }
+  .label PrintHiScore=$8240 {
+  }
+  .label _hitScore=$811b
+  .label _hitScoreRoundValue=$810f
+  .label _score1=$8115
+  .label _score2=$8116
+  .label PrintDuckHits=$82d9 {
+  }
+  .label PrintScore=$81f7 {
+  }
+  .label _bullet=$811c
+  .label _hiScore3=$811a
+  .label EvalHits=$835d {
+  }
+  .label HitScoreRound=$8106
+  .label _hiScore2=$8119
+  .label FlashHits=$8316 {
+  }
+  .label addPerfectScore=$81bf {
+  }
+  .label addFinishedScore=$81db {
+  }
+  .label checkHiScore=$8289 {
+    .label copyHiScore=$82ac
+  }
+}
+.label Game=$99d9 {
+  .label Speed=$99da
+  .label _wait=$99dd
+  .label _gameSpeedRound=$9c1e
+  .label setDifficulty=$9bfe {
+  }
+  .label _hitsNeededRound=$9c15
+  .label _framesToFlyAway=$9bb0
+  .label InitTitleScreen=$99de {
+  }
+  .label Play=$9aa2 {
+  }
+  .label _slowdown=$9baf
+  .label Init=$9a50 {
+  }
+  .label _duckMoveSpeedRound=$9c27
+  .label StartGame=$99dc
+  .label State=$99d9
+  .label Shots=$99db
+  .label _secondsToFlyAway=$9bb1
+  .label playDucks=$9bb2 {
+  }
+}
+.label SpriteMemory=$5000
+.label Dog1=$8efd {
+  .label _sprite1Y=$8f00
+  .label _sprite3X=$8f03
+  .label Move=$90f8 {
+  }
+  .label _moveDown=$8efe
+  .label _sprite2X=$8f01
+  .label _sprite3Y=$8f04
+  .label _sprite1X=$8eff
+  .label _sprite2Y=$8f02
+  .label Show=$8f05 {
+  }
+  .label _isVisible=$8efd
+}
+.label Dog2=$9132 {
+  .label _sprite1Y=$9135
+  .label _sprite4X=$913a
+  .label _sprite3X=$9138
+  .label _sprite4Y=$913b
+  .label Move=$93c9 {
+  }
+  .label _moveDown=$9133
+  .label _sprite2X=$9136
+  .label _sprite3Y=$9139
+  .label _sprite1X=$9134
+  .label _sprite2Y=$9137
+  .label Show=$913c {
+  }
+  .label _isVisible=$9132
+}
+.label Dog3=$9409 {
+  .label _sprite1Y=$940c
+  .label _animSpeed=$9410
+  .label Move=$95b3 {
+  }
+  .label _moveDown=$940a
+  .label _sprite2X=$940d
+  .label _sprite1X=$940b
+  .label _sprite2Y=$940e
+  .label _animation=$940f
+  .label Show=$9411 {
+  }
+  .label _isVisible=$9409
+}
+.label EndDelay=$890f
+.label Dog4=$95e7 {
+  .label _sprite1Y=$95ea
+  .label _sprite4X=$95ef
+  .label _sprite3X=$95ed
+  .label _sprite4Y=$95f0
+  .label _sprite2X=$95eb
+  .label _sprite3Y=$95ee
+  .label _sprite1X=$95e9
+  .label _sprite2Y=$95ec
+  .label _isVisible=$95e7
+  .label _spritesAnimation=$95f2
+  .label Init=$964c {
+  }
+  .label _animSpeed=$9903
+  .label Move=$9904 {
+    .label animSpeed=$9915
+  }
+  .label _moveDown=$95e8
+  .label land=$99a5 {
+  }
+  .label Show=$967a {
+  }
+  .label _spritesAnimationPointer=$95f1
+  .label _sprites=$9628
+  .label walk=$9974 {
+  }
+  .label jump=$99be {
+  }
+}
+.label SMC_Vec=$88c8
+.label NoKey=$896d
+.label SMC_Row=$88b3
+.label Set=$99d7 {
+  .label Hits=$99d8
+  .label Shots=$99d7
+}
+.label Crosshair=$8acf {
+  .label getMouseInput=$8c37 {
+  }
+  .label getLightGunInputTitle=$8baf {
+  }
+  .label show=$8af5 {
+  }
+  .label isHitDuck1=$8d68 {
+  }
+  .label _lpyOld=$8bae
+  .label _highBoundaryY=$8ad6
+  .label _isJoystick=$8acf
+  .label _highBoundaryX=$8ad3
+  .label Init=$8ad7 {
+  }
+  .label getLightGunInput=$8b75 {
+  }
+  .label CheckGame=$8cd4 {
+  }
+  .label isHitDuck2=$8e09 {
+  }
+  .label _lowBoundaryY=$8ad5
+  .label _lowBoundaryX=$8ad1
+  .label _trigger=$8af0
+  .label CheckTitleScreen=$8c83 {
+  }
+  .label _showY=$8af3
+  .label multiply=$8ea8 {
+    .label m0=$8ead
+    .label m1=$8eb2
+  }
+  .label _showX=$8af1
+  .label areWeOutOfShots=$8ebb {
+  }
+  .label getJoystick1Input=$8bdb {
+  }
+  .label _isMouse=$8ad0
+  .label _isShotFired=$8af4
+  .label _x=$8aed
+  .label _y=$8aef
+}
+.label Scrolltext=$9c30 {
+  .label Init=$9cdb {
+  }
+  .label Scroll=$9cea {
+    .label reset=$9d1f {
+    }
+  }
+  .label Smooth=$9ce4 {
+  }
+  .label _smooth=$9c30
+  .label _text=$9c31
+}
+.label Cleanup=$891f
+.label SMC_Key=$88f3
+.label Loop_Debounce=$88b8
+.label ScreenRamTitleScreen=$4c00
+.label Joystick1=$8000 {
+  .label pressedBit=$8000
+  .label DOWN=$1
+  .label Pressed=$8027 {
+    .label noaction=$8039
+  }
+  .label LEFT=$2
+  .label data=$8042
+  .label FIRE=$4
+  .label Held=$803c {
+  }
+  .label RIGHT=$3
+  .label Poll=$800e {
+  }
+  .label UP=$0
+  .label Reset=$8001 {
+  }
+}
+.label Round=$3b9c {
+  .label Hits=$3b9e
+  .label HitsNeeded=$3ba8
+  .label Number=$3b9c
+  .label DuckNumber=$3b9d
+}
+.label Joystick2=$804a {
+  .label pressedBit=$804a
+  .label DOWN=$1
+  .label Pressed=$8071 {
+    .label noaction=$8083
+  }
+  .label LEFT=$2
+  .label data=$808c
+  .label FIRE=$4
+  .label Held=$8086 {
+  }
+  .label RIGHT=$3
+  .label Poll=$8058 {
+  }
+  .label UP=$0
+  .label Reset=$804b {
+  }
+}
+.label SetDecodeTable=$8951
+.label Loop=$8976
+.label Keyboard=$874c {
+  .label Keyb_Init=$886b
+  .label SYS_Shflag=$8865
+  .label GetKey=$8968
+  .label SYS_Sfdx=$8866
+  .label SYS_Kount=$8869
+  .label KeyMap3=$87d6
+  .label SYS_Xmax=$8864
+  .label KeyMap4=$8817
+  .label KeyMap1=$8754
+  .label KeyMap2=$8795
+  .label KeyR=$8858
+  .label SYS_Lstx=$8867
+  .label SYS_Lstshf=$886a
+  .label KeyMapVec=$874c
+  .label SYS_Ndx=$8863
+  .label SYS_Delay=$8868
+  .label ReadKeyb=$8889
+  .label SYS_Keyd=$8859
+}
+.label Text=$3c77 {
+  .label Hide=$3dfb {
+  }
+  .label Finished=$3db6 {
+  }
+  .label _numberMappings=$3c77
+  .label GameOver=$3d30 {
+  }
+  .label _flyAwayText=$3d5c
+  .label showText=$3dcd {
+  }
+  .label FlyAway=$3d66 {
+  }
+  .label _goodText=$3d41
+  .label ReplaceChar=$3ca2 {
+  }
+  .label _roundText=$3cff
+  .label Perfect=$3d8b {
+  }
+  .label _finishedText3=$3dac
+  .label _perfectText3=$3d81
+  .label _finishedText1=$3da2
+  .label _gameText1=$3c81
+  .label RoundNumber=$3d09 {
+  }
+  .label _perfectText1=$3d77
+  .label _gameOverText=$3d26
+  .label Good=$3d4b {
+  }
+  .label _gameText3=$3c97
+  .label _gameText2=$3c8c
+}
+.label Cont=$8958
+.label Mouse=$8988 {
+  .label min_x_lo=$8ac3
+  .label cbm1351_poll=$8992 {
+  }
+  .label min_x_hi=$8ac5
+  .label LEFT_BUTTON=$10
+  .label restrictLeftBoundary=$8a3f {
+  }
+  .label restrict=$8a32 {
+  }
+  .label Y_STUFF=$1
+  .label restrictLowerBoundary=$8aa2 {
+  }
+  .label sid=$d400
+  .label max_y_lo=$8ac8
+  .label BUTTON_PRESS_RIGHT=$2
+  .label pos_y_lo=$8acc
+  .label X_STUFF=$0
+  .label pos_y_hi=$8ace
+  .label max_y_hi=$8aca
+  .label limit=$898a
+  .label min_y_lo=$8ac4
+  .label min_y_hi=$8ac6
+  .label half_width=$8990
+  .label previous=$898c
+  .label restrictRightBoundary=$8a60 {
+  }
+  .label BUTTON_NOPRESS=$0
+  .label poty=$d41a
+  .label max_x_lo=$8ac7
+  .label BUTTON_PRESS_LEFT=$1
+  .label pos_x_lo=$8acb
+  .label pos_x_hi=$8acd
+  .label potx=$d419
+  .label max_x_hi=$8ac9
+  .label width=$898e
+  .label pot_delta=$89c3 {
+    .label zero=$8a2f
+    .label negative=$8a1f
+    .label increase=$8a18
+    .label decrease=$8a2c
+  }
+  .label minimum=$8988
+  .label restrictUpperBoundary=$8a81 {
+  }
+}
+.label joystick_port2=$dc00
+.label joystick_port1=$dc01
+.label Duck=$83a8 {
+  .label MoveSpeed=$83a9
+  .label RndMovements=$85dd
+  .label UpperBoundary2=$47
+  .label AreAllDucksOnTheGround=$86dd {
+  }
+  .label LeftBoundary2=$36
+  .label LowerBoundary2=$81
+  .label UpperBoundary=$32
+  .label PlayWith1Duck=$83a8
+  .label RndDirectionPointer=$83da
+  .label RndXPositions=$84dc
+  .label RightBoundary=$127
+  .label LeftBoundary=$1e
+  .label Sprites=$83aa
+  .label RightBoundary2=$10f
+  .label RndDirection=$83db
+  .label RndMovementsPointer=$85dc
+  .label FlashDuckHits=$870a {
+  }
+  .label LowerBoundary=$96
+  .label RndXPositionPointer=$84db
+}
+.label Main=$9d28 {
+  .label irqGame3=$31a4 {
+  }
+  .label disable_restore_key=$31d5 {
+    .label nmi=$31fa
+  }
+  .label irqGame2=$3178 {
+  }
+  .label background_color=$d021
+  .label charmulticolor2=$d023
+  .label start=$3000 {
+  }
+  .label irqTitleScreen=$3053 {
+  }
+  .label irqScroller=$30c7 {
+  }
+  .label border_color=$d020
+  .label charmulticolor1=$d022
+  .label irqGame1=$30f6 {
+  }
+}

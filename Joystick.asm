@@ -2,10 +2,11 @@
 
 *=* "[CODE] Joystick code"
 
-//	inspired by this post 
-// 	https://codebase64.org/doku.php?id=base:joystick_input_handling
 .label joystick_port1=$dc01
 .label joystick_port2=$dc00
+
+//	inspired by this post 
+// 	https://codebase64.org/doku.php?id=base:joystick_input_handling
 Joystick1:
 {
 	pressedBit:	.byte 0 

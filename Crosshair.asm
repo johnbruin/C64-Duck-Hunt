@@ -264,7 +264,10 @@ Crosshair:
 			lda #1
 			sta _isJoystick
 			jsr getJoystick1Input
-			jsr getLightGunInputTitle
+			cpy #$ff
+			bne !+
+				jsr getLightGunInputTitle
+			!:
 		!ismouse:
 
 		jsr Crosshair.show
@@ -308,7 +311,8 @@ Crosshair:
 			jsr Keyboard.GetKey
 			cmp #03 //runstop
 			bne !+
-				jsr Game.InitTitleScreen
+				lda #0	
+				sta Game.StartGame
 				rts	
 			!:
 		!ismouse:

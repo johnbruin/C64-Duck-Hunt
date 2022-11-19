@@ -15,7 +15,7 @@ Main:
 	.pc = $0801 "[CODE] Basic Program Start"
 	:BasicUpstart(start)			
 
-	.pc = $3000 "[CODE] Main Program"
+	.pc = $2a00 "[CODE] Main Program"
 	start:		
 	{
 		jsr $e544		// Clear screen	
@@ -65,7 +65,7 @@ Main:
 		beq !+
 			jsr Game.Init
 			jsr Scrolltext.Init
-			lda #EndRound
+			lda #StartRound
 			sta Game.State
 			:irq_next(irqGame1, 0)
 		!:	
@@ -123,7 +123,8 @@ Main:
 		#endif
 
 		lda Game.StartGame
-		bne !+		
+		bne !+	
+			jsr Game.InitTitleScreen	
 			:irq_next(irqTitleScreen,0)
 		!:		
 		:irq_next(irqGame2, 50+16*8)

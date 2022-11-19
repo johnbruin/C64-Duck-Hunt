@@ -270,25 +270,25 @@ Dog4:
         !:
 
         lda _animSpeed
-        cmp animSpeed:#6
+        cmp animSpeed:#8
         bne !skipAnimation+
             lda #0
             sta _animSpeed  
-            lda #6
+            lda #8
             sta animSpeed
             inc _spritesAnimationPointer  
-            
-            ldy _spritesAnimationPointer
-            cpy #38
-            bne !+
-                jsr SoundFx.Bark
-            !:
 
-            ldy _spritesAnimationPointer
-            cpy #42
-            bne !+
-                jsr SoundFx.Bark
-            !:    
+            // ldy _spritesAnimationPointer
+            // cpy #38
+            // bne !+
+            //     jsr SoundFx.Bark
+            // !:
+
+            // ldy _spritesAnimationPointer
+            // cpy #42
+            // bne !+
+            //     jsr SoundFx.Bark
+            // !:    
 
             ldy _spritesAnimationPointer
             ldx _spritesAnimation,y

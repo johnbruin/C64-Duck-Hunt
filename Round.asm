@@ -6,4 +6,5 @@ Round:
 	DuckNumber:	.byte 0
 	Hits: .fill 10, 0
 	HitsNeeded: .byte 5
+	IsPerfect: .byte 0
 }

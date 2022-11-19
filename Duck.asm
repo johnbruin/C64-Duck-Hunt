@@ -89,26 +89,24 @@ Duck:
         lda PlayWith1Duck
         bne !only1Duck+
             lda Duck1.OnTheGround
-            beq !++
+            beq !+
                 jsr Text.Hide
-                jsr SoundFx.Smile
-                lda #ClearWith1Duck
+                lda #ClearWith1DuckPause
                 sta Game.State 
                 rts
             !:
         !only1Duck:
 
         lda Duck1.OnTheGround
-        beq !++
+        beq !twoDucks+
             lda Duck2.OnTheGround
             beq !+
                 jsr Text.Hide
-                jsr SoundFx.Smile
-                lda #ClearWith2Ducks
+                lda #ClearWith2DucksPause
                 sta Game.State
                 rts
             !:
-        !:
+        !twoDucks:
         rts
     }
 

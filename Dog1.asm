@@ -150,7 +150,7 @@ Dog1:
         lda _moveDown
         bne !moveDown+
             lda _sprite1Y
-            cmp #Dog.MinY
+            cmp #Dog.MinY+3
             bcc !+
                 dec _sprite1Y
                 dec _sprite2Y
@@ -158,8 +158,7 @@ Dog1:
                 rts
             !:
             lda #1
-            sta _moveDown 
-
+            sta _moveDown
         !moveDown:
         lda _sprite1Y
         cmp #Dog.MaxY

@@ -1,5 +1,7 @@
 #importonce 
 
+#import "Globals.asm"
+
 *=* "[CODE] SoundFX"
 
 SoundFx:
@@ -33,7 +35,15 @@ SoundFx:
     Drop:
     {
         lda #4    // sfx number
+        ldy #0    // voice number
+        jsr $c04a // play sound!
+
+        lda #4    // sfx number
         ldy #1    // voice number
+        jsr $c04a // play sound!
+
+        lda #4    // sfx number
+        ldy #2    // voice number
         jsr $c04a // play sound!
 
         rts
@@ -71,9 +81,10 @@ SoundFx:
 
     Smile:
     {
-        lda #6    // sfx number
-        ldy #2    // voice number
-        jsr $c04a // play sound!
+        lda #1
+		ldx #1		
+		jsr Music.init
+        
         rts
     }
 
@@ -136,6 +147,28 @@ SoundFx:
 
         lda #$0f
         sta $d418
+
+        rts
+    }
+
+    Reset:
+    {
+        lda #$0
+        ldx #$17
+        !:               
+            sta $d400,x
+            dex
+        bpl !-
+
+        lda #$08
+        sta $d404
+        sta $d40b
+        sta $d412
+
+        lda #$0
+        sta $d404
+        sta $d40b
+        sta $d412
 
         rts
     }

@@ -6,7 +6,9 @@
 	 Intro
 	,Playing
 	,ClearWith1Duck
+	,ClearWith1DuckPause
 	,ClearWith2Ducks
+	,ClearWith2DucksPause
 	,EndRound
 	,StartRound
 	,GameOver
@@ -14,6 +16,8 @@
 	,NewSet
 	,FlyAway
 	,Miss
+	,PerfectRound
+	,FinalRound
 }
 
 #import "Globals.asm"
@@ -38,15 +42,16 @@ Game:
 	StartGame: .byte 0
 
 	_wait: .byte 0
+	_waitFall: .byte 10
 
 	InitTitleScreen:
 	{
-		jsr Sprites.Hide
-		
-		lda #Music.startSong - 0
-		ldx #Music.startSong - 0
+		lda #2
+		ldx #2		
 		jsr Music.init
 
+		jsr Sprites.Hide
+		
 		jsr Crosshair.Init
 
 		jsr Joystick1.Reset
@@ -109,7 +114,6 @@ Game:
 
 	Init:
 	{
-		jsr SoundFx.ResetSid
 		jsr Joystick1.Reset
 		jsr Joystick2.Reset
 
@@ -132,7 +136,8 @@ Game:
 		sta $D023
 
 		lda #0
-		sta Round.DuckNumber		
+		sta Round.DuckNumber
+		lda #0	
 		sta Round.Number
 
 		jsr Score.Reset
@@ -146,15 +151,13 @@ Game:
 		jsr Duck1.Init
 		jsr Duck2.Init
 
-		jsr SoundFx.Shot
-
 		rts
 	}
 
 	Play:
-	{				
+	{	
 		jsr Crosshair.CheckGame
-
+				
 		lda Game.State
 		
 		cmp #GameOver
@@ -163,7 +166,8 @@ Game:
 			bne !wait+
 				lda #0
 				sta StartGame
-				jsr InitTitleScreen			
+				jsr InitTitleScreen
+				rts		
 			!wait:
 			dec _wait
 			rts
@@ -173,6 +177,20 @@ Game:
 		bne !+
 			jsr Dog4.Move
 			jsr Dog4.Show
+			jsr Music.play
+			rts
+		!:
+
+		cmp #ClearWith1DuckPause
+		bne !+
+			lda _waitFall
+			bne !waitFall+
+                jsr SoundFx.Smile
+                lda #ClearWith1Duck
+                sta Game.State
+				rts
+			!waitFall:
+			dec _waitFall
 			rts
 		!:
 
@@ -180,6 +198,20 @@ Game:
 		bne !+
 			jsr Dog1.Show	
 			jsr Dog1.Move
+			jsr Music.play
+			rts
+		!:
+
+		cmp #ClearWith2DucksPause
+		bne !+
+			lda _waitFall
+			bne !waitFall+
+                jsr SoundFx.Smile
+                lda #ClearWith2Ducks
+                sta Game.State
+				rts
+			!waitFall:
+			dec _waitFall
 			rts
 		!:
 
@@ -187,6 +219,7 @@ Game:
 		bne !+
 			jsr Dog2.Show	
 			jsr Dog2.Move
+			jsr Music.play
 			rts
 		!:
 
@@ -240,19 +273,86 @@ Game:
 		cmp #EndRound
 		bne !+
 			jsr Score.FlashHits
+			jsr Music.play
 			lda _wait
 			bne !wait+
-				inc Round.Number	
-				lda Round.Number
-				jsr setDifficulty
-				jsr Text.Hide
-				jsr Text.RoundNumber
-				jsr Dog4.Init
-				jsr Score.Init
-				lda #Intro
+			    lda Round.Number
+				cmp #9
+				bne !finalround+
+					lda #200
+					sta _wait
+	                jsr Score.AddFinishedScore
+	                jsr Score.PrintScore
+    	            jsr Score.CheckHiScore
+        	        jsr Text.Finished
+					lda #FinalRound
+					sta Game.State
+					rts
+				!finalround:
+
+				lda Round.IsPerfect
+				bne !isperfect+
+					lda #StartRound
+					sta Game.State
+					rts
+				!isperfect:
+
+				lda #200
+				sta _wait
+				jsr Score.AddPerfectScore
+                jsr Score.PrintScore
+                jsr Text.Perfect
+				lda #PerfectRound
 				sta Game.State
+				rts
 			!wait:
-			dec _wait			
+			dec _wait
+			rts
+		!:
+
+		cmp #PerfectRound
+		bne !+
+			jsr Music.play
+			lda _wait
+			bne !wait+
+				lda #StartRound
+				sta Game.State
+				rts
+			!wait:
+			dec _wait
+			rts
+		!:
+
+		cmp #FinalRound
+		bne !+
+			jsr Music.play
+			lda _wait
+			bne !wait+
+				lda #GameOver
+				sta Game.State
+				rts
+			!wait:
+			dec _wait
+			rts
+		!:
+
+
+		cmp #StartRound
+		bne !+
+			lda #0
+			sta Round.IsPerfect
+			inc Round.Number	
+			lda Round.Number
+			jsr setDifficulty
+			jsr Text.Hide
+			jsr Text.RoundNumber
+			jsr Dog4.Init
+			jsr Score.Init
+			lda #0
+			ldx #0		
+			jsr Music.init
+			lda #Intro
+			sta Game.State
 			rts
 		!:
 
@@ -266,6 +366,9 @@ Game:
 				jsr Score.EvalHits
 				rts
 			!:
+
+			lda #10
+			sta _waitFall
 
 			lda #3
 			sta Set.Shots

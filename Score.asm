@@ -125,7 +125,7 @@ Score:
         rts
     }
 
-    addPerfectScore:
+    AddPerfectScore:
     {
         sed
         lda #0    
@@ -142,7 +142,7 @@ Score:
         rts
     }
 
-    addFinishedScore:
+    AddFinishedScore:
     {
         sed
         lda #0    
@@ -253,7 +253,7 @@ Score:
         rts
     }
 
-    checkHiScore:
+    CheckHiScore:
     {
         lda _score3
         cmp _hiScore3
@@ -426,33 +426,25 @@ Score:
         bcs !higher+
         bne !lower+
         !lower: 
-            jsr checkHiScore
+            jsr Score.CheckHiScore
             jsr Text.GameOver
             lda #GameOver
             sta Game.State
             rts
         !higher:
+            lda #200
+            sta Game._wait
+
             cpx #10
             bne !+
-                jsr addPerfectScore
-                jsr PrintScore
-                jsr Text.Perfect
-                jmp !endRound+
+                lda #1
+                sta Round.IsPerfect
             !:
-            jsr Text.Good
-            !endRound:
-            
-            lda Round.Number
-            cmp #9
-            bne !+
-                jsr addFinishedScore
-                jsr PrintScore
-                jsr checkHiScore
-                jsr Text.Finished
-                lda #GameOver
-                sta Game.State
-                rts
-            !:
+
+        	lda #4
+			ldx #4		
+			jsr Music.init
+
             lda #EndRound
             sta Game.State
         rts

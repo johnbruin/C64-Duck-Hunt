@@ -175,4 +175,16 @@ Dog3:
 
         rts
     }
+
+    MoveUpOnly:
+    {
+        lda _sprite1Y
+        cmp #Dog.MinY
+        bcc !+
+            dec _sprite1Y
+            dec _sprite2Y
+            rts
+        !:
+        rts
+    }
 }

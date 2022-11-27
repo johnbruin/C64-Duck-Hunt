@@ -428,8 +428,11 @@ Score:
         !lower: 
             jsr Score.CheckHiScore
             jsr Text.GameOver
-            lda #GameOver
-            sta Game.State
+            jsr SoundFx.GameOver
+            lda #140
+            sta Game._wait
+            lda #GameOverPause
+            sta Game.State            
             rts
         !higher:
             lda #200

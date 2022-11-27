@@ -12,6 +12,7 @@
 	,EndRound
 	,StartRound
 	,GameOver
+	,GameOverPause
 	,NewRound
 	,NewSet
 	,FlyAway
@@ -160,6 +161,21 @@ Game:
 				
 		lda Game.State
 		
+		cmp #GameOverPause
+		bne !+
+			lda _wait
+			bne !wait+
+				lda #200
+				sta _wait
+                lda #GameOver
+                sta Game.State
+				rts
+			!wait:
+			dec _wait
+			jsr Music.play
+			rts
+		!:
+
 		cmp #GameOver
 		bne !+
 			lda _wait
@@ -170,6 +186,9 @@ Game:
 				rts		
 			!wait:
 			dec _wait
+			jsr Music.play
+			jsr Dog3.Show	
+			jsr Dog3.MoveUpOnly
 			rts
 		!:
 
@@ -255,6 +274,7 @@ Game:
 
 			jsr Dog3.Show	
 			jsr Dog3.Move
+			jsr Music.play
 			rts
 		!miss:
 
@@ -263,6 +283,7 @@ Game:
 			lda #$ff
 			sta Round.DuckNumber
 
+			jsr SoundFx.Reset
 			jsr Score.Init
 
 			lda #NewSet
@@ -393,6 +414,8 @@ Game:
 				jsr Duck2.Init
 			!only1Duck:		
 			
+			jsr SoundFx.Quack
+
 			lda #Playing
 			sta Game.State
 			rts

@@ -6,6 +6,13 @@
 
 SoundFx:
 {
+    GameOver:
+    {
+        lda #5
+		ldx #5		
+		jsr Music.init
+    }
+
     Play:
     {
         jsr $c237 // play all voices
@@ -90,30 +97,10 @@ SoundFx:
 
     Laugh:
     {
-        lda #5    // sfx number
-        ldy #2    // voice number
-        jsr $c04a // play sound!
+        lda #6
+		ldx #6		
+		jsr Music.init
         
-        rts
-    }
-
-    Bark:
-    {
-        lda #15
-        sta $d418 // set volume to 15
-
-        lda #7    // sfx number
-        ldy #0    // voice number
-        jsr $c04a // play sound!
-        
-        lda #7    // sfx number
-        ldy #1    // voice number
-        jsr $c04a // play sound!
-
-        lda #7    // sfx number
-        ldy #2    // voice number
-        jsr $c04a // play sound!
-
         rts
     }
 

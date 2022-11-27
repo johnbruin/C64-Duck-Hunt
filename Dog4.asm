@@ -262,7 +262,7 @@ Dog4:
     Move:
     {
         ldy _spritesAnimationPointer
-        cpy #49
+        cpy #50
         bne !+
             lda #NewRound
             sta Game.State
@@ -277,18 +277,6 @@ Dog4:
             lda #8
             sta animSpeed
             inc _spritesAnimationPointer  
-
-            // ldy _spritesAnimationPointer
-            // cpy #38
-            // bne !+
-            //     jsr SoundFx.Bark
-            // !:
-
-            // ldy _spritesAnimationPointer
-            // cpy #42
-            // bne !+
-            //     jsr SoundFx.Bark
-            // !:    
 
             ldy _spritesAnimationPointer
             ldx _spritesAnimation,y

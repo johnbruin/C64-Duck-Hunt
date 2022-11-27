@@ -320,7 +320,6 @@ Duck1:
     check:
         jsr crossUpperBoundary
         beq !+
-            jsr SoundFx.Quack
             lda #FlyRightDown
             sta _direction
         !:
@@ -338,7 +337,6 @@ Duck1:
     check:
         jsr crossLowerBoundary
         beq !+
-            jsr SoundFx.Quack
             lda #FlyDiagonalLeftUp
             sta _direction
         !:
@@ -356,14 +354,12 @@ Duck1:
     check:
         jsr crossUpperBoundary
         beq !+
-            jsr SoundFx.Quack
             lda #FlyLeftDown
             sta _direction
             rts
         !:
         jsr crossLeftBoundary
         beq !+
-            jsr SoundFx.Quack
             lda #FlyRightDown
             sta _direction
         !:
@@ -381,14 +377,12 @@ Duck1:
     check:
         jsr crossLowerBoundary
         beq !+
-            jsr SoundFx.Quack
             lda #FlyDiagonalLeftUp
             sta _direction
             rts
         !:
         jsr crossLeftBoundary
         beq !+
-            jsr SoundFx.Quack
             lda #FlyDiagonalRightUp
             sta _direction
         !:
@@ -406,14 +400,12 @@ Duck1:
     check:
         jsr crossUpperBoundary
         beq !+
-            jsr SoundFx.Quack
             lda #FlyRightDown
             sta _direction
             rts
         !:
         jsr crossRightBoundary
         beq !+
-            jsr SoundFx.Quack
             lda #FlyLeftDown
             sta _direction
         !:
@@ -431,14 +423,12 @@ Duck1:
     check:
         jsr crossLowerBoundary
         beq !+
-            jsr SoundFx.Quack
             lda #FlyDiagonalRightUp
             sta _direction
             rts
         !:
         jsr crossRightBoundary
         beq !+
-            jsr SoundFx.Quack
             lda #FlyLeftUp
             sta _direction 
         !:
@@ -457,14 +447,12 @@ Duck1:
     check:
         jsr crossUpperBoundary
         beq !+
-            jsr SoundFx.Quack
             lda #FlyLeftDown
             sta _direction
             rts
         !:
         jsr crossLeftBoundary
         beq !+
-            jsr SoundFx.Quack
             lda #FlyRightDown
             sta _direction
         !:
@@ -483,14 +471,12 @@ Duck1:
     check:
         jsr crossUpperBoundary
         beq !+
-            jsr SoundFx.Quack
             lda #FlyRightDown
             sta _direction
             rts
         !:
         jsr crossRightBoundary
         beq !+
-            jsr SoundFx.Quack
             lda #FlyLeftDown
             sta _direction        
         !:
@@ -700,6 +686,7 @@ Duck1:
             lda #0
             rts
         !lower:
+            jsr SoundFx.Quack
             lda #1
         rts
     }
@@ -712,6 +699,7 @@ Duck1:
         bne !higher+    
 
         !higher:
+            jsr SoundFx.Quack
             lda #1
             rts
         !lower:

@@ -10,6 +10,7 @@ Scrolltext:
         _smooth: .byte 0
         _text: 
         .text "           C64 VERSION BY MAHNA MAHNA IN 2022"
+        .text "           TITLE PICTURE BY NYKE"
         .text "           MUSIC BY JACK PAW JUDI"
         .text "           GRAPHICS AND CODE BY STATLER"
         .text "           AIM AND SHOOT WITH LIGHTGUN OR JOYSTICK OR MOUSE IN PORT 1"

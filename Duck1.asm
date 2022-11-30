@@ -662,13 +662,6 @@ Duck1:
         
         !skip:
 
-        ldx #Joystick2.FIRE
-        jsr Joystick2.Held
-        bne !+
-            jsr SoundFx.Quack
-            rts
-        !:
-
         lda #0
         sta _isJoystick2Input
 

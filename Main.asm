@@ -1,5 +1,8 @@
 //#define DEBUG
 
+.pc = $0801 "[CODE] Basic Program Start"
+:BasicUpstart(Main.start)	
+
 #import "Macros/irq_macros.asm"
 #import "Globals.asm"
 #import "Game.asm"
@@ -11,9 +14,6 @@ Main:
 	.label background_color     = $d021
 	.label charmulticolor1		= $d022
 	.label charmulticolor2		= $d023
-
-	.pc = $0801 "[CODE] Basic Program Start"
-	:BasicUpstart(start)			
 
 	.pc = $2a00 "[CODE] Main Program"
 	start:		
@@ -31,6 +31,9 @@ Main:
 		and #%11111100 
 		ora #%00000010 //Change VIC bank to bank1: $4000-$7fff
 		sta $DD00
+
+		lda #$1b
+        sta $d011
 
 		jsr Game.InitTitleScreen
 		jsr Scrolltext.Init
@@ -148,27 +151,5 @@ Main:
 		lda #BLACK
 		sta background_color
 		irq_next(irqGame1, 0)	
-	}
-
-	disable_restore_key:
-	{
-		lda #<nmi             //Set NMI vector
-		sta $0318
-		sta $fffa
-		lda #>nmi
-		sta $0319
-		sta $fffb
-		lda #$81
-		sta $dd0d             //Use Timer A
-		lda #$01              //Timer A count ($0001)
-		sta $dd04
-		lda #$00
-		sta $dd05
-		lda #%00011001        //Run Timer A
-		sta $dd0e
-		rts
-
-		nmi:
-		rti
 	}
 }

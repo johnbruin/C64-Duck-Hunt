@@ -9,23 +9,32 @@ EXOMIZER="G:\Mijn Drive\c64\exomizer-3.1.0\win32\exomizer.exe"
 
 VICE="G:\Mijn Drive\c64\VICE\bin\x64sc.exe"
 
-# Compile assembly files with KickAssembler
-#%.prg: %.asm $(KICKASS)
-#	java -jar $(KICKASS) -debugdump "$<"
+# Build a crunched version of Main.prg
+%.zip: %.prg
+	$(EXOMIZER) sfx sys "$<" -o "$*.zip" -n
 
 # Build a final version
 duckhunt.prg:
 	java -jar $(KICKASS) "Main.asm"	
 	$(EXOMIZER) sfx sys main.prg -o "duckhunt.prg" -n
+
+	java -jar $(KICKASS) "Main.asm"	
+	$(EXOMIZER) sfx sys "Main.prg" -o "Main.zip" -n
+	java -jar $(KICKASS) "Loading.asm"	
+	$(EXOMIZER) sfx sys "Loading.prg" -o "DuckHunt.prg" -n
 	del Main.prg
+	del Main.zip
 	del Main.sym
-	$(VICE) "duckhunt.prg"
+	del Loading.prg
+	del Loading.sym
+	$(VICE) "DuckHunt.prg"
 
 # Build and debug
 %.debug:
 	$(DEBUGGER) -prg "$*.prg" -pass -unpause -wait 2500 -autojmp -layout 9
 
 clean:
+	del Main.zip
 	del *.prg
 	del *.exe.prg
 	del *.sym

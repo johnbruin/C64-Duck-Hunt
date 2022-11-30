@@ -15,7 +15,7 @@ SoundFx:
 
     Play:
     {
-        jsr $c237 // play all voices
+        jsr SoundFx_data+$237 // play all voices
         rts
     }
     
@@ -26,15 +26,15 @@ SoundFx:
 
         lda #0    // sfx number
         ldy #0    // voice number
-        jsr $c04a // play sound!
+        jsr SoundFx_data+$4a // play sound!
         
         lda #0    // sfx number
         ldy #1    // voice number
-        jsr $c04a // play sound!
+        jsr SoundFx_data+$4a // play sound!
 
         lda #0    // sfx number
         ldy #2    // voice number
-        jsr $c04a // play sound!
+        jsr SoundFx_data+$4a // play sound!
 
         rts
     }
@@ -43,15 +43,15 @@ SoundFx:
     {
         lda #4    // sfx number
         ldy #0    // voice number
-        jsr $c04a // play sound!
+        jsr SoundFx_data+$4a // play sound!
 
         lda #4    // sfx number
         ldy #1    // voice number
-        jsr $c04a // play sound!
+        jsr SoundFx_data+$4a // play sound!
 
         lda #4    // sfx number
         ldy #2    // voice number
-        jsr $c04a // play sound!
+        jsr SoundFx_data+$4a // play sound!
 
         rts
     }
@@ -63,7 +63,7 @@ SoundFx:
 
         lda #1    // sfx number
         ldy #0    // voice number
-        jsr $c04a // play sound!
+        jsr SoundFx_data+$4a // play sound!
 
         rts
     }
@@ -72,7 +72,7 @@ SoundFx:
     {
         lda #2    // sfx number
         ldy #1    // voice number
-        jsr $c04a // play sound!
+        jsr SoundFx_data+$4a // play sound!
 
         rts
     }
@@ -81,7 +81,7 @@ SoundFx:
     {
         lda #3    // sfx number
         ldy #1    // voice number
-        jsr $c04a // play sound!
+        jsr SoundFx_data+$4a // play sound!
 
         rts
     }

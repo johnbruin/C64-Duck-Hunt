@@ -20,9 +20,8 @@ SpriteMemory:
 	.var sprites = LoadBinary("Sprites/DuckHunt - Sprites.bin")
 	.fill sprites.getSize(), sprites.get(i)
 
-.var Music = LoadSid("music/Duckhunt.sid")
+.var Music = LoadSid("music/Duck_hunt_8580.sid")
 *=Music.location "[MUSIC] Duckhunt by Jack-Paw-Judi"
 .fill Music.size, Music.getData(i)
 
-*=$c000 "[DATA] SoundFX"
 #import "Music\SoundFx.asm"

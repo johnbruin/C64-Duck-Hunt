@@ -91,6 +91,18 @@ Text:
 			rts
 		!replace:
 
+		cmp #','
+		bne !replace+
+			lda #202
+			rts
+		!replace:
+
+		cmp #'-'
+		bne !replace+
+			lda #201
+			rts
+		!replace:
+
 		cmp #0
 		bne !replace+
 			rts

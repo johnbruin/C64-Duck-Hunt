@@ -65,3 +65,48 @@
     pla
     rti
 }
+
+.macro waste_cycles(n) {
+    .var nops = floor(n/2)
+    .var rem = n&1
+
+    .var c = n
+    .if (rem == 0) {
+        .for (var i = 0; i < nops; i++) {
+            nop
+            .eval c -= 2
+        }
+    } else {
+        .for (var i = 0; i < nops-1; i++) {
+            nop
+            .eval c -= 2
+        }
+        bit $fe
+        .eval c -= 3
+    }
+    .if (c != 0) {
+        .error "assert"
+    }
+}
+
+disable_restore_key:
+{
+    lda #<nmi             //Set NMI vector
+    sta $0318
+    sta $fffa
+    lda #>nmi
+    sta $0319
+    sta $fffb
+    lda #$81
+    sta $dd0d             //Use Timer A
+    lda #$01              //Timer A count ($0001)
+    sta $dd04
+    lda #$00
+    sta $dd05
+    lda #%00011001        //Run Timer A
+    sta $dd0e
+    rts
+
+    nmi:
+    rti
+}

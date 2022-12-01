@@ -18,9 +18,10 @@ Main:
 
 	#import "Macros/irq_macros.asm"
 	#import "Joystick.asm"
+	#import "Mouse.asm"
 	#import "Relocator.asm"
 
-    .pc = $0900 "[CODE] Main Program"
+    .pc = $0b00 "[CODE] Main Program"
 	_stopIntro:      .byte 0
 	start:		
 	{
@@ -80,7 +81,15 @@ Main:
 				jmp relocator
 			!:
 			:waste_cycles(63 - 4 - 4 - 3)
-			:waste_cycles(67*7)			
+			
+			lda _isMouse
+			bne !ismouse+
+				jmp !notismouse+
+			!ismouse:
+				:waste_cycles(64*7)			
+				jmp !loop-
+			!notismouse:
+				:waste_cycles(66*7)			
 		jmp !loop-
 	}
 
@@ -90,8 +99,17 @@ Main:
 		:irq_enter()		
 		jsr disable_restore_key
 		jsr Music.play
-		jsr getLightGunInput
-		jsr getJoystick1Input
+
+		jsr getMouseInput
+		lda _isMouse
+		bne !ismouse+
+			jsr getJoystick1Input
+			cpy #$ff
+			bne !+
+				jsr getLightGunInput
+			!:
+		!ismouse:
+				
 		lda _stopIntro
         beq !+ 
 			    lda #$ff
@@ -99,6 +117,36 @@ Main:
     			:irq_exit()
 		!:
 		:irq_next(irqLoading, 0)
+	}
+
+	_isMouse: .byte 0
+	getMouseInput:
+	{
+		lda $d41a		
+		bne !+
+			rts
+		!:
+
+		lda Mouse.potx
+		cmp #$ff
+		bne !+
+			lda Mouse.poty
+			cmp #$ff
+			bne !+
+				lda #0
+				sta _isMouse
+				rts
+			!:		
+		!:
+
+		lda #1
+		sta _isMouse
+
+		jsr Mouse.cbm1351_poll 
+
+		jsr getJoystick1Input
+
+		rts
 	}
 
 	getLightGunInput:
@@ -120,6 +168,7 @@ Main:
 		bne !+
 			lda #1
 			sta _stopIntro
+			ldy #1
 		!:
 		rts
 	}

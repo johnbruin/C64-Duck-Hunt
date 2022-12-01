@@ -16,18 +16,15 @@ VICE="G:\Mijn Drive\c64\VICE\bin\x64sc.exe"
 # Build a final version
 duckhunt.prg:
 	java -jar $(KICKASS) "Main.asm"	
-	$(EXOMIZER) sfx sys main.prg -o "duckhunt.prg" -n
-
-	java -jar $(KICKASS) "Main.asm"	
 	$(EXOMIZER) sfx sys "Main.prg" -o "Main.zip" -n
 	java -jar $(KICKASS) "Loading.asm"	
-	$(EXOMIZER) sfx sys "Loading.prg" -o "DuckHunt.prg" -n
+	$(EXOMIZER) sfx sys "Loading.prg" -o "Duck_Hunt.prg" -n
 	del Main.prg
 	del Main.zip
 	del Main.sym
 	del Loading.prg
 	del Loading.sym
-	$(VICE) "DuckHunt.prg"
+	$(VICE) "Duck_Hunt.prg"
 
 # Build and debug
 %.debug:

@@ -10,7 +10,7 @@ Tools used:
 * C64 Debugger: https://sourceforge.net/projects/c64-debugger/
 * Exomizer: https://bitbucket.org/magli143/exomizer/wiki/Home
 * Multipaint: http://multipaint.kameli.net/
-* CharPad C64: https://subchristsoftware.itch.io/charpad-c64-free
-* SpritePad C64 Pro: https://subchristsoftware.itch.io/spritepad-c64-pro
-* Sid Sfx Editor: https://agpx.itch.io/sid-sfx-editor
+* CharPad C64 (to open the .ctm file in Pictures): https://subchristsoftware.itch.io/charpad-c64-free
+* SpritePad C64 Pro (to open the .spd file in Sprites): https://subchristsoftware.itch.io/spritepad-c64-pro
+* Sid Sfx Editor (to open the .sdx file in Music): https://agpx.itch.io/sid-sfx-editor
 * VICE the Versatile Commodore Emulator: https://vice-emu.sourceforge.io/
